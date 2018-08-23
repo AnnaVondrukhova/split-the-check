@@ -19,7 +19,7 @@ class StartViewController: UIViewController {
         //Тестовый блок - УДАЛИТЬ
 //        let domain = Bundle.main.bundleIdentifier!
 //        UserDefaults.standard.removePersistentDomain(forName: domain)
-        
+//        
 //        print ("UserDefaults cleared")
         //
 
