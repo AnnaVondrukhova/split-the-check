@@ -1,0 +1,53 @@
+//
+//  NotLoadedCheckCell.swift
+//  SplitTheCheck
+//
+//  Created by Anya on 22/01/2018.
+//  Copyright © 2018 Anna Zhulidova. All rights reserved.
+//
+
+import UIKit
+
+class NotLoadedCheckCell: UICollectionViewCell {
+    
+    @IBOutlet weak var qrImage: UIImageView!
+    @IBOutlet weak var date: UILabel!
+    @IBOutlet weak var sum: UILabel!
+    
+    func configure (qrString: String) {
+        let fullDate: Date?
+        let params = qrString
+            .components(separatedBy: "&")
+            .map { $0.components(separatedBy: "=") }
+            .reduce([String: String]()) { result, param in
+                var dict = result
+                let key = param[0]
+                let value = param[1]
+                dict[key] = value
+                return dict
+        }
+        
+        print (params["t"])
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyyMMdd'T'HHmmss"
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        if dateFormatter.date(from: params["t"]!) != nil {
+            fullDate = dateFormatter.date(from: params["t"]!)
+        } else {
+            dateFormatter.dateFormat = "yyyyMMdd'T'HHmm"
+            fullDate = dateFormatter.date(from: params["t"]!)
+        }
+        print (fullDate as Any)
+        
+        
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        let date = dateFormatter.string(from: fullDate!)
+        dateFormatter.dateFormat = "HH:mm"
+        let time = dateFormatter.string(from: fullDate!)
+        
+        self.date.text = date+"  "+time
+        self.sum.text = params["s"]
+        self.qrImage.image = UIImage(named: "qrCode")
+    }
+}

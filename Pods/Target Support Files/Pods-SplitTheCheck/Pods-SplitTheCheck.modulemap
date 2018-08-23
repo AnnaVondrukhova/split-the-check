@@ -1,0 +1,6 @@
+framework module Pods_SplitTheCheck {
+  umbrella header "Pods-SplitTheCheck-umbrella.h"
+
+  export *
+  module * { export * }
+}
