@@ -13,12 +13,18 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var nameText: UITextField!
     @IBOutlet weak var emailText: UITextField!
     @IBOutlet weak var telText: UITextField!
+    @IBOutlet weak var checkbox: Checkbox!
+    @IBOutlet weak var agreementBtn: UIButton!
+    @IBOutlet weak var signUpBtn: CustomButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.telText.delegate = self
         telText.keyboardType = UIKeyboardType.numberPad
+        signUpBtn.isEnabled = false
+        signUpBtn.backgroundColor = UIColor.gray
+        checkbox.delegate = self
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -29,14 +35,89 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toUserAgreementVC" {
-            print("Go to UserAgreementViewController")
-            let controller = segue.destination as! UserAgreementViewController
-            controller.name = nameText.text ?? ""
-            controller.email = emailText.text ?? ""
-            controller.tel = telText.text ?? ""
+    @IBAction func signUp(_ sender: Any) {
+        //регистрируем пользователя
+        signUpBtn.backgroundColor = UIColor(red:0.47, green:0.47, blue:0.47, alpha:1.0)
+        signUpBtn.titleLabel?.textColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
+        
+        let name = nameText.text ?? ""
+        let email = emailText.text ?? ""
+        let tel = telText.text ?? ""
+        
+        let url = URL(string: "https://proverkacheka.nalog.ru:9999/v1/mobile/users/signup")
+        
+        var request = URLRequest(url: url!)
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        
+        let headers = ["email":email,"name":name,"phone":tel]
+        request.httpBody = try! JSONSerialization.data(withJSONObject: headers)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print(error?.localizedDescription ?? "Unknown error")
+                self.showAlert(message: "Ошибка соединения с сервером")
+                return
+            }
+            
+            let httpResponse = response as? HTTPURLResponse
+            
+            //если ответ получен, то:
+            if httpResponse != nil {
+                let statusCode = httpResponse!.statusCode
+                print("Status code = \(statusCode)")
+                
+                if statusCode == 204 {
+                    print ("New password was sent")
+                    //запоминаем имя, email и телефон-логин
+                    UserDefaults.standard.set(name, forKey: "name")
+                    UserDefaults.standard.set(email, forKey: "email")
+                    UserDefaults.standard.set(tel, forKey: "user")
+                    //переходим на страницу ввода нового пароля
+                    DispatchQueue.main.async {
+                        self.performSegue(withIdentifier: "fromSignUpToNewPasswordVC", sender: nil)
+                    }
+                }
+                else if statusCode == 409 {
+                    print ("User exists, data = \(data), thread \(Thread.isMainThread)")
+                    DispatchQueue.main.async {
+                        self.showAlert(message: "Пользователь уже существует")
+                    }
+                                    }
+                else if statusCode == 500 {
+                    print ("Incorrect phone number, data = \(data), thread \(Thread.isMainThread)")
+                    DispatchQueue.main.async {
+                        self.showAlert(message: "Некорректный номер телефона")
+                    }
+                }
+                else if statusCode == 400 {
+                    print ("Incorrect email, data = \(data), thread \(Thread.isMainThread)")
+                    DispatchQueue.main.async {
+                        self.showAlert(message: "Некорректный адрес электронной почты")
+                    }
+                }
+                else {
+                    print ("Unknown error, status code = \(statusCode), data = \(data), thread \(Thread.isMainThread)")
+                    DispatchQueue.main.async {
+                        self.showAlert(message: "Ошибка соединения с сервером")
+                    }
+                }
+            }
+            else {
+                print (httpResponse!.allHeaderFields)
+                self.showAlert(message: "Ошибка соединения с сервером")
+            }
         }
+        
+        task.resume()
+    }
+    
+    func  showAlert(message: String) {
+        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -45,3 +126,17 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     }
 
 }
+
+extension SignUpViewController: CheckboxDelegate {
+    func checked(_ checkbox: Checkbox) {
+        if checkbox.isChecked {
+            signUpBtn.isEnabled = true
+            signUpBtn.backgroundColor = UIColor(red:0.49, green:0.25, blue:0.84, alpha:1.0)
+        }
+        else {
+            signUpBtn.isEnabled = false
+            signUpBtn.backgroundColor = UIColor.gray
+        }
+    }
+}
+

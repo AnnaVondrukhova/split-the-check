@@ -8,7 +8,7 @@
 
 import UIKit
 protocol CheckboxDelegate {
-    func checked(_ button: Checkbox)
+    func checked(_ checkbox: Checkbox)
 }
 
 class Checkbox: UIButton {
