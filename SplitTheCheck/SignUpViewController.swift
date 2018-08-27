@@ -22,8 +22,9 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
 
         self.telText.delegate = self
         telText.keyboardType = UIKeyboardType.numberPad
+//        agreementBtn.titleLabel?.attributedText = NSAttributedString(string: (agreementBtn.titleLabel?.text!)!, attributes: [.underlineStyle: NSUnderlineStyle.styleSingle.rawValue])
         signUpBtn.isEnabled = false
-        signUpBtn.backgroundColor = UIColor.gray
+        signUpBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
         checkbox.delegate = self
     }
 
@@ -131,11 +132,11 @@ extension SignUpViewController: CheckboxDelegate {
     func checked(_ checkbox: Checkbox) {
         if checkbox.isChecked {
             signUpBtn.isEnabled = true
-            signUpBtn.backgroundColor = UIColor(red:0.49, green:0.25, blue:0.84, alpha:1.0)
+            signUpBtn.backgroundColor = UIColor(red:0.37, green:0.75, blue:0.62, alpha:1.0)
         }
         else {
             signUpBtn.isEnabled = false
-            signUpBtn.backgroundColor = UIColor.gray
+            signUpBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
         }
     }
 }
