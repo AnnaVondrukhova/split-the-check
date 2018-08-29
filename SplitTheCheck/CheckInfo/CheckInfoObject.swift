@@ -10,7 +10,7 @@ import Foundation
 import SwiftyJSON
 import RealmSwift
 
-class CheckInfo: Object {
+class CheckInfoObject: Object {
     @objc dynamic var sectionId = 0
     @objc dynamic var sectionName = "Общий чек"
     @objc dynamic var id = 0
@@ -20,14 +20,14 @@ class CheckInfo: Object {
     @objc dynamic var price = 0.0
     @objc dynamic var myQuantity = 0
     @objc dynamic var myQtotalQ = ""
-    var parent = LinkingObjects(fromType: QrStringInfo.self, property: "checkItems")
+    var parent = LinkingObjects(fromType: QrStringInfoObject.self, property: "checkItems")
     
     static var classId = 1
     
     convenience init(json: JSON) {
         self.init()
         
-        self.id = CheckInfo.classId
+        self.id = CheckInfoObject.classId
         self.name = json["name"].stringValue
         self.initialQuantity = json["quantity"].doubleValue
         self.totalQuantity = json["quantity"].doubleValue
@@ -35,7 +35,7 @@ class CheckInfo: Object {
 //        self.myQuantity = json["quantity"].intValue
         self.myQtotalQ = json["quantity"].stringValue
         
-        CheckInfo.classId += 1
+        CheckInfoObject.classId += 1
         print ("id = \(id)")
     }
     
@@ -54,7 +54,7 @@ class CheckInfo: Object {
         
     }
     
-    static func ==(lhs: CheckInfo, rhs: CheckInfo) -> Bool {
+    static func ==(lhs: CheckInfoObject, rhs: CheckInfoObject) -> Bool {
         return(lhs.id == rhs.id
         && lhs.name == rhs.name
         && lhs.initialQuantity == rhs.initialQuantity
@@ -86,8 +86,8 @@ class CheckInfo: Object {
         print(" id: \(id) \n name: \(name),\n initialQuantity: \(initialQuantity) \n totalQuantity: \(totalQuantity) \n price: \(price)")
     }
     
-    func copyItem() -> CheckInfo {
-        let copy = CheckInfo(sectionId: sectionId, sectionName: sectionName, id: id, name: name, initialQuantity: initialQuantity, totalQuantity: totalQuantity, price: price)
+    func copyItem() -> CheckInfoObject {
+        let copy = CheckInfoObject(sectionId: sectionId, sectionName: sectionName, id: id, name: name, initialQuantity: initialQuantity, totalQuantity: totalQuantity, price: price)
         return copy
     }
 

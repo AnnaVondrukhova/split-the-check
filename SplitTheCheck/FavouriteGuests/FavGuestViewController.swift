@@ -11,7 +11,7 @@ import RealmSwift
 
 class FavGuestViewController: UITableViewController {
 
-    var favouriteGuests = List<GuestInfo>()
+    var favouriteGuests = List<GuestInfoObject>()
     var token: NotificationToken?
         
     override func viewDidLoad() {

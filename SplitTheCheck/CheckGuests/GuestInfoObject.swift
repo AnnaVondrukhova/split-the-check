@@ -11,7 +11,7 @@ import RealmSwift
 
 class User: Object {
     @objc dynamic var id = UUID().uuidString
-    var guests = List<GuestInfo>()
+    var guests = List<GuestInfoObject>()
     
     override static func primaryKey() -> String? {
         return "id"
@@ -19,7 +19,7 @@ class User: Object {
     
 }
 
-class GuestInfo: Object {
+class GuestInfoObject: Object {
     
     @objc dynamic var id = UUID().uuidString
     @objc dynamic var name = ""

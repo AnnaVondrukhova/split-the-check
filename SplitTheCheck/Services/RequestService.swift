@@ -9,16 +9,15 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
-import RealmSwift
 
 class RequestService {
-    let user = UserDefaults.standard.string(forKey: "user")
-    let password = UserDefaults.standard.string(forKey: "password")
     
     //загружаем данные с сайта ФНС
-    func loadData(receivedString: String){
+    static func loadData(receivedString: String){
         print("loadData func begin")
         
+        let user = UserDefaults.standard.string(forKey: "user")
+        let password = UserDefaults.standard.string(forKey: "password")
         let loginData = String(format: "%@:%@", user!, password!).data(using: String.Encoding.utf8)!
         let base64LoginData = loginData.base64EncodedString()
         
@@ -48,21 +47,21 @@ class RequestService {
                 case .success(let value):
                     let json = JSON(value)
                     if json.rawString() != "null" {
-                        let qrStringItem = QrStringInfo(error: nil, qrString: receivedString, jsonString: json.rawString())
-                        let check = json["document"]["receipt"]["items"].compactMap {CheckInfo(json: $0.1)}
+                        let qrStringItem = QrStringInfoObject(error: nil, qrString: receivedString, jsonString: json.rawString())
+                        let check = json["document"]["receipt"]["items"].compactMap {CheckInfoObject(json: $0.1)}
                         qrStringItem.addCheckItems(check)
-                        self.saveQRString(string: qrStringItem)
+                        RealmServices.saveQRString(string: qrStringItem)
                         print ("case success")
                     } else {
-                        let qrStringItem = QrStringInfo(error: "No data received", qrString: receivedString, jsonString: nil)
-                        self.saveQRString(string: qrStringItem)
+                        let qrStringItem = QrStringInfoObject(error: "No data received", qrString: receivedString, jsonString: nil)
+                        RealmServices.saveQRString(string: qrStringItem)
                         print("case error: \(String(describing: json.rawString()))")
                     }
                     
                 //если не получили json, записываем строку в базу с jsonString = nil и error != nil
                 case .failure(let error):
-                    let qrStringItem = QrStringInfo(error: error.localizedDescription, qrString: receivedString, jsonString: nil)
-                    self.saveQRString(string: qrStringItem)
+                    let qrStringItem = QrStringInfoObject(error: error.localizedDescription, qrString: receivedString, jsonString: nil)
+                    RealmServices.saveQRString(string: qrStringItem)
                     print("case error \(error)")
                 }
             }
@@ -71,20 +70,5 @@ class RequestService {
 
     }
     
-    //сохраняем наш объект QrStringInfo в базу данных
-    func saveQRString(string: QrStringInfo) {
-        do {
-//            Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
-//            print("configuration changed")
-            let realm = try Realm()
-            realm.beginWrite()
-            realm.add(string, update: true)
-            print ("added string to Realm")
-            try realm.commitWrite()
-            print(realm.configuration.fileURL as Any)
-        } catch {
-            print(error)
-        }
-    }
 
 }

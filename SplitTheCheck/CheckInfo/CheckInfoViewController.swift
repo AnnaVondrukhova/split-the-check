@@ -12,16 +12,16 @@ import SwiftyJSON
 import RealmSwift
 
 
-class ResultViewController: UIViewController, ResultCellDelegate {
+class CheckInfoViewController: UIViewController, ResultCellDelegate {
 
     @IBOutlet weak var addGuest: CustomButton!
     @IBOutlet weak var checkTableView: UITableView!
     
 //    let requestResult = RequestService()
-    var parentString = QrStringInfo()
-    var items = [[CheckInfo]]()
-    var selectedItems: [CheckInfo] = []
-    var guests = [GuestInfo]()
+    var parentString = QrStringInfoObject()
+    var items = [[CheckInfoObject]]()
+    var selectedItems: [CheckInfoObject] = []
+    var guests = [GuestInfoObject]()
     var totalSum = [Double]()
     var guestSum = 0.0
     
@@ -38,13 +38,13 @@ class ResultViewController: UIViewController, ResultCellDelegate {
         do {
             let realm = try Realm()
             print (parentString.qrString)
-            let realmItems = realm.objects(CheckInfo.self).filter("%@ IN parent", parentString).sorted(byKeyPath: "sectionId")
-            var realItems = [CheckInfo]()
+            let realmItems = realm.objects(CheckInfoObject.self).filter("%@ IN parent", parentString).sorted(byKeyPath: "sectionId")
+            var realItems = [CheckInfoObject]()
             for item in Array(realmItems) {
                 let copyItem = item.copyItem()
                 realItems.append(copyItem)
             }
-            self.items = realItems.reduce([[CheckInfo]]()) {
+            self.items = realItems.reduce([[CheckInfoObject]]()) {
                 guard var last = $0.last else { return [[$1]] }
                 var collection = $0
                 if last.first!.sectionId == $1.sectionId {
@@ -57,7 +57,7 @@ class ResultViewController: UIViewController, ResultCellDelegate {
             }
             
             for item in items {
-                guests.append(GuestInfo(name: (item.first?.sectionName)!))
+                guests.append(GuestInfoObject(name: (item.first?.sectionName)!))
                 totalSum.append(item.reduce(0){$0 + round(100*$1.price*$1.totalQuantity)/100})
             }
             
@@ -111,7 +111,7 @@ class ResultViewController: UIViewController, ResultCellDelegate {
     
 }
 
-extension ResultViewController: UITableViewDataSource, UITableViewDelegate {
+extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
     //количество секций
     func  numberOfSections(in tableView: UITableView) -> Int {
         return items.count
@@ -134,7 +134,7 @@ extension ResultViewController: UITableViewDataSource, UITableViewDelegate {
     
     //конфигурация ячейки
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "itemInfo", for: indexPath) as! ResultCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "itemInfo", for: indexPath) as! CheckInfoCell
         cell.delegate = self
         
         cell.configure(item: items[indexPath.section][indexPath.row], section: indexPath.section)
@@ -143,7 +143,7 @@ extension ResultViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     //изменение количества выбранных единиц товара
-    func amountTapped(_ cell: ResultCell) {
+    func amountTapped(_ cell: CheckInfoCell) {
         let indexPath = self.checkTableView.indexPath(for: cell)!
         let item = items[indexPath.section][indexPath.row]
         
@@ -171,7 +171,7 @@ extension ResultViewController: UITableViewDataSource, UITableViewDelegate {
     
     //выделение ячейки. Устанавливаем количество выбранных единиц товара = 1
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath)! as! ResultCell
+        let cell = tableView.cellForRow(at: indexPath)! as! CheckInfoCell
         let item = items[indexPath.section][indexPath.row]
         print("choose: \(item.myQtotalQ)")
         
@@ -194,7 +194,7 @@ extension ResultViewController: UITableViewDataSource, UITableViewDelegate {
     
     //снятие выделения ячейки.  Устанавливаем количество выбранных единиц товара = totalQuantity
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let deselectedCell = tableView.cellForRow(at: indexPath) as! ResultCell
+        let deselectedCell = tableView.cellForRow(at: indexPath) as! CheckInfoCell
         let item = items[indexPath.section][indexPath.row]
         
         if(selectedItems.contains(item)){
@@ -267,11 +267,11 @@ extension ResultViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-extension ResultViewController {
+extension CheckInfoViewController {
     //добавляем favouriteGuest на экран с чеком по нажатию на ячейку или кнопку +
     @IBAction func addGuestToCheck (segue: UIStoryboardSegue) {
         if segue.identifier == "addFavouriteGuestToCheck" {
-            let guestViewCotroller = segue.source as! GuestViewController
+            let guestViewCotroller = segue.source as! CheckGuestsViewController
 //            let resultViewController = segue.destination as! ResultViewController
             
             if let indexPath = guestViewCotroller.tableView.indexPathForSelectedRow {
@@ -281,7 +281,7 @@ extension ResultViewController {
                 addNewSection(sectionName: guest.name)
             }
         } else if  segue.identifier == "addNewGuestToCheck" {
-            let guestViewCotroller = segue.source as! GuestViewController
+            let guestViewCotroller = segue.source as! CheckGuestsViewController
             //            let resultViewController = segue.destination as! ResultViewController
             
             let guest = guestViewCotroller.newGuest
@@ -294,11 +294,11 @@ extension ResultViewController {
     
     //добавление секции с гостем
     func addNewSection(sectionName: String) {
-        var newSectionItems = [CheckInfo]()
+        var newSectionItems = [CheckInfoObject]()
         let sectionNo = items.count
         
         for item in selectedItems {
-            newSectionItems.append(CheckInfo(sectionId: sectionNo, sectionName: sectionName, id: item.id, name: item.name, initialQuantity: item.initialQuantity, totalQuantity: Double(item.myQuantity), price: item.price))
+            newSectionItems.append(CheckInfoObject(sectionId: sectionNo, sectionName: sectionName, id: item.id, name: item.name, initialQuantity: item.initialQuantity, totalQuantity: Double(item.myQuantity), price: item.price))
             print("new item id: \(newSectionItems.last!.id)")
             
             let index = items[0].index(of: item)
@@ -326,7 +326,7 @@ extension ResultViewController {
     
     //сохранение чека
     @objc func saveTheCheck() {
-        var itemsToRealm: [CheckInfo] = []
+        var itemsToRealm: [CheckInfoObject] = []
         
         for section in items {
             for item in section {
@@ -338,7 +338,7 @@ extension ResultViewController {
             let realm = try Realm()
             realm.beginWrite()
 //            parentString.checkItems.removeAll()
-            let oldCheck = realm.objects(CheckInfo.self).filter("%@ IN parent", parentString).sorted(byKeyPath: "sectionId")
+            let oldCheck = realm.objects(CheckInfoObject.self).filter("%@ IN parent", parentString).sorted(byKeyPath: "sectionId")
             realm.delete(oldCheck)
             for item in itemsToRealm {
                parentString.checkItems.append(item)

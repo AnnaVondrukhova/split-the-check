@@ -11,13 +11,13 @@ import SwiftyJSON
 import RealmSwift
 
 
-class CheckHistoryViewController: UICollectionViewController {
+class AllChecksViewController: UICollectionViewController {
 
-    var storedChecks: Results<QrStringInfo>?
+    var storedChecks: Results<QrStringInfoObject>?
     var jsonString = ""
     let requestResult = RequestService()
     var token: NotificationToken?
-    var modifiedString = QrStringInfo()
+    var modifiedString = QrStringInfoObject()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +46,7 @@ class CheckHistoryViewController: UICollectionViewController {
                 realm.beginWrite()
                 realm.add(User())
                 let user = realm.objects(User.self).first
-                user?.guests.append(GuestInfo(name: userName))
+                user?.guests.append(GuestInfoObject(name: userName))
                 try realm.commitWrite()
             } catch {
                 print(error.localizedDescription)
@@ -62,7 +62,7 @@ class CheckHistoryViewController: UICollectionViewController {
         self.tabBarController?.tabBar.isHidden = false
         do {
             let realm = try Realm()
-            self.storedChecks = realm.objects(QrStringInfo.self)
+            self.storedChecks = realm.objects(QrStringInfoObject.self)
             print(realm.configuration.fileURL as Any)
         } catch {
             print(error.localizedDescription)
@@ -82,7 +82,7 @@ class CheckHistoryViewController: UICollectionViewController {
         //если информация о чеке еще не загружена, пробуем загрузить
         else if (collectionView.cellForItem(at: indexPath) as? NotLoadedCheckCell) != nil {
             print("cell as NotLoadedCheckCell")
-            requestResult.loadData(receivedString: storedChecks![indexPath.item].qrString)
+            RequestService.loadData(receivedString: storedChecks![indexPath.item].qrString)
             getStringFromRealm()
             
         }
@@ -91,7 +91,7 @@ class CheckHistoryViewController: UICollectionViewController {
     //нотификация об обновлении данных в базе
     func getStringFromRealm() {
         guard let realm = try? Realm() else {return}
-        storedChecks = realm.objects(QrStringInfo.self)
+        storedChecks = realm.objects(QrStringInfoObject.self)
         token = storedChecks?.observe {[weak self] (changes: RealmCollectionChange) in
             switch changes {
             case .initial ( _):
@@ -158,7 +158,7 @@ class CheckHistoryViewController: UICollectionViewController {
         //если переходим с ячейки с уже загруженным чеком
         if segue.identifier == "showCheckSegue" {
             print ("trying to load check")
-            let controller = segue.destination as! ResultViewController
+            let controller = segue.destination as! CheckInfoViewController
             
             controller.parentString = modifiedString
         }

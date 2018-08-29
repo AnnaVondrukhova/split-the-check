@@ -22,8 +22,8 @@ class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     var qrCodeFrameView: UIView?
     
     var token: NotificationToken?
-    var storedChecks: Results<QrStringInfo>?
-    var addedString = QrStringInfo()
+    var storedChecks: Results<QrStringInfoObject>?
+    var addedString = QrStringInfoObject()
     
     let requestResult = RequestService()
 
@@ -112,7 +112,7 @@ class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                 do {
                     let realm = try Realm()
 
-                    let realmQrString = realm.objects(QrStringInfo.self).filter("qrString = %@", qrString).isEmpty
+                    let realmQrString = realm.objects(QrStringInfoObject.self).filter("qrString = %@", qrString).isEmpty
                     //если есть, выдаем ошибку
                     if !realmQrString {
                         activityIndicator.stopAnimating()
@@ -121,7 +121,7 @@ class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                     }
                     //если нет, пробуем загрузить данные
                     else {
-                        requestResult.loadData(receivedString: qrString)
+                        RequestService.loadData(receivedString: qrString)
                         getStringFromRealm()
                         print("got string from realm")
                     }
@@ -141,7 +141,7 @@ class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     //если ошибки нет, передаем полученную строку на ResultViewController и переходим туда
     func getStringFromRealm() {
         guard let realm = try? Realm() else {return}
-        storedChecks = realm.objects(QrStringInfo.self)
+        storedChecks = realm.objects(QrStringInfoObject.self)
         token = storedChecks?.observe {[weak self] (changes: RealmCollectionChange) in
             switch changes {
             case .initial (let results):
@@ -210,11 +210,11 @@ class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     }
     
     func getStringInfo(qrStringInfo: String) {
-        var realmQrString = QrStringInfo()
+        var realmQrString = QrStringInfoObject()
         
         do {
                 let realm = try Realm()
-            realmQrString = realm.object(ofType: QrStringInfo.self, forPrimaryKey: qrStringInfo)!
+            realmQrString = realm.object(ofType: QrStringInfoObject.self, forPrimaryKey: qrStringInfo)!
             } catch {
                 print (error)
             }
@@ -224,7 +224,7 @@ class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
             performSegue(withIdentifier: "qrResult", sender: nil)
         }
         else {
-            self.requestResult.loadData(receivedString: qrStringInfo)
+            RequestService.loadData(receivedString: qrStringInfo)
             self.getStringFromRealm()
             print("got string from realm")
         }
@@ -234,7 +234,7 @@ class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "qrResult" {
             print("performing segue qrResult")
-            let controller = segue.destination as! ResultViewController
+            let controller = segue.destination as! CheckInfoViewController
             controller.parentString = addedString
         }
     }

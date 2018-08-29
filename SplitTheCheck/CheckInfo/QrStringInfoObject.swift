@@ -9,11 +9,11 @@
 import Foundation
 import RealmSwift
 
-class QrStringInfo: Object {
+class QrStringInfoObject: Object {
     @objc dynamic var error: String?
     @objc dynamic var qrString = ""
     @objc dynamic var jsonString: String?
-    var checkItems = List<CheckInfo>()
+    var checkItems = List<CheckInfoObject>()
     
     override static func primaryKey() -> String? {
         return "qrString"
@@ -28,7 +28,7 @@ class QrStringInfo: Object {
         
     }
     
-    func addCheckItems(_ checkItems: [CheckInfo]) {
+    func addCheckItems(_ checkItems: [CheckInfoObject]) {
         self.checkItems.append(objectsIn: checkItems)
         
         

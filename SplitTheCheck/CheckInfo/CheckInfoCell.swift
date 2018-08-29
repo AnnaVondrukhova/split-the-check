@@ -9,10 +9,10 @@
 import UIKit
 
 protocol ResultCellDelegate {
-    func amountTapped(_ cell: ResultCell)
+    func amountTapped(_ cell: CheckInfoCell)
 }
 
-class ResultCell: UITableViewCell {
+class CheckInfoCell: UITableViewCell {
 
     @IBOutlet weak var itemName: UILabel!
     @IBOutlet weak var itemPrice: UILabel!
@@ -28,7 +28,7 @@ class ResultCell: UITableViewCell {
         itemAmount.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(labelAmountTapped(_:))))
     }
     
-    func configure(item: CheckInfo, section: Int) {
+    func configure(item: CheckInfoObject, section: Int) {
         itemName.text = item.name
         itemPrice.text = String(item.price)
         itemAmount.text = item.myQtotalQ

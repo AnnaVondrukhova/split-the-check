@@ -38,7 +38,7 @@ class FavGuestCell: UITableViewCell {
         favGuestName.tag = tag
     }
     
-    func configure(guest: GuestInfo) {
+    func configure(guest: GuestInfoObject) {
         favGuestName.text = guest.name
         favGuestChar.text = String(guest.name.uppercased().first ?? " ")
         
@@ -71,7 +71,7 @@ extension FavGuestCell: UITextFieldDelegate {
                 let realm = try Realm()
                 realm.beginWrite()
                 print (guestId)
-                let guest = realm.object(ofType: GuestInfo.self, forPrimaryKey: guestId)
+                let guest = realm.object(ofType: GuestInfoObject.self, forPrimaryKey: guestId)
                 print ("\(guest?.name), tag: \(favGuestName.tag)")
                 guest?.name = favGuestName.text!
                 try realm.commitWrite()
@@ -84,7 +84,7 @@ extension FavGuestCell: UITextFieldDelegate {
                 let realm = try Realm()
                 realm.beginWrite()
                 if favGuestName.text! != nil && favGuestName.text! != "" {
-                    let newGuest = GuestInfo(name: favGuestName.text!)
+                    let newGuest = GuestInfoObject(name: favGuestName.text!)
                     self.delegate.favouriteGuests.append(newGuest)
 //                    realm.add(newGuest)
                     print ("new name added: \(favGuestName.text!)")

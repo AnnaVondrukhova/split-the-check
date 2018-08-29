@@ -8,26 +8,27 @@
 
 /* Begin PBXBuildFile section */
 		9D7BF400B94D2315710BB53B /* Pods_SplitTheCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F4E5AAC67EC266DF5551386 /* Pods_SplitTheCheck.framework */; };
+		C104596321368F0C007BD0A7 /* RealmServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = C104596221368F0C007BD0A7 /* RealmServices.swift */; };
 		C10CB24D2109E24400652794 /* NewPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10CB24C2109E24400652794 /* NewPasswordViewController.swift */; };
 		C1369BC3200D227000830D45 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1369BC2200D227000830D45 /* HeaderCell.swift */; };
-		C1369BC6200F841700830D45 /* GuestInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1369BC5200F841700830D45 /* GuestInfo.swift */; };
-		C1369BC8200F86B100830D45 /* GuestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1369BC7200F86B100830D45 /* GuestViewController.swift */; };
+		C1369BC6200F841700830D45 /* GuestInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1369BC5200F841700830D45 /* GuestInfoObject.swift */; };
+		C1369BC8200F86B100830D45 /* CheckGuestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1369BC7200F86B100830D45 /* CheckGuestsViewController.swift */; };
 		C1369BCA200F870B00830D45 /* FavouriteGuestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1369BC9200F870B00830D45 /* FavouriteGuestCell.swift */; };
 		C1369BCC200F873D00830D45 /* AddGuestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1369BCB200F873D00830D45 /* AddGuestCell.swift */; };
 		C1619CAF2008CBE2004640ED /* RequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1619CAE2008CBE2004640ED /* RequestService.swift */; };
-		C1619CB12008D339004640ED /* CheckInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1619CB02008D339004640ED /* CheckInfo.swift */; };
-		C1619CB42008EB61004640ED /* ResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1619CB32008EB61004640ED /* ResultCell.swift */; };
-		C1690C6E2015F58F00C3638E /* CheckHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1690C6D2015F58F00C3638E /* CheckHistoryViewController.swift */; };
+		C1619CB12008D339004640ED /* CheckInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1619CB02008D339004640ED /* CheckInfoObject.swift */; };
+		C1619CB42008EB61004640ED /* CheckInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1619CB32008EB61004640ED /* CheckInfoCell.swift */; };
+		C1690C6E2015F58F00C3638E /* AllChecksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1690C6D2015F58F00C3638E /* AllChecksViewController.swift */; };
 		C1690C702015F5E400C3638E /* LoadedCheckCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1690C6F2015F5E400C3638E /* LoadedCheckCell.swift */; };
 		C1690C722015F60000C3638E /* NotLoadedCheckCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1690C712015F60000C3638E /* NotLoadedCheckCell.swift */; };
-		C1690C7B2019FCBD00C3638E /* QrStringInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1690C7A2019FCBD00C3638E /* QrStringInfo.swift */; };
+		C1690C7B2019FCBD00C3638E /* QrStringInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1690C7A2019FCBD00C3638E /* QrStringInfoObject.swift */; };
 		C169B02F203C397100987727 /* FavGuestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C169B02E203C397100987727 /* FavGuestViewController.swift */; };
 		C169B031203C399F00987727 /* FavGuestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C169B030203C399F00987727 /* FavGuestCell.swift */; };
 		C16B3E7C1FF112B6005C99B8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16B3E7B1FF112B6005C99B8 /* AppDelegate.swift */; };
 		C16B3E7E1FF112B6005C99B8 /* scanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16B3E7D1FF112B6005C99B8 /* scanViewController.swift */; };
 		C16B3E811FF112B6005C99B8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C16B3E7F1FF112B6005C99B8 /* Main.storyboard */; };
 		C16B3E861FF112B6005C99B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C16B3E841FF112B6005C99B8 /* LaunchScreen.storyboard */; };
-		C18BDA771FF2951F0008E58F /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18BDA761FF2951F0008E58F /* ResultViewController.swift */; };
+		C18BDA771FF2951F0008E58F /* CheckInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */; };
 		C1902DB1212ED026009F00CF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1902DB0212ED026009F00CF /* GoogleService-Info.plist */; };
 		C1A0672F200CF16E007AD89A /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0672E200CF16E007AD89A /* CustomButton.swift */; };
 		C1A22E2320FCB3E100286CD3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A22E2220FCB3E100286CD3 /* LoginViewController.swift */; };
@@ -42,19 +43,20 @@
 
 /* Begin PBXFileReference section */
 		2F4E5AAC67EC266DF5551386 /* Pods_SplitTheCheck.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SplitTheCheck.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C104596221368F0C007BD0A7 /* RealmServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmServices.swift; sourceTree = "<group>"; };
 		C10CB24C2109E24400652794 /* NewPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPasswordViewController.swift; sourceTree = "<group>"; };
 		C1369BC2200D227000830D45 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
-		C1369BC5200F841700830D45 /* GuestInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestInfo.swift; sourceTree = "<group>"; };
-		C1369BC7200F86B100830D45 /* GuestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestViewController.swift; sourceTree = "<group>"; };
+		C1369BC5200F841700830D45 /* GuestInfoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestInfoObject.swift; sourceTree = "<group>"; };
+		C1369BC7200F86B100830D45 /* CheckGuestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckGuestsViewController.swift; sourceTree = "<group>"; };
 		C1369BC9200F870B00830D45 /* FavouriteGuestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteGuestCell.swift; sourceTree = "<group>"; };
 		C1369BCB200F873D00830D45 /* AddGuestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddGuestCell.swift; sourceTree = "<group>"; };
 		C1619CAE2008CBE2004640ED /* RequestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestService.swift; sourceTree = "<group>"; };
-		C1619CB02008D339004640ED /* CheckInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInfo.swift; sourceTree = "<group>"; };
-		C1619CB32008EB61004640ED /* ResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCell.swift; sourceTree = "<group>"; };
-		C1690C6D2015F58F00C3638E /* CheckHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckHistoryViewController.swift; sourceTree = "<group>"; };
+		C1619CB02008D339004640ED /* CheckInfoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInfoObject.swift; sourceTree = "<group>"; };
+		C1619CB32008EB61004640ED /* CheckInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInfoCell.swift; sourceTree = "<group>"; };
+		C1690C6D2015F58F00C3638E /* AllChecksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllChecksViewController.swift; sourceTree = "<group>"; };
 		C1690C6F2015F5E400C3638E /* LoadedCheckCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadedCheckCell.swift; sourceTree = "<group>"; };
 		C1690C712015F60000C3638E /* NotLoadedCheckCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotLoadedCheckCell.swift; sourceTree = "<group>"; };
-		C1690C7A2019FCBD00C3638E /* QrStringInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrStringInfo.swift; sourceTree = "<group>"; };
+		C1690C7A2019FCBD00C3638E /* QrStringInfoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrStringInfoObject.swift; sourceTree = "<group>"; };
 		C169B02E203C397100987727 /* FavGuestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavGuestViewController.swift; sourceTree = "<group>"; };
 		C169B030203C399F00987727 /* FavGuestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavGuestCell.swift; sourceTree = "<group>"; };
 		C16B3E781FF112B6005C99B8 /* SplitTheCheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SplitTheCheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,7 +65,7 @@
 		C16B3E801FF112B6005C99B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C16B3E851FF112B6005C99B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C16B3E871FF112B6005C99B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C18BDA761FF2951F0008E58F /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
+		C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInfoViewController.swift; sourceTree = "<group>"; };
 		C1902DB0212ED026009F00CF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C1A0672E200CF16E007AD89A /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		C1A22E2220FCB3E100286CD3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -98,37 +100,67 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C1369BC4200F83DD00830D45 /* Guests */ = {
+		C104596421368F99007BD0A7 /* LoginViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				C1369BC7200F86B100830D45 /* GuestViewController.swift */,
+				C1A8F73220FA904A00B0B644 /* StartViewController.swift */,
+				C1A22E2220FCB3E100286CD3 /* LoginViewController.swift */,
+				C1A22E2620FF38D600286CD3 /* ForgetViewController.swift */,
+				C1A22E2420FE208400286CD3 /* SignUpViewController.swift */,
+				C1FCE56A212C2FDB009B8C59 /* UserAgreementViewController.swift */,
+				C10CB24C2109E24400652794 /* NewPasswordViewController.swift */,
+			);
+			path = LoginViewControllers;
+			sourceTree = "<group>";
+		};
+		C104596521369001007BD0A7 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C1619CAE2008CBE2004640ED /* RequestService.swift */,
+				C104596221368F0C007BD0A7 /* RealmServices.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		C104596621369036007BD0A7 /* CustomUIObjects */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = CustomUIObjects;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		C1369BC4200F83DD00830D45 /* CheckGuests */ = {
+			isa = PBXGroup;
+			children = (
+				C1369BC7200F86B100830D45 /* CheckGuestsViewController.swift */,
 				C1369BC9200F870B00830D45 /* FavouriteGuestCell.swift */,
 				C1369BCB200F873D00830D45 /* AddGuestCell.swift */,
-				C1369BC5200F841700830D45 /* GuestInfo.swift */,
+				C1369BC5200F841700830D45 /* GuestInfoObject.swift */,
 			);
-			path = Guests;
+			path = CheckGuests;
 			sourceTree = "<group>";
 		};
 		C1619CB22008EAEA004640ED /* CheckInfo */ = {
 			isa = PBXGroup;
 			children = (
-				C18BDA761FF2951F0008E58F /* ResultViewController.swift */,
-				C1619CB32008EB61004640ED /* ResultCell.swift */,
+				C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */,
+				C1619CB32008EB61004640ED /* CheckInfoCell.swift */,
 				C1369BC2200D227000830D45 /* HeaderCell.swift */,
-				C1619CB02008D339004640ED /* CheckInfo.swift */,
-				C1690C7A2019FCBD00C3638E /* QrStringInfo.swift */,
+				C1619CB02008D339004640ED /* CheckInfoObject.swift */,
+				C1690C7A2019FCBD00C3638E /* QrStringInfoObject.swift */,
 			);
 			path = CheckInfo;
 			sourceTree = "<group>";
 		};
-		C1690C6C2015F55C00C3638E /* CheckHistory */ = {
+		C1690C6C2015F55C00C3638E /* AllChecks */ = {
 			isa = PBXGroup;
 			children = (
-				C1690C6D2015F58F00C3638E /* CheckHistoryViewController.swift */,
+				C1690C6D2015F58F00C3638E /* AllChecksViewController.swift */,
 				C1690C6F2015F5E400C3638E /* LoadedCheckCell.swift */,
 				C1690C712015F60000C3638E /* NotLoadedCheckCell.swift */,
 			);
-			path = CheckHistory;
+			path = AllChecks;
 			sourceTree = "<group>";
 		};
 		C169B02D203C393900987727 /* FavouriteGuests */ = {
@@ -161,27 +193,23 @@
 		C16B3E7A1FF112B6005C99B8 /* SplitTheCheck */ = {
 			isa = PBXGroup;
 			children = (
-				C169B02D203C393900987727 /* FavouriteGuests */,
-				C1690C6C2015F55C00C3638E /* CheckHistory */,
-				C1369BC4200F83DD00830D45 /* Guests */,
+				C1690C6C2015F55C00C3638E /* AllChecks */,
 				C1619CB22008EAEA004640ED /* CheckInfo */,
-				C16B3E7B1FF112B6005C99B8 /* AppDelegate.swift */,
-				C1A8F73220FA904A00B0B644 /* StartViewController.swift */,
-				C1A22E2220FCB3E100286CD3 /* LoginViewController.swift */,
-				C1A22E2620FF38D600286CD3 /* ForgetViewController.swift */,
-				C1A22E2420FE208400286CD3 /* SignUpViewController.swift */,
-				C1FCE56A212C2FDB009B8C59 /* UserAgreementViewController.swift */,
-				C10CB24C2109E24400652794 /* NewPasswordViewController.swift */,
+				C1369BC4200F83DD00830D45 /* CheckGuests */,
+				C169B02D203C393900987727 /* FavouriteGuests */,
+				C104596421368F99007BD0A7 /* LoginViewControllers */,
+				C104596521369001007BD0A7 /* Services */,
+				C104596621369036007BD0A7 /* CustomUIObjects */,
+				C16B3E7D1FF112B6005C99B8 /* scanViewController.swift */,
 				C16B3E7F1FF112B6005C99B8 /* Main.storyboard */,
 				C1FCE578212D8E64009B8C59 /* Main_2.storyboard */,
-				C1DA9E1A203EC67D0014C0DB /* Assets.xcassets */,
 				C16B3E841FF112B6005C99B8 /* LaunchScreen.storyboard */,
+				C1DA9E1A203EC67D0014C0DB /* Assets.xcassets */,
 				C16B3E871FF112B6005C99B8 /* Info.plist */,
 				C1902DB0212ED026009F00CF /* GoogleService-Info.plist */,
-				C1619CAE2008CBE2004640ED /* RequestService.swift */,
 				C1A0672E200CF16E007AD89A /* CustomButton.swift */,
 				C1FCE56C212C38EF009B8C59 /* Checkbox.swift */,
-				C16B3E7D1FF112B6005C99B8 /* scanViewController.swift */,
+				C16B3E7B1FF112B6005C99B8 /* AppDelegate.swift */,
 			);
 			path = SplitTheCheck;
 			sourceTree = "<group>";
@@ -357,22 +385,23 @@
 			files = (
 				C169B031203C399F00987727 /* FavGuestCell.swift in Sources */,
 				C1A22E2720FF38D600286CD3 /* ForgetViewController.swift in Sources */,
-				C1619CB12008D339004640ED /* CheckInfo.swift in Sources */,
-				C18BDA771FF2951F0008E58F /* ResultViewController.swift in Sources */,
-				C1619CB42008EB61004640ED /* ResultCell.swift in Sources */,
-				C1690C7B2019FCBD00C3638E /* QrStringInfo.swift in Sources */,
+				C1619CB12008D339004640ED /* CheckInfoObject.swift in Sources */,
+				C18BDA771FF2951F0008E58F /* CheckInfoViewController.swift in Sources */,
+				C1619CB42008EB61004640ED /* CheckInfoCell.swift in Sources */,
+				C1690C7B2019FCBD00C3638E /* QrStringInfoObject.swift in Sources */,
 				C1FCE56B212C2FDB009B8C59 /* UserAgreementViewController.swift in Sources */,
 				C169B02F203C397100987727 /* FavGuestViewController.swift in Sources */,
 				C1619CAF2008CBE2004640ED /* RequestService.swift in Sources */,
 				C1FCE56D212C38EF009B8C59 /* Checkbox.swift in Sources */,
 				C1369BC3200D227000830D45 /* HeaderCell.swift in Sources */,
 				C1A22E2320FCB3E100286CD3 /* LoginViewController.swift in Sources */,
-				C1690C6E2015F58F00C3638E /* CheckHistoryViewController.swift in Sources */,
-				C1369BC8200F86B100830D45 /* GuestViewController.swift in Sources */,
+				C1690C6E2015F58F00C3638E /* AllChecksViewController.swift in Sources */,
+				C1369BC8200F86B100830D45 /* CheckGuestsViewController.swift in Sources */,
 				C1690C702015F5E400C3638E /* LoadedCheckCell.swift in Sources */,
 				C1A0672F200CF16E007AD89A /* CustomButton.swift in Sources */,
 				C1369BCA200F870B00830D45 /* FavouriteGuestCell.swift in Sources */,
-				C1369BC6200F841700830D45 /* GuestInfo.swift in Sources */,
+				C104596321368F0C007BD0A7 /* RealmServices.swift in Sources */,
+				C1369BC6200F841700830D45 /* GuestInfoObject.swift in Sources */,
 				C1A22E2520FE208400286CD3 /* SignUpViewController.swift in Sources */,
 				C1A8F73320FA904A00B0B644 /* StartViewController.swift in Sources */,
 				C16B3E7E1FF112B6005C99B8 /* scanViewController.swift in Sources */,

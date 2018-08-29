@@ -9,10 +9,10 @@
 import UIKit
 import RealmSwift
 
-class GuestViewController: UITableViewController, addGuestDelegate  {
+class CheckGuestsViewController: UITableViewController, addGuestDelegate  {
     
-    var favouriteGuests = List<GuestInfo>()
-    var newGuest = GuestInfo(name: "Гость 1")
+    var favouriteGuests = List<GuestInfoObject>()
+    var newGuest = GuestInfoObject(name: "Гость 1")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,14 +88,14 @@ class GuestViewController: UITableViewController, addGuestDelegate  {
     
     //добавляем нового гостя в guests по нажатию кнопки
     func addNewGuest(_ cell: AddGuestCell) {
-        newGuest = GuestInfo(name: cell.guestName.text!)
+        newGuest = GuestInfoObject(name: cell.guestName.text!)
         
         if cell.addToFavouritesBtnState == true {
             
             do {
                 let realm = try Realm()
                 realm.beginWrite()
-                favouriteGuests.append(GuestInfo(name: cell.guestName.text!))
+                favouriteGuests.append(GuestInfoObject(name: cell.guestName.text!))
                 print ("fav guests: \(favouriteGuests)")
 //                realm.add(newGuest, update: true)
                 try realm.commitWrite()
