@@ -38,8 +38,8 @@ class GuestViewController: UITableViewController, addGuestDelegate  {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         do {
-            Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
-            print("configuration changed")
+//            Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
+//            print("configuration changed")
             let realm = try Realm()
             realm.beginWrite()
             let user = realm.objects(User.self).first

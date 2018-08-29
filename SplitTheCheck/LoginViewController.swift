@@ -42,8 +42,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func logIn(_ sender: Any) {
-        logInBtn.backgroundColor = UIColor(red:0.66, green:0.52, blue:0.79, alpha:1.0)
-        logInBtn.titleLabel?.textColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
+        logInBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
         
         loginText.endEditing(true)
         pwdText.endEditing(true)

@@ -15,6 +15,7 @@ class RequestService {
     let user = UserDefaults.standard.string(forKey: "user")
     let password = UserDefaults.standard.string(forKey: "password")
     
+    //загружаем данные с сайта ФНС
     func loadData(receivedString: String){
         print("loadData func begin")
         
@@ -23,6 +24,7 @@ class RequestService {
         
         let headers = ["Authorization": "Basic \(base64LoginData)", "Device-Id": "84EDF5AE-13AE-42ED-9164-D77189481489", "Device-OS": "iOS 11.2.2", "Version":"2", "ClientVersion":"1.4.2", "Host": "proverkacheka.nalog.ru:8888", "Connection":"keep-alive", "Accept-Language": "ru;q=1", "User-Agent": "okhttp/3.0.1"]
         
+        //разбираем полученную строку на словарь с параметрами
         let params = receivedString
             .components(separatedBy: "&")
             .map { $0.components(separatedBy: "=") }
@@ -36,7 +38,8 @@ class RequestService {
         
         print ("params loaded")
         
-        let url = "http://proverkacheka.nalog.ru:8888/v1/inns/*/kkts/*/fss/\(params["fn"]!)/tickets/\(params["i"]!)?sendToEmail=no&fiscalSign=\(params["fp"]!)"
+        let url = "https://proverkacheka.nalog.ru:9999/v1/inns/*/kkts/*/fss/\(params["fn"]!)/tickets/\(params["i"]!)?fiscalSign=\(params["fp"]!)&sendToEmail=no"
+
         
             Alamofire.request(url, method: .get, headers: headers).validate(statusCode: 200..<600).responseData { response in
                 print ("Alamofire begin")
@@ -46,7 +49,7 @@ class RequestService {
                     let json = JSON(value)
                     if json.rawString() != "null" {
                         let qrStringItem = QrStringInfo(error: nil, qrString: receivedString, jsonString: json.rawString())
-                        let check = json["document"]["receipt"]["items"].flatMap {CheckInfo(json: $0.1)}
+                        let check = json["document"]["receipt"]["items"].compactMap {CheckInfo(json: $0.1)}
                         qrStringItem.addCheckItems(check)
                         self.saveQRString(string: qrStringItem)
                         print ("case success")
@@ -68,6 +71,7 @@ class RequestService {
 
     }
     
+    //сохраняем наш объект QrStringInfo в базу данных
     func saveQRString(string: QrStringInfo) {
         do {
 //            Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)

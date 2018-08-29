@@ -22,7 +22,6 @@ class CheckHistoryViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
 //        do {
 //            let realm = try Realm()
 //
@@ -35,11 +34,11 @@ class CheckHistoryViewController: UICollectionViewController {
 //        }
 //        UserDefaults.standard.set(false, forKey: "notFirstLaunch")
 //
-//
-//
+
 //                    Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
 //                    print("configuration changed")
         
+        //если это первый запуск программы, записываем имя пользователя как первого гостя
         if !UserDefaults.standard.bool(forKey: "notFirstLaunch") {
             let userName = UserDefaults.standard.string(forKey: "name") ?? "Я"
             do {
@@ -58,12 +57,7 @@ class CheckHistoryViewController: UICollectionViewController {
         
     }
 
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+    //при переходе на экран получаем из базы список чеков с основной информацией
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = false
         do {
@@ -78,27 +72,20 @@ class CheckHistoryViewController: UICollectionViewController {
         print("data reloaded")
     }
     
+    //если мы выбираем в списке чек, то...
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        //если информация о чеке загружена, переходим на страницу с информацией
         if (collectionView.cellForItem(at: indexPath) as? LoadedCheckCell) != nil {
             modifiedString = storedChecks![indexPath.item]
             performSegue(withIdentifier: "showCheckSegue", sender: nil)
-        } else if (collectionView.cellForItem(at: indexPath) as? NotLoadedCheckCell) != nil {
+        }
+        //если информация о чеке еще не загружена, пробуем загрузить
+        else if (collectionView.cellForItem(at: indexPath) as? NotLoadedCheckCell) != nil {
             print("cell as NotLoadedCheckCell")
             requestResult.loadData(receivedString: storedChecks![indexPath.item].qrString)
             getStringFromRealm()
             
         }
-    }
-
-
-    
-    func  showErrorAlert(_ error: String) {
-        let alert = UIAlertController(title: "Ошибка", message: error, preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
     }
 
     //нотификация об обновлении данных в базе
@@ -107,8 +94,8 @@ class CheckHistoryViewController: UICollectionViewController {
         storedChecks = realm.objects(QrStringInfo.self)
         token = storedChecks?.observe {[weak self] (changes: RealmCollectionChange) in
             switch changes {
-            case .initial (let results):
-                print ("initial results: \(results)")
+            case .initial ( _):
+                print ("initial results downloaded")
             case .update(_, _, let insertions, let modifications):
                 print("insertions: \(insertions)")
                 print("modifications: \(modifications)")
@@ -124,6 +111,16 @@ class CheckHistoryViewController: UICollectionViewController {
             }
         }
     }
+    
+    func  showErrorAlert(_ error: String) {
+        let alert = UIAlertController(title: "Ошибка", message: error, preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
+
+
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -167,6 +164,11 @@ class CheckHistoryViewController: UICollectionViewController {
         }
     }
 
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         print ("checkHistoryView disappears")
