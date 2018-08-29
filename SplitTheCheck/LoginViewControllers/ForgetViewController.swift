@@ -47,7 +47,7 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
-                self.showAlert(message: "Ошибка соединения с сервером")
+                Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 return
             }
             
@@ -69,29 +69,27 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
                 }
                 else if statusCode == 404 {
                     print ("User was not found, data = \(data)")
-                    self.showAlert(message: "Пользователь не найден")
+                    DispatchQueue.main.async {
+                        Alerts.showErrorAlert(VC: self, message: "Пользователь не найден")
+                    }
                 }
                 else {
                     print ("Unknown error, status code = \(statusCode), data = \(data)")
-                    self.showAlert(message: "Ошибка соединения с сервером")
+                    DispatchQueue.main.async {
+                        Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
+                    }
                 }
             }
             else {
                 print (httpResponse!.allHeaderFields)
-                self.showAlert(message: "Ошибка соединения с сервером")
+                DispatchQueue.main.async {
+                    Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
+                }
             }
         }
         
         task.resume()
 
-    }
-    
-    func  showAlert(message: String) {
-        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {

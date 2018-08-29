@@ -57,7 +57,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
-                self.showAlert(message: "Ошибка соединения с сервером")
+                Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 return
             }
             
@@ -82,43 +82,35 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 else if statusCode == 409 {
                     print ("User exists, data = \(data), thread \(Thread.isMainThread)")
                     DispatchQueue.main.async {
-                        self.showAlert(message: "Пользователь уже существует")
+                        Alerts.showErrorAlert(VC: self, message: "Пользователь уже существует")
                     }
                                     }
                 else if statusCode == 500 {
                     print ("Incorrect phone number, data = \(data), thread \(Thread.isMainThread)")
                     DispatchQueue.main.async {
-                        self.showAlert(message: "Некорректный номер телефона")
+                        Alerts.showErrorAlert(VC: self, message: "Некорректный номер телефона")
                     }
                 }
                 else if statusCode == 400 {
                     print ("Incorrect email, data = \(data), thread \(Thread.isMainThread)")
                     DispatchQueue.main.async {
-                        self.showAlert(message: "Некорректный адрес электронной почты")
+                        Alerts.showErrorAlert(VC: self, message: "Некорректный адрес электронной почты")
                     }
                 }
                 else {
                     print ("Unknown error, status code = \(statusCode), data = \(data), thread \(Thread.isMainThread)")
                     DispatchQueue.main.async {
-                        self.showAlert(message: "Ошибка соединения с сервером")
+                        Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                     }
                 }
             }
             else {
                 print (httpResponse!.allHeaderFields)
-                self.showAlert(message: "Ошибка соединения с сервером")
+                Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
             }
         }
         
         task.resume()
-    }
-    
-    func  showAlert(message: String) {
-        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {

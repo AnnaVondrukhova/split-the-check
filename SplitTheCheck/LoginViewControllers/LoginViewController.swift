@@ -65,7 +65,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
-                self.showAlert(message: "Ошибка соединения с сервером")
+                Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 return
             }
             
@@ -93,7 +93,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     //если авторизация не прошла, выдаем ошибку
                     print ("thread \(Thread.isMainThread)")
                     DispatchQueue.main.async {
-                        self.showAlert(message: "Неверный пользователь или пароль")
+                        Alerts.showErrorAlert(VC: self, message: "Неверный пользователь или пароль")
                         self.logInBtn.backgroundColor = UIColor(red:0.80, green:0.63, blue:0.95, alpha:1.0)
                         self.logInBtn.titleLabel?.textColor = UIColor.white
                     }
@@ -102,14 +102,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         
         task.resume()
-    }
-    
-    func  showAlert(message: String) {
-        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

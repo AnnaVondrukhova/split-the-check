@@ -12,7 +12,7 @@ import SwiftyJSON
 import AVFoundation
 import RealmSwift
 
-class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
 
 //    @IBOutlet weak var resultQRcode: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -23,7 +23,7 @@ class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     
     var token: NotificationToken?
     var storedChecks: Results<QrStringInfoObject>?
-    var addedString = QrStringInfoObject()
+    var addedString: QrStringInfoObject?
     
     let requestResult = RequestService()
 
@@ -102,6 +102,7 @@ class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
             let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj) as! AVMetadataMachineReadableCodeObject
             qrCodeFrameView?.frame = barCodeObject.bounds
             
+            self.captureSession?.stopRunning()
             activityIndicator.isHidden = false
             activityIndicator.startAnimating()
             
@@ -119,11 +120,10 @@ class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                         activityIndicator.isHidden = true
                         showDuplicateAlert(qrString: qrString)
                     }
-                    //если нет, пробуем загрузить данные
+                    //если нет, добавляем строку в базу и пробуем загрузить данные
                     else {
                         RequestService.loadData(receivedString: qrString)
-                        getStringFromRealm()
-                        print("got string from realm")
+                        RealmServices.getStringFromRealm(VC: self)
                     }
                 } catch {
                     print(error.localizedDescription)
@@ -131,64 +131,13 @@ class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
             }
             videoPreviewLayer?.isHidden = true
             qrCodeFrameView?.isHidden = true
-            self.captureSession?.stopRunning()
+            
             
         }
     }
+
     
-    //Нотификация о добавлении данных в базу.
-    //если была добавлена строка, записываем ее в addedString. Если есть ошибка, выдаем алерт с ошибкой.
-    //если ошибки нет, передаем полученную строку на ResultViewController и переходим туда
-    func getStringFromRealm() {
-        guard let realm = try? Realm() else {return}
-        storedChecks = realm.objects(QrStringInfoObject.self)
-        token = storedChecks?.observe {[weak self] (changes: RealmCollectionChange) in
-            switch changes {
-            case .initial (let results):
-                print ("initial results: \(results)")
-            case .update(_, _, let insertions, let modifications):
-                print("insertions: \(insertions)")
-                print("modifications: \(modifications)")
-                if insertions != [] {
-                    self?.addedString = (self?.storedChecks![insertions[0]])!
-                }
-                else if modifications != [] {
-                    self?.addedString = (self?.storedChecks![modifications[0]])!
-                }
-                else {
-                    print ("no insertions or modifications")
-                }
-                
-                if self?.addedString.error != nil {
-                    self?.activityIndicator.stopAnimating()
-                    self?.activityIndicator.isHidden = true
-                    self?.showErrorAlert((self?.addedString.error!)!)
-                    //!!ВОПРОС!! Переходить ли на страницу со списком чеков?
-                } else {
-                    self?.activityIndicator.stopAnimating()
-                    self?.performSegue(withIdentifier: "qrResult", sender: nil)
-                    print("segue performed")
-                }
-            case .error(let error):
-                print(error)
-            }
-        }
-    }
-    
-    //алерт с ошибкой о загрузке данных
-    func  showErrorAlert(_ error: String) {
-        let alert = UIAlertController(title: "Ошибка", message: error, preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "OK", style: .cancel, handler: {(action: UIAlertAction) in
-            self.videoPreviewLayer?.isHidden = false
-            self.qrCodeFrameView?.isHidden = false
-            self.captureSession?.startRunning()
-        })
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
-    }
-    
-    //алерт с информацией о том, что такой чек уже существует
+    //алерт при сканировании с информацией о том, что такой чек уже существует
     func showDuplicateAlert (qrString: String) {
         let alert = UIAlertController(title: "Ошибка", message: "Чек уже отсканирован", preferredStyle: .alert)
         
@@ -201,41 +150,19 @@ class scanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         let actionOk = UIAlertAction(title: "Перейти к чеку", style: .default, handler: {(action: UIAlertAction) in
             self.activityIndicator.isHidden = false
             self.activityIndicator.startAnimating()
-            self.getStringInfo(qrStringInfo: qrString)
+            RealmServices.getStringInfo(VC: self, token: self.token, qrStringInfo: qrString)
         })
         
         alert.addAction(actionOk)
         alert.addAction(actionCancel)
         present(alert, animated: true, completion: nil)
     }
-    
-    func getStringInfo(qrStringInfo: String) {
-        var realmQrString = QrStringInfoObject()
-        
-        do {
-                let realm = try Realm()
-            realmQrString = realm.object(ofType: QrStringInfoObject.self, forPrimaryKey: qrStringInfo)!
-            } catch {
-                print (error)
-            }
-        
-        if (realmQrString.jsonString != nil && realmQrString.jsonString != "null") {
-            self.addedString = realmQrString
-            performSegue(withIdentifier: "qrResult", sender: nil)
-        }
-        else {
-            RequestService.loadData(receivedString: qrStringInfo)
-            self.getStringFromRealm()
-            print("got string from realm")
-        }
-
-    }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "qrResult" {
             print("performing segue qrResult")
             let controller = segue.destination as! CheckInfoViewController
-            controller.parentString = addedString
+            controller.parentString = addedString!
         }
     }
     
