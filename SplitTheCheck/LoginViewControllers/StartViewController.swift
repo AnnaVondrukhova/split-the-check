@@ -17,11 +17,11 @@ class StartViewController: UIViewController {
         print("StartView did load")
         
         //Тестовый блок - УДАЛИТЬ
-//        let domain = Bundle.main.bundleIdentifier!
-//        UserDefaults.standard.removePersistentDomain(forName: domain)
-//        
-//        print ("UserDefaults cleared")
-//        
+        let domain = Bundle.main.bundleIdentifier!
+        UserDefaults.standard.removePersistentDomain(forName: domain)
+        
+        print ("UserDefaults cleared")
+        
 
     }
     

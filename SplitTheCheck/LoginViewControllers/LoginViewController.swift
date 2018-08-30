@@ -16,12 +16,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var forgetBtn: UIButton!
     @IBOutlet weak var logInBtn: CustomButton!
     @IBOutlet weak var signUpBtn: CustomButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         print ("LoginVC did load")
         
+        self.activityIndicator.isHidden = true
         self.loginText.delegate = self
         loginText.keyboardType = UIKeyboardType.numberPad
         pwdText.keyboardType = UIKeyboardType.numberPad
@@ -43,6 +45,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction func logIn(_ sender: Any) {
         logInBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
         
         loginText.endEditing(true)
         pwdText.endEditing(true)
@@ -65,14 +69,24 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
-                Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
+                DispatchQueue.main.async {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                    Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
+                }
                 return
             }
             
+            let httpResponse = response as? HTTPURLResponse
+            
             //если ответ получен, то:
-            if let httpResponse = response as? HTTPURLResponse {
-                let statusCode = httpResponse.statusCode
+            if httpResponse != nil {
+                let statusCode = httpResponse!.statusCode
                 print("Status code = \(statusCode)")
+                DispatchQueue.main.async {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                }
                 
                 if statusCode == 200 {
                     //если авторизация прошла, получаем имя и email пользователя, запоминаем, переходим на главную страницу приложения
@@ -89,19 +103,33 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         self.performSegue(withIdentifier: "fromLoginToCheckHistoryVC", sender: nil)
                     }
                 }
-                else {
+                else if statusCode == 403 {
                     //если авторизация не прошла, выдаем ошибку
                     print ("thread \(Thread.isMainThread)")
                     DispatchQueue.main.async {
                         Alerts.showErrorAlert(VC: self, message: "Неверный пользователь или пароль")
-                        self.logInBtn.backgroundColor = UIColor(red:0.80, green:0.63, blue:0.95, alpha:1.0)
-                        self.logInBtn.titleLabel?.textColor = UIColor.white
                     }
+                }
+                else {
+                    //при неизвестной ошибке выдаем ошибку соединения с сервером
+                    print ("Unknown error, status code = \(statusCode), data = \(data), thread \(Thread.isMainThread)")
+                    DispatchQueue.main.async {
+                        Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
+                    }
+                }
+            }
+            else {
+                print (httpResponse!.allHeaderFields)
+                DispatchQueue.main.async {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                    Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 }
             }
         }
         
         task.resume()
+        self.logInBtn.backgroundColor = UIColor(red:0.37, green:0.75, blue:0.62, alpha:1.0)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

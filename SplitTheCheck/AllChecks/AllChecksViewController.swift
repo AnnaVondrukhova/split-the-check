@@ -60,6 +60,7 @@ class AllChecksViewController: UICollectionViewController {
     //при переходе на экран получаем из базы список чеков с основной информацией
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = false
+        
         do {
             let realm = try Realm()
             self.storedChecks = realm.objects(QrStringInfoObject.self)

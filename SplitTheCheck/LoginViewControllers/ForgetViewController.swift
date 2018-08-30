@@ -12,10 +12,12 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var telText: UITextField!
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var getPwdBtn: CustomButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.activityIndicator.isHidden = true
         self.telText.delegate = self
         telText.keyboardType = UIKeyboardType.numberPad
     }
@@ -31,8 +33,9 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func getNewPwd(_ sender: Any) {
         //получаем новый пароль по номеру телефона
-        getPwdBtn.backgroundColor = UIColor(red:0.47, green:0.47, blue:0.47, alpha:1.0)
-        getPwdBtn.titleLabel?.textColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
+        getPwdBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
         
         let url = URL(string: "https://proverkacheka.nalog.ru:9999/v1/mobile/users/restore")
         
@@ -47,7 +50,11 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
-                Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
+                DispatchQueue.main.async {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                    Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
+                }
                 return
             }
             
@@ -57,6 +64,10 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
             if httpResponse != nil {
                 let statusCode = httpResponse!.statusCode
                 print("Status code = \(statusCode)")
+                DispatchQueue.main.async {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                }
                 
                 if statusCode == 204 {
                     print ("New password was sent")
@@ -64,7 +75,7 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
                     UserDefaults.standard.set(telNumber, forKey: "user")
                     //переходим на страницу ввода нового пароля
                     DispatchQueue.main.async {
-                        self.performSegue(withIdentifier: "toNewPasswordVC", sender: nil)
+                         self.performSegue(withIdentifier: "toNewPasswordVC", sender: nil)
                     }
                 }
                 else if statusCode == 404 {
@@ -83,13 +94,16 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
             else {
                 print (httpResponse!.allHeaderFields)
                 DispatchQueue.main.async {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
                     Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 }
             }
+            
         }
         
         task.resume()
-
+        self.getPwdBtn.backgroundColor = UIColor(red:0.37, green:0.75, blue:0.62, alpha:1.0)
     }
     
     override func didReceiveMemoryWarning() {
