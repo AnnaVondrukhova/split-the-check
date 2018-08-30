@@ -45,7 +45,7 @@
         <!--Login View Controller-->
         <scene sceneID="TPZ-cf-aK7">
             <objects>
-                <viewController id="A9k-wR-Ogm" customClass="LoginViewController" customModule="SplitTheCheck" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="A9k-wR-Ogm" customClass="LoginViewController" customModule="SplitTheCheck" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="533-Wr-VxK">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -578,6 +578,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="y3U-dc-bfh"/>
-        <segue reference="a0V-7Q-q8n"/>
+        <segue reference="7UP-3a-D1I"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -24,6 +24,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     var token: NotificationToken?
     var storedChecks: Results<QrStringInfoObject>?
     var addedString: QrStringInfoObject?
+    var qrString = ""
     
     let requestResult = RequestService()
 
@@ -107,7 +108,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
             activityIndicator.startAnimating()
             
             if metadataObj.stringValue != nil {
-                let qrString = metadataObj.stringValue!
+                qrString = metadataObj.stringValue!
                 
                 //проверяем, что такого чека еще нет в базе
                 do {
@@ -173,6 +174,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        captureSession?.stopRunning()
         print ("scanView disappears")
         token = nil
     }

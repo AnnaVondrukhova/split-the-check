@@ -54,7 +54,19 @@ class RealmServices {
                 if VC.addedString?.error != nil {
                     VC.activityIndicator.stopAnimating()
                     VC.activityIndicator.isHidden = true
-                    Alerts.showErrorAlert(VC: VC, message: (VC.addedString?.error!)!)
+                    switch  VC.addedString?.error {
+                    case "403":
+                        Alerts.authErrorAlert(VC: VC, message: "Неверный пользователь или пароль. Требуется повторная авторизация")
+                    case "406":
+                        Alerts.showErrorAlert(VC: VC, message: "Чек не найден")
+                    case "202":
+                        print ("Ошибка 202, повторяем запрос...")
+                        RequestService.loadData(receivedString: VC.qrString)
+                    case "500":
+                        Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
+                    default:
+                        Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
+                    }
                     //!!ВОПРОС!! Переходить ли на страницу со списком чеков?
                 } else {
                     VC.activityIndicator.stopAnimating()
@@ -84,7 +96,18 @@ class RealmServices {
                 print("modifications: \(modifications)")
                 VC.modifiedString = (VC.storedChecks?[modifications[0]])!
                 if VC.modifiedString.error != nil {
-                    Alerts.showErrorAlert(VC: VC, message: VC.modifiedString.error!)
+                    switch  VC.modifiedString.error {
+                    case "403":
+                        Alerts.authErrorAlert(VC: VC, message: "Неверный пользователь или пароль. Требуется повторная авторизация")
+                    case "406":
+                        Alerts.showErrorAlert(VC: VC, message: "Чек не найден")
+                    case "202":
+                        Alerts.showErrorAlert(VC: VC, message: "Повторите запрос")
+                    case "500":
+                        Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
+                    default:
+                        Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
+                    }
                 } else {
                     VC.performSegue(withIdentifier: "showCheckSegue", sender: nil)
                     print("showCheckSegue performed")

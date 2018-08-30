@@ -98,6 +98,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     UserDefaults.standard.set(password, forKey: "password")
                     UserDefaults.standard.set(name, forKey: "name")
                     UserDefaults.standard.set(email, forKey: "email")
+                    UserDefaults.standard.set(true, forKey: "isLoggedIn")
                     
                     DispatchQueue.main.async {
                         self.performSegue(withIdentifier: "fromLoginToCheckHistoryVC", sender: nil)
