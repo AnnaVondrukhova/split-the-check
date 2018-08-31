@@ -74,6 +74,10 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
             videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
             videoPreviewLayer?.frame = view.layer.bounds
             view.layer.addSublayer(videoPreviewLayer!)
+            
+            activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
+            view.bringSubview(toFront: activityIndicator)
+            activityIndicator.isHidden = true
 
             captureSession?.startRunning()
             print ("Capture session started running")
@@ -94,6 +98,8 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         if metadataObjects.count == 0 {
             qrCodeFrameView?.frame = CGRect.zero
         }
+        captureSession?.stopRunning()
+        qrCodeFrameView?.isHidden = true
         print ("got metadataObjects: \(metadataObjects)")
 
         let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
@@ -102,13 +108,13 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         if metadataObj.type == AVMetadataObject.ObjectType.qr {
             let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj) as! AVMetadataMachineReadableCodeObject
             qrCodeFrameView?.frame = barCodeObject.bounds
-            
-            self.captureSession?.stopRunning()
-            activityIndicator.isHidden = false
-            activityIndicator.startAnimating()
+
             
             if metadataObj.stringValue != nil {
                 qrString = metadataObj.stringValue!
+                activityIndicator.isHidden = false
+                activityIndicator.startAnimating()
+                print("started activity indicator")
                 
                 //проверяем, что такого чека еще нет в базе
                 do {
@@ -119,7 +125,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                     if !realmQrString {
                         activityIndicator.stopAnimating()
                         activityIndicator.isHidden = true
-                        showDuplicateAlert(qrString: qrString)
+                        showDuplicateAlert(qrString: self.qrString)
                     }
                     //если нет, добавляем строку в базу и пробуем загрузить данные
                     else {
@@ -130,8 +136,6 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                     print(error.localizedDescription)
                 }
             }
-            videoPreviewLayer?.isHidden = true
-            qrCodeFrameView?.isHidden = true
             
             
         }
@@ -151,6 +155,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         let actionOk = UIAlertAction(title: "Перейти к чеку", style: .default, handler: {(action: UIAlertAction) in
             self.activityIndicator.isHidden = false
             self.activityIndicator.startAnimating()
+            print("started activity indicator in showDuplicateAlert")
             RealmServices.getStringInfo(VC: self, token: self.token, qrStringInfo: qrString)
         })
         

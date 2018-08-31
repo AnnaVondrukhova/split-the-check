@@ -41,6 +41,7 @@ class RealmServices {
             case .update(_, _, let insertions, let modifications):
                 print("insertions: \(insertions)")
                 print("modifications: \(modifications)")
+                print ("thread in getStringFromRealm: \(Thread.isMainThread)")
                 if insertions != [] {
                     VC.addedString = VC.storedChecks?[insertions[0]]
                 }
@@ -52,19 +53,26 @@ class RealmServices {
                 }
                 
                 if VC.addedString?.error != nil {
-                    VC.activityIndicator.stopAnimating()
-                    VC.activityIndicator.isHidden = true
                     switch  VC.addedString?.error {
                     case "403":
+                        VC.activityIndicator.stopAnimating()
+                        VC.activityIndicator.isHidden = true
                         Alerts.authErrorAlert(VC: VC, message: "Неверный пользователь или пароль. Требуется повторная авторизация")
                     case "406":
+                        VC.activityIndicator.stopAnimating()
+                        VC.activityIndicator.isHidden = true
                         Alerts.showErrorAlert(VC: VC, message: "Чек не найден")
                     case "202":
                         print ("Ошибка 202, повторяем запрос...")
+                        usleep(500000)
                         RequestService.loadData(receivedString: VC.qrString)
                     case "500":
+                        VC.activityIndicator.stopAnimating()
+                        VC.activityIndicator.isHidden = true
                         Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
                     default:
+                        VC.activityIndicator.stopAnimating()
+                        VC.activityIndicator.isHidden = true
                         Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
                     }
                     //!!ВОПРОС!! Переходить ли на страницу со списком чеков?
