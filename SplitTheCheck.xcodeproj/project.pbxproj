@@ -128,6 +128,8 @@
 		C104596621369036007BD0A7 /* CustomUIObjects */ = {
 			isa = PBXGroup;
 			children = (
+				C1A0672E200CF16E007AD89A /* CustomButton.swift */,
+				C1FCE56C212C38EF009B8C59 /* Checkbox.swift */,
 			);
 			name = CustomUIObjects;
 			path = ..;
@@ -210,8 +212,6 @@
 				C1DA9E1A203EC67D0014C0DB /* Assets.xcassets */,
 				C16B3E871FF112B6005C99B8 /* Info.plist */,
 				C1902DB0212ED026009F00CF /* GoogleService-Info.plist */,
-				C1A0672E200CF16E007AD89A /* CustomButton.swift */,
-				C1FCE56C212C38EF009B8C59 /* Checkbox.swift */,
 				C16B3E7B1FF112B6005C99B8 /* AppDelegate.swift */,
 			);
 			path = SplitTheCheck;

@@ -8,12 +8,21 @@
 
 import UIKit
 import SwiftyJSON
+@IBDesignable
 
 class LoadedCheckCell: UICollectionViewCell {
     @IBOutlet weak var date: UILabel!
     
     @IBOutlet weak var sum: UILabel!
     @IBOutlet weak var shop: UILabel!
+    
+    @IBInspectable var cornerRadius: CGFloat = 0{
+        didSet{
+            self.layer.cornerRadius = cornerRadius
+        }
+    }
+    
+    
     
     func configure(jsonString: String) {
         let json = JSON.init(parseJSON: jsonString)
@@ -34,7 +43,12 @@ class LoadedCheckCell: UICollectionViewCell {
         
         
         self.date.text = date+"  "+time
-        self.shop.text = json["document"]["receipt"]["user"].stringValue
+        if json["document"]["receipt"]["user"].stringValue.replacingOccurrences(of: " ", with: "") != "" {
+            self.shop.text = json["document"]["receipt"]["user"].stringValue.replacingOccurrences(of: " ", with: "", options: [.anchored], range: nil )
+        }
+        else {
+            self.shop.text = "Без названия"
+        }
         self.sum.text = "\(json["document"]["receipt"]["totalSum"].doubleValue/100)"
     }
 }

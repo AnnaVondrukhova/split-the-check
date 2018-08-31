@@ -11,7 +11,7 @@ import SwiftyJSON
 import RealmSwift
 
 
-class AllChecksViewController: UICollectionViewController {
+class AllChecksViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
     var storedChecks: Results<QrStringInfoObject>?
     var jsonString = ""
@@ -71,6 +71,11 @@ class AllChecksViewController: UICollectionViewController {
 
         self.collectionView?.reloadData()
         print("data reloaded")
+    }
+    
+    //задаем ширину ячеек
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: self.view.bounds.width - 20, height: 60)
     }
     
     //если мы выбираем в списке чек, то...

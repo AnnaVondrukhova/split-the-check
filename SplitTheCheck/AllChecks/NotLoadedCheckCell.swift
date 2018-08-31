@@ -7,12 +7,20 @@
 //
 
 import UIKit
+@IBDesignable
 
 class NotLoadedCheckCell: UICollectionViewCell {
     
     @IBOutlet weak var qrImage: UIImageView!
     @IBOutlet weak var date: UILabel!
     @IBOutlet weak var sum: UILabel!
+    
+    @IBInspectable var cornerRadius: CGFloat = 0{
+        didSet{
+            self.layer.cornerRadius = cornerRadius
+        }
+    }
+
     
     func configure (qrString: String) {
         let fullDate: Date?
