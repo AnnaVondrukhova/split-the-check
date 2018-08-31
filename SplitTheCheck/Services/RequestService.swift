@@ -34,12 +34,10 @@ class RequestService {
                 dict[key] = value
                 return dict
         }
-        
         print ("params loaded")
         
         let url = "https://proverkacheka.nalog.ru:9999/v1/inns/*/kkts/*/fss/\(params["fn"]!)/tickets/\(params["i"]!)?fiscalSign=\(params["fp"]!)&sendToEmail=no"
-
-        
+                
             Alamofire.request(url, method: .get, headers: headers).validate(statusCode: 200..<600).responseData { response in
                 print ("Alamofire begin")
                 switch response.result {
@@ -53,16 +51,16 @@ class RequestService {
                         RealmServices.saveQRString(string: qrStringItem)
                         print ("case success")
                     } else {
-                        let qrStringItem = QrStringInfoObject(error: "No data received", qrString: receivedString, jsonString: nil)
+                        let qrStringItem = QrStringInfoObject(error: "\(response.response?.statusCode ?? 500)", qrString: receivedString, jsonString: nil)
                         RealmServices.saveQRString(string: qrStringItem)
-                        print("case error: \(String(describing: json.rawString()))")
+                        print("case error: \(String(describing: response.response?.statusCode))")
                     }
                     
                 //если не получили json, записываем строку в базу с jsonString = nil и error != nil
-                case .failure(let error):
-                    let qrStringItem = QrStringInfoObject(error: error.localizedDescription, qrString: receivedString, jsonString: nil)
+                case .failure:
+                    let qrStringItem = QrStringInfoObject(error: "\(response.response?.statusCode ?? 500)", qrString: receivedString, jsonString: nil)
                     RealmServices.saveQRString(string: qrStringItem)
-                    print("case error \(error)")
+                    print("case error \(String(describing: response.response?.statusCode))")
                 }
             }
         
@@ -70,5 +68,4 @@ class RequestService {
 
     }
     
-
 }

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9D7BF400B94D2315710BB53B /* Pods_SplitTheCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F4E5AAC67EC266DF5551386 /* Pods_SplitTheCheck.framework */; };
 		C104596321368F0C007BD0A7 /* RealmServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = C104596221368F0C007BD0A7 /* RealmServices.swift */; };
+		C104596821369A9A007BD0A7 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C104596721369A9A007BD0A7 /* Alerts.swift */; };
 		C10CB24D2109E24400652794 /* NewPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10CB24C2109E24400652794 /* NewPasswordViewController.swift */; };
 		C1369BC3200D227000830D45 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1369BC2200D227000830D45 /* HeaderCell.swift */; };
 		C1369BC6200F841700830D45 /* GuestInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1369BC5200F841700830D45 /* GuestInfoObject.swift */; };
@@ -25,7 +26,7 @@
 		C169B02F203C397100987727 /* FavGuestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C169B02E203C397100987727 /* FavGuestViewController.swift */; };
 		C169B031203C399F00987727 /* FavGuestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C169B030203C399F00987727 /* FavGuestCell.swift */; };
 		C16B3E7C1FF112B6005C99B8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16B3E7B1FF112B6005C99B8 /* AppDelegate.swift */; };
-		C16B3E7E1FF112B6005C99B8 /* scanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16B3E7D1FF112B6005C99B8 /* scanViewController.swift */; };
+		C16B3E7E1FF112B6005C99B8 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16B3E7D1FF112B6005C99B8 /* ScanViewController.swift */; };
 		C16B3E811FF112B6005C99B8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C16B3E7F1FF112B6005C99B8 /* Main.storyboard */; };
 		C16B3E861FF112B6005C99B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C16B3E841FF112B6005C99B8 /* LaunchScreen.storyboard */; };
 		C18BDA771FF2951F0008E58F /* CheckInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */; };
@@ -44,6 +45,7 @@
 /* Begin PBXFileReference section */
 		2F4E5AAC67EC266DF5551386 /* Pods_SplitTheCheck.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SplitTheCheck.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C104596221368F0C007BD0A7 /* RealmServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmServices.swift; sourceTree = "<group>"; };
+		C104596721369A9A007BD0A7 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		C10CB24C2109E24400652794 /* NewPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPasswordViewController.swift; sourceTree = "<group>"; };
 		C1369BC2200D227000830D45 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		C1369BC5200F841700830D45 /* GuestInfoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestInfoObject.swift; sourceTree = "<group>"; };
@@ -61,7 +63,7 @@
 		C169B030203C399F00987727 /* FavGuestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavGuestCell.swift; sourceTree = "<group>"; };
 		C16B3E781FF112B6005C99B8 /* SplitTheCheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SplitTheCheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C16B3E7B1FF112B6005C99B8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		C16B3E7D1FF112B6005C99B8 /* scanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = scanViewController.swift; sourceTree = "<group>"; };
+		C16B3E7D1FF112B6005C99B8 /* ScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
 		C16B3E801FF112B6005C99B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C16B3E851FF112B6005C99B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C16B3E871FF112B6005C99B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 			children = (
 				C1619CAE2008CBE2004640ED /* RequestService.swift */,
 				C104596221368F0C007BD0A7 /* RealmServices.swift */,
+				C104596721369A9A007BD0A7 /* Alerts.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -200,7 +203,7 @@
 				C104596421368F99007BD0A7 /* LoginViewControllers */,
 				C104596521369001007BD0A7 /* Services */,
 				C104596621369036007BD0A7 /* CustomUIObjects */,
-				C16B3E7D1FF112B6005C99B8 /* scanViewController.swift */,
+				C16B3E7D1FF112B6005C99B8 /* ScanViewController.swift */,
 				C16B3E7F1FF112B6005C99B8 /* Main.storyboard */,
 				C1FCE578212D8E64009B8C59 /* Main_2.storyboard */,
 				C16B3E841FF112B6005C99B8 /* LaunchScreen.storyboard */,
@@ -399,12 +402,13 @@
 				C1369BC8200F86B100830D45 /* CheckGuestsViewController.swift in Sources */,
 				C1690C702015F5E400C3638E /* LoadedCheckCell.swift in Sources */,
 				C1A0672F200CF16E007AD89A /* CustomButton.swift in Sources */,
+				C104596821369A9A007BD0A7 /* Alerts.swift in Sources */,
 				C1369BCA200F870B00830D45 /* FavouriteGuestCell.swift in Sources */,
 				C104596321368F0C007BD0A7 /* RealmServices.swift in Sources */,
 				C1369BC6200F841700830D45 /* GuestInfoObject.swift in Sources */,
 				C1A22E2520FE208400286CD3 /* SignUpViewController.swift in Sources */,
 				C1A8F73320FA904A00B0B644 /* StartViewController.swift in Sources */,
-				C16B3E7E1FF112B6005C99B8 /* scanViewController.swift in Sources */,
+				C16B3E7E1FF112B6005C99B8 /* ScanViewController.swift in Sources */,
 				C1690C722015F60000C3638E /* NotLoadedCheckCell.swift in Sources */,
 				C1369BCC200F873D00830D45 /* AddGuestCell.swift in Sources */,
 				C16B3E7C1FF112B6005C99B8 /* AppDelegate.swift in Sources */,

@@ -60,6 +60,7 @@ class AllChecksViewController: UICollectionViewController {
     //при переходе на экран получаем из базы список чеков с основной информацией
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = false
+        
         do {
             let realm = try Realm()
             self.storedChecks = realm.objects(QrStringInfoObject.self)
@@ -83,43 +84,9 @@ class AllChecksViewController: UICollectionViewController {
         else if (collectionView.cellForItem(at: indexPath) as? NotLoadedCheckCell) != nil {
             print("cell as NotLoadedCheckCell")
             RequestService.loadData(receivedString: storedChecks![indexPath.item].qrString)
-            getStringFromRealm()
-            
+            RealmServices.getStringFromRealm(VC: self)
         }
     }
-
-    //нотификация об обновлении данных в базе
-    func getStringFromRealm() {
-        guard let realm = try? Realm() else {return}
-        storedChecks = realm.objects(QrStringInfoObject.self)
-        token = storedChecks?.observe {[weak self] (changes: RealmCollectionChange) in
-            switch changes {
-            case .initial ( _):
-                print ("initial results downloaded")
-            case .update(_, _, let insertions, let modifications):
-                print("insertions: \(insertions)")
-                print("modifications: \(modifications)")
-                self?.modifiedString = (self?.storedChecks![modifications[0]])!
-                if self?.modifiedString.error != nil {
-                    self?.showErrorAlert((self?.modifiedString.error!)!)
-                } else {
-                    self?.performSegue(withIdentifier: "showCheckSegue", sender: nil)
-                    print("segue performed")
-                }
-            case .error(let error):
-                print(error)
-            }
-        }
-    }
-    
-    func  showErrorAlert(_ error: String) {
-        let alert = UIAlertController(title: "Ошибка", message: error, preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
-    }
-
 
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {

@@ -19,16 +19,16 @@ class StartViewController: UIViewController {
         //Тестовый блок - УДАЛИТЬ
 //        let domain = Bundle.main.bundleIdentifier!
 //        UserDefaults.standard.removePersistentDomain(forName: domain)
-//        
+//
 //        print ("UserDefaults cleared")
-//        
+//
 
     }
     
     //проверка на автоматический вход в приложение
     override func viewDidAppear(_ animated: Bool) {
         //запрос на авторизацию
-        if UserDefaults.standard.bool(forKey: "notFirstLaunch") {
+        if UserDefaults.standard.bool(forKey: "isLoggedIn") {
             self.performSegue(withIdentifier: "toCheckHistoryVC", sender: nil)
         }
         

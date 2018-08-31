@@ -16,10 +16,12 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var checkbox: Checkbox!
     @IBOutlet weak var agreementBtn: UIButton!
     @IBOutlet weak var signUpBtn: CustomButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.activityIndicator.isHidden = true
         self.telText.delegate = self
         telText.keyboardType = UIKeyboardType.numberPad
 //        agreementBtn.titleLabel?.attributedText = NSAttributedString(string: (agreementBtn.titleLabel?.text!)!, attributes: [.underlineStyle: NSUnderlineStyle.styleSingle.rawValue])
@@ -38,8 +40,9 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func signUp(_ sender: Any) {
         //регистрируем пользователя
-        signUpBtn.backgroundColor = UIColor(red:0.47, green:0.47, blue:0.47, alpha:1.0)
-        signUpBtn.titleLabel?.textColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
+        signUpBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
         
         let name = nameText.text ?? ""
         let email = emailText.text ?? ""
@@ -57,7 +60,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
-                self.showAlert(message: "Ошибка соединения с сервером")
+                DispatchQueue.main.async {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                    Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
+                }
                 return
             }
             
@@ -67,6 +74,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             if httpResponse != nil {
                 let statusCode = httpResponse!.statusCode
                 print("Status code = \(statusCode)")
+                DispatchQueue.main.async {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                }
                 
                 if statusCode == 204 {
                     print ("New password was sent")
@@ -82,50 +93,47 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 else if statusCode == 409 {
                     print ("User exists, data = \(data), thread \(Thread.isMainThread)")
                     DispatchQueue.main.async {
-                        self.showAlert(message: "Пользователь уже существует")
+                        Alerts.showErrorAlert(VC: self, message: "Пользователь уже существует")
                     }
                                     }
                 else if statusCode == 500 {
                     print ("Incorrect phone number, data = \(data), thread \(Thread.isMainThread)")
                     DispatchQueue.main.async {
-                        self.showAlert(message: "Некорректный номер телефона")
+                        Alerts.showErrorAlert(VC: self, message: "Некорректный номер телефона")
                     }
                 }
                 else if statusCode == 400 {
                     print ("Incorrect email, data = \(data), thread \(Thread.isMainThread)")
                     DispatchQueue.main.async {
-                        self.showAlert(message: "Некорректный адрес электронной почты")
+                        Alerts.showErrorAlert(VC: self, message: "Некорректный адрес электронной почты")
                     }
                 }
                 else {
                     print ("Unknown error, status code = \(statusCode), data = \(data), thread \(Thread.isMainThread)")
                     DispatchQueue.main.async {
-                        self.showAlert(message: "Ошибка соединения с сервером")
+                        Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                     }
                 }
             }
             else {
                 print (httpResponse!.allHeaderFields)
-                self.showAlert(message: "Ошибка соединения с сервером")
+                DispatchQueue.main.async {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                    Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
+                }
             }
         }
         
         task.resume()
-    }
-    
-    func  showAlert(message: String) {
-        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
+        self.signUpBtn.backgroundColor = UIColor(red:0.37, green:0.75, blue:0.62, alpha:1.0)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
 }
 
 extension SignUpViewController: CheckboxDelegate {

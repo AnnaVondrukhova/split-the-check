@@ -28,6 +28,7 @@ class CheckInfoViewController: UIViewController, ResultCellDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         print ("viewDidLoad")
+        
         self.checkTableView?.rowHeight = 60
         self.tabBarController?.tabBar.isHidden = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveTheCheck))
