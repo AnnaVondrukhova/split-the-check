@@ -49,6 +49,6 @@ class LoadedCheckCell: UICollectionViewCell {
         else {
             self.shop.text = "Без названия"
         }
-        self.sum.text = "\(json["document"]["receipt"]["totalSum"].doubleValue/100)"
+        self.sum.text = String(format: "%.2f", json["document"]["receipt"]["totalSum"].doubleValue/100)
     }
 }
