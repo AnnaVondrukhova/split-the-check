@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y3O-BF-Gx7">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.13.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y3O-BF-Gx7">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.9"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -51,7 +51,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Номер телефона" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="9ZJ-Db-0jB">
-                                <rect key="frame" x="102" y="208" width="170" height="30"/>
+                                <rect key="frame" x="102.5" y="208" width="170" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="c05-CB-o3a"/>
                                     <constraint firstAttribute="width" constant="170" id="ne3-89-I9R"/>
@@ -61,7 +61,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Пароль" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="I5G-vL-v8V">
-                                <rect key="frame" x="102" y="258" width="170" height="30"/>
+                                <rect key="frame" x="102.5" y="258" width="170" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="170" id="2db-Vz-43a"/>
                                     <constraint firstAttribute="height" constant="30" id="ujb-Ua-BlH"/>
@@ -84,7 +84,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eoC-BP-Aaz" customClass="CustomButton" customModule="SplitTheCheck" customModuleProvider="target">
-                                <rect key="frame" x="132" y="366" width="110" height="30"/>
+                                <rect key="frame" x="132.5" y="366" width="110" height="30"/>
                                 <color key="backgroundColor" red="0.36862745098039218" green="0.74509803921568629" blue="0.62352941176470589" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="110" id="Cz0-Oj-59z"/>
@@ -103,7 +103,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wZm-yY-2Jj" customClass="CustomButton" customModule="SplitTheCheck" customModuleProvider="target">
-                                <rect key="frame" x="132" y="411" width="110" height="30"/>
+                                <rect key="frame" x="132.5" y="411" width="110" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="110" id="7HR-45-592"/>
                                     <constraint firstAttribute="height" constant="30" id="EgC-tb-Pir"/>
@@ -195,7 +195,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1P9-iz-qbW" customClass="CustomButton" customModule="SplitTheCheck" customModuleProvider="target">
-                                <rect key="frame" x="112" y="279" width="150" height="30"/>
+                                <rect key="frame" x="112.5" y="279" width="150" height="30"/>
                                 <color key="backgroundColor" red="0.36862745099999999" green="0.74509803919999995" blue="0.62352941179999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="BbR-FB-fvf"/>
@@ -214,7 +214,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="На указанный номер будет отправлено SMS с паролем" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5gW-d7-UJ8">
-                                <rect key="frame" x="88" y="199" width="200" height="40"/>
+                                <rect key="frame" x="87.5" y="199" width="200" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="ukN-Rk-CsO"/>
                                     <constraint firstAttribute="width" constant="200" id="ylo-rG-Vct"/>
@@ -344,7 +344,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите пароль из SMS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lyJ-fp-2Jp">
-                                <rect key="frame" x="87" y="199" width="200" height="20"/>
+                                <rect key="frame" x="87.5" y="199" width="200" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="qtv-Iw-qE7"/>
                                     <constraint firstAttribute="width" constant="200" id="wb8-P0-FHy"/>
@@ -354,7 +354,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qeg-2Z-leQ" customClass="CustomButton" customModule="SplitTheCheck" customModuleProvider="target">
-                                <rect key="frame" x="132" y="279" width="110" height="30"/>
+                                <rect key="frame" x="132.5" y="279" width="110" height="30"/>
                                 <color key="backgroundColor" red="0.36862745099999999" green="0.74509803919999995" blue="0.62352941179999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="110" id="d9Y-zr-r5O"/>
@@ -433,7 +433,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jMX-mr-64Z" customClass="CustomButton" customModule="SplitTheCheck" customModuleProvider="target">
-                                <rect key="frame" x="132" y="419" width="110" height="30"/>
+                                <rect key="frame" x="132.5" y="419" width="110" height="30"/>
                                 <color key="backgroundColor" red="0.36862745099999999" green="0.74509803919999995" blue="0.62352941179999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="110" id="J6R-PG-Ofv"/>
@@ -578,6 +578,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="y3U-dc-bfh"/>
-        <segue reference="dXZ-De-ubA"/>
+        <segue reference="a0V-7Q-q8n"/>
     </inferredMetricsTieBreakers>
 </document>
