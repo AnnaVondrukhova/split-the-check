@@ -13,14 +13,30 @@ import RealmSwift
 
 class AllChecksViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
-    var storedChecks: Results<QrStringInfoObject>?
+    var storedChecks: [QrStringInfoObject]?
     var jsonString = ""
     let requestResult = RequestService()
     var token: NotificationToken?
     var modifiedString = QrStringInfoObject()
+    var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    var waitingLabel: UILabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        activityIndicator.color = UIColor.darkGray
+        activityIndicator.center = self.view.center
+        self.view.addSubview(activityIndicator)
+        self.view.bringSubview(toFront: activityIndicator)
+        
+        waitingLabel.text = "Обработка чека..."
+        waitingLabel.textColor = UIColor.darkGray
+        waitingLabel.font = UIFont.systemFont(ofSize: 15)
+        waitingLabel.frame.size = CGSize(width: 127, height: 20)
+        waitingLabel.center.x = self.view.center.x
+        waitingLabel.center.y = self.view.center.y + activityIndicator.frame.height/2 + 18
+        self.view.addSubview(waitingLabel)
+        self.view.bringSubview(toFront: waitingLabel)
         
 //        do {
 //            let realm = try Realm()
@@ -60,10 +76,12 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
     //при переходе на экран получаем из базы список чеков с основной информацией
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = false
+        activityIndicator.isHidden = true
+        waitingLabel.isHidden = true
         
         do {
             let realm = try Realm()
-            self.storedChecks = realm.objects(QrStringInfoObject.self)
+            self.storedChecks = realm.objects(QrStringInfoObject.self).reversed()
             print(realm.configuration.fileURL as Any)
         } catch {
             print(error.localizedDescription)
@@ -88,8 +106,11 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
         //если информация о чеке еще не загружена, пробуем загрузить
         else if (collectionView.cellForItem(at: indexPath) as? NotLoadedCheckCell) != nil {
             print("cell as NotLoadedCheckCell")
+            activityIndicator.isHidden = false
+            waitingLabel.isHidden = false
+            activityIndicator.startAnimating()
             RequestService.loadData(receivedString: storedChecks![indexPath.item].qrString)
-            RealmServices.getStringFromRealm(VC: self)
+            RealmServices.getStringFromRealm(VC: self, qrString: storedChecks![indexPath.item].qrString)
         }
     }
 

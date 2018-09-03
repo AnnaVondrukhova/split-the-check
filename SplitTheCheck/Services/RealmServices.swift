@@ -57,10 +57,12 @@ class RealmServices {
                     case "403":
                         VC.activityIndicator.stopAnimating()
                         VC.activityIndicator.isHidden = true
+                        VC.waitingLabel.isHidden = true
                         Alerts.authErrorAlert(VC: VC, message: "Неверный пользователь или пароль. Требуется повторная авторизация")
                     case "406":
                         VC.activityIndicator.stopAnimating()
                         VC.activityIndicator.isHidden = true
+                        VC.waitingLabel.isHidden = true
                         Alerts.showErrorAlert(VC: VC, message: "Чек не найден")
                     case "202":
                         print ("Ошибка 202, повторяем запрос...")
@@ -69,10 +71,12 @@ class RealmServices {
                     case "500":
                         VC.activityIndicator.stopAnimating()
                         VC.activityIndicator.isHidden = true
+                        VC.waitingLabel.isHidden = true
                         Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
                     default:
                         VC.activityIndicator.stopAnimating()
                         VC.activityIndicator.isHidden = true
+                        VC.waitingLabel.isHidden = true
                         Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
                     }
                     //!!ВОПРОС!! Переходить ли на страницу со списком чеков?
@@ -91,11 +95,12 @@ class RealmServices {
     //Нотификация об обновлении данных в базе для AllChecksViewController
     //Если строка была обновлена, записываем ее в modifiedString. Если в ней есть ошибка, выдаем алерт с ошибкой.
     //если ошибки нет, передаем полученную строку на CheckInfoViewController и переходим туда
-    static func getStringFromRealm(VC: AllChecksViewController) {
+    static func getStringFromRealm(VC: AllChecksViewController, qrString: String) {
         print ("getStringFromRealm for AllChecksViewController")
         guard let realm = try? Realm() else {return}
-        VC.storedChecks = realm.objects(QrStringInfoObject.self)
-        VC.token = VC.storedChecks?.observe {(changes: RealmCollectionChange) in
+        var storedChecks: Results<QrStringInfoObject>?
+        storedChecks = realm.objects(QrStringInfoObject.self)
+        VC.token = storedChecks?.observe {(changes: RealmCollectionChange) in
             switch changes {
             case .initial ( _):
                 print ("initial results downloaded")
@@ -106,17 +111,32 @@ class RealmServices {
                 if VC.modifiedString.error != nil {
                     switch  VC.modifiedString.error {
                     case "403":
+                        VC.activityIndicator.stopAnimating()
+                        VC.activityIndicator.isHidden = true
+                        VC.waitingLabel.isHidden = true
                         Alerts.authErrorAlert(VC: VC, message: "Неверный пользователь или пароль. Требуется повторная авторизация")
                     case "406":
+                        VC.activityIndicator.stopAnimating()
+                        VC.activityIndicator.isHidden = true
+                        VC.waitingLabel.isHidden = true
                         Alerts.showErrorAlert(VC: VC, message: "Чек не найден")
                     case "202":
-                        Alerts.showErrorAlert(VC: VC, message: "Повторите запрос")
+                        print ("Ошибка 202, повторяем запрос...")
+                        usleep(500000)
+                        RequestService.loadData(receivedString: qrString)
                     case "500":
+                        VC.activityIndicator.stopAnimating()
+                        VC.activityIndicator.isHidden = true
+                        VC.waitingLabel.isHidden = true
                         Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
                     default:
+                        VC.activityIndicator.stopAnimating()
+                        VC.activityIndicator.isHidden = true
+                        VC.waitingLabel.isHidden = true
                         Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
                     }
                 } else {
+                    VC.activityIndicator.stopAnimating()
                     VC.performSegue(withIdentifier: "showCheckSegue", sender: nil)
                     print("showCheckSegue performed")
                 }
