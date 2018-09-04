@@ -56,6 +56,6 @@ class NotLoadedCheckCell: UICollectionViewCell {
         
         self.date.text = date+"  "+time
         self.sum.text = params["s"]
-        self.qrImage.image = UIImage(named: "qrCode")
+//        self.qrImage.image = UIImage(named: "qrCode")
     }
 }

@@ -31,7 +31,9 @@ class FavGuestViewController: UITableViewController {
             let realm = try Realm()
             realm.beginWrite()
             let user = realm.objects(User.self).first
-            self.favouriteGuests = (user?.guests)!
+            if user?.guests != nil {
+                self.favouriteGuests = (user?.guests)!
+            }
             try realm.commitWrite()
             print(realm.configuration.fileURL as Any)
             print ("View will appear: fav guests: \(self.favouriteGuests)")

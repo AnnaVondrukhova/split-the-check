@@ -12,16 +12,22 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var telText: UITextField!
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var getPwdBtn: CustomButton!
+    @IBOutlet weak var waitingView: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.activityIndicator.isHidden = true
+        waitingView.layer.cornerRadius = 10
+        waitingView.layer.opacity = 0.8
+        self.activityIndicator.hidesWhenStopped = true
         self.telText.delegate = self
         telText.keyboardType = UIKeyboardType.numberPad
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        waitingView.isHidden = true
+    }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         print ("did begin editing")
@@ -34,7 +40,7 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
     @IBAction func getNewPwd(_ sender: Any) {
         //получаем новый пароль по номеру телефона
         getPwdBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
-        activityIndicator.isHidden = false
+        waitingView.isHidden = false
         activityIndicator.startAnimating()
         
         let url = URL(string: "https://proverkacheka.nalog.ru:9999/v1/mobile/users/restore")
@@ -51,8 +57,8 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
                 DispatchQueue.main.async {
-                    self.activityIndicator.isHidden = true
                     self.activityIndicator.stopAnimating()
+                    self.waitingView.isHidden = true
                     Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 }
                 return
@@ -65,8 +71,8 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
                 let statusCode = httpResponse!.statusCode
                 print("Status code = \(statusCode)")
                 DispatchQueue.main.async {
-                    self.activityIndicator.isHidden = true
                     self.activityIndicator.stopAnimating()
+                    self.waitingView.isHidden = true
                 }
                 
                 if statusCode == 204 {
@@ -94,8 +100,8 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
             else {
                 print (httpResponse!.allHeaderFields)
                 DispatchQueue.main.async {
-                    self.activityIndicator.isHidden = true
                     self.activityIndicator.stopAnimating()
+                    self.waitingView.isHidden = true
                     Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 }
             }

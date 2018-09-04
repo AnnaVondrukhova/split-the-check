@@ -17,6 +17,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
 //    @IBOutlet weak var resultQRcode: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var waitingLabel: UILabel!
+    @IBOutlet weak var waitingView: UIView!
     
     var captureSession: AVCaptureSession?
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
@@ -37,6 +38,9 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         super.viewDidLoad()
         
         print ("scan view controller did load")
+        activityIndicator.hidesWhenStopped = true
+        waitingView.layer.cornerRadius = 10
+        waitingView.layer.opacity = 0.8
     }
 
 //    func saveCheckItems(checkItems: [CheckInfo], qrString: String) {
@@ -77,10 +81,11 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
             view.layer.addSublayer(videoPreviewLayer!)
             
             activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
+            view.bringSubview(toFront: waitingView)
             view.bringSubview(toFront: waitingLabel)
             view.bringSubview(toFront: activityIndicator)
-            activityIndicator.isHidden = true
             waitingLabel.isHidden = true
+            waitingView.isHidden = true
 
             captureSession?.startRunning()
             print ("Capture session started running")
@@ -115,9 +120,9 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
             
             if metadataObj.stringValue != nil {
                 qrString = metadataObj.stringValue!
-                activityIndicator.isHidden = false
                 activityIndicator.startAnimating()
                 waitingLabel.isHidden = false
+                waitingView.isHidden = false
                 print("started activity indicator")
                 
                 //проверяем, что такого чека еще нет в базе
@@ -128,8 +133,8 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                     //если есть, выдаем ошибку
                     if !realmQrString {
                         activityIndicator.stopAnimating()
-                        activityIndicator.isHidden = true
                         waitingLabel.isHidden = true
+                        waitingView.isHidden = true
                         showDuplicateAlert(qrString: self.qrString)
                     }
                     //если нет, добавляем строку в базу и пробуем загрузить данные
@@ -158,9 +163,9 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         })
         //если выбираем "Перейти к чеку", то пытаемся загрузить данные
         let actionOk = UIAlertAction(title: "Перейти к чеку", style: .default, handler: {(action: UIAlertAction) in
-            self.activityIndicator.isHidden = false
             self.activityIndicator.startAnimating()
             self.waitingLabel.isHidden = false
+            self.waitingView.isHidden = false
             print("started activity indicator in showDuplicateAlert")
             RealmServices.getStringInfo(VC: self, token: self.token, qrStringInfo: qrString)
         })

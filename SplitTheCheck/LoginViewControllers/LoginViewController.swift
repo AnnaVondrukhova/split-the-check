@@ -16,6 +16,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var forgetBtn: UIButton!
     @IBOutlet weak var logInBtn: CustomButton!
     @IBOutlet weak var signUpBtn: CustomButton!
+    @IBOutlet weak var waitingView: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
@@ -23,7 +24,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         print ("LoginVC did load")
         
-        self.activityIndicator.isHidden = true
+        waitingView.layer.cornerRadius = 10
+        waitingView.layer.opacity = 0.8
+        self.activityIndicator.hidesWhenStopped = true
         self.loginText.delegate = self
         loginText.keyboardType = UIKeyboardType.numberPad
         pwdText.keyboardType = UIKeyboardType.numberPad
@@ -33,6 +36,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.isNavigationBarHidden = true
+        waitingView.isHidden = true
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -45,7 +49,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction func logIn(_ sender: Any) {
         logInBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
-        activityIndicator.isHidden = false
+        waitingView.isHidden = false
         activityIndicator.startAnimating()
         
         loginText.endEditing(true)
@@ -70,8 +74,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
                 DispatchQueue.main.async {
-                    self.activityIndicator.isHidden = true
                     self.activityIndicator.stopAnimating()
+                    self.waitingView.isHidden = true
                     Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 }
                 return
@@ -84,8 +88,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 let statusCode = httpResponse!.statusCode
                 print("Status code = \(statusCode)")
                 DispatchQueue.main.async {
-                    self.activityIndicator.isHidden = true
                     self.activityIndicator.stopAnimating()
+                    self.waitingView.isHidden = true
                 }
                 
                 if statusCode == 200 {
@@ -122,8 +126,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             else {
                 print (httpResponse!.allHeaderFields)
                 DispatchQueue.main.async {
-                    self.activityIndicator.isHidden = true
                     self.activityIndicator.stopAnimating()
+                    self.waitingView.isHidden = true
                     Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 }
             }

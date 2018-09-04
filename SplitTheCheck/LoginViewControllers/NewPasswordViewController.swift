@@ -12,18 +12,25 @@ import SwiftyJSON
 class NewPasswordViewController: UIViewController {
     @IBOutlet weak var pwdText: UITextField!
     @IBOutlet weak var logInBtn: CustomButton!
+    @IBOutlet weak var waitingView: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.activityIndicator.isHidden = true
+        waitingView.layer.cornerRadius = 10
+        waitingView.layer.opacity = 0.8
+        self.activityIndicator.hidesWhenStopped = true
         pwdText.keyboardType = UIKeyboardType.numberPad
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        waitingView.isHidden = true
     }
 
     @IBAction func logIn(_ sender: Any) {
         logInBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
-        activityIndicator.isHidden = false
+        waitingView.isHidden = false
         activityIndicator.startAnimating()
         
         pwdText.endEditing(true)
@@ -47,8 +54,8 @@ class NewPasswordViewController: UIViewController {
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
                 DispatchQueue.main.async {
-                    self.activityIndicator.isHidden = true
                     self.activityIndicator.stopAnimating()
+                    self.waitingView.isHidden = true
                     Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 }
                 return
@@ -61,8 +68,8 @@ class NewPasswordViewController: UIViewController {
                 let statusCode = httpResponse!.statusCode
                 print("Status code = \(statusCode)")
                 DispatchQueue.main.async {
-                    self.activityIndicator.isHidden = true
                     self.activityIndicator.stopAnimating()
+                    self.waitingView.isHidden = true
                 }
                 
                 if statusCode == 200 {
@@ -100,8 +107,8 @@ class NewPasswordViewController: UIViewController {
             else {
                 print (httpResponse!.allHeaderFields)
                 DispatchQueue.main.async {
-                    self.activityIndicator.isHidden = true
                     self.activityIndicator.stopAnimating()
+                    self.waitingView.isHidden = true
                     Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 }
             }

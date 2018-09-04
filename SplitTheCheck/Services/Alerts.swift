@@ -23,6 +23,7 @@ class Alerts {
                 scanVC.qrCodeFrameView?.isHidden = false
                 scanVC.captureSession?.startRunning()
             }
+
         })
         alert.addAction(action)
         VC.present(alert, animated: true, completion: nil)

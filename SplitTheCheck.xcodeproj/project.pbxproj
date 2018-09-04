@@ -141,7 +141,6 @@
 				C1369BC7200F86B100830D45 /* CheckGuestsViewController.swift */,
 				C1369BC9200F870B00830D45 /* FavouriteGuestCell.swift */,
 				C1369BCB200F873D00830D45 /* AddGuestCell.swift */,
-				C1369BC5200F841700830D45 /* GuestInfoObject.swift */,
 			);
 			path = CheckGuests;
 			sourceTree = "<group>";
@@ -173,6 +172,7 @@
 			children = (
 				C169B02E203C397100987727 /* FavGuestViewController.swift */,
 				C169B030203C399F00987727 /* FavGuestCell.swift */,
+				C1369BC5200F841700830D45 /* GuestInfoObject.swift */,
 			);
 			path = FavouriteGuests;
 			sourceTree = "<group>";

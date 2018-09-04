@@ -13,28 +13,41 @@ import RealmSwift
 
 class AllChecksViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
-    var storedChecks: [QrStringInfoObject]?
+    var storedChecks: Results<QrStringInfoObject>?
     var jsonString = ""
     let requestResult = RequestService()
     var token: NotificationToken?
     var modifiedString = QrStringInfoObject()
     var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     var waitingLabel: UILabel = UILabel()
+    var waitingView: UIView = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        activityIndicator.color = UIColor.darkGray
-        activityIndicator.center = self.view.center
+        waitingView.backgroundColor = UIColor.lightGray
+        waitingView.layer.cornerRadius = 10
+        waitingView.frame.size = CGSize(width: 180, height: 20 + activityIndicator.frame.height + 48)
+        waitingView.center = self.view.center
+        waitingView.layer.opacity = 0.8
+        self.view.addSubview(waitingView)
+        self.view.bringSubview(toFront: waitingView)
+        
+        activityIndicator.color = UIColor.white
+        activityIndicator.center.x = waitingView.center.x
+        activityIndicator.center.y = waitingView.frame.minY + 20 + activityIndicator.frame.height/2
         self.view.addSubview(activityIndicator)
         self.view.bringSubview(toFront: activityIndicator)
+        activityIndicator.isHidden = false
+        activityIndicator.hidesWhenStopped = true
         
         waitingLabel.text = "Обработка чека..."
-        waitingLabel.textColor = UIColor.darkGray
-        waitingLabel.font = UIFont.systemFont(ofSize: 15)
-        waitingLabel.frame.size = CGSize(width: 127, height: 20)
-        waitingLabel.center.x = self.view.center.x
-        waitingLabel.center.y = self.view.center.y + activityIndicator.frame.height/2 + 18
+        waitingLabel.textAlignment = .center
+        waitingLabel.textColor = UIColor.white
+        waitingLabel.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+        waitingLabel.frame.size = CGSize(width: 140, height: 20)
+        waitingLabel.center.x = waitingView.center.x
+        waitingLabel.center.y = activityIndicator.frame.maxY + 18
         self.view.addSubview(waitingLabel)
         self.view.bringSubview(toFront: waitingLabel)
         
@@ -76,12 +89,12 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
     //при переходе на экран получаем из базы список чеков с основной информацией
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = false
-        activityIndicator.isHidden = true
         waitingLabel.isHidden = true
+        waitingView.isHidden = true
         
         do {
             let realm = try Realm()
-            self.storedChecks = realm.objects(QrStringInfoObject.self).reversed()
+            self.storedChecks = realm.objects(QrStringInfoObject.self)
             print(realm.configuration.fileURL as Any)
         } catch {
             print(error.localizedDescription)
@@ -106,8 +119,8 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
         //если информация о чеке еще не загружена, пробуем загрузить
         else if (collectionView.cellForItem(at: indexPath) as? NotLoadedCheckCell) != nil {
             print("cell as NotLoadedCheckCell")
-            activityIndicator.isHidden = false
             waitingLabel.isHidden = false
+            waitingView.isHidden = false
             activityIndicator.startAnimating()
             RequestService.loadData(receivedString: storedChecks![indexPath.item].qrString)
             RealmServices.getStringFromRealm(VC: self, qrString: storedChecks![indexPath.item].qrString)
@@ -122,9 +135,20 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        if storedChecks != nil {
+        if (storedChecks != nil) && (storedChecks?.isEmpty == false) {
+            print ("stored checks not nil or empty")
+            self.collectionView?.backgroundView = nil
             return storedChecks!.count
         } else {
+            let bounds = CGRect(x: 0, y: 0, width: (self.collectionView?.bounds.size.width)!, height: (self.collectionView?.bounds.size.height)!)
+            let noDataLabel = UILabel(frame: bounds)
+            noDataLabel.text = "Нет отсканированных чеков"
+            noDataLabel.textAlignment = .center
+            noDataLabel.textColor = UIColor.lightGray
+            noDataLabel.font = UIFont.systemFont(ofSize: 15)
+            noDataLabel.sizeToFit()
+            self.collectionView?.backgroundView = noDataLabel
+            
             return 0
         }
     }

@@ -16,18 +16,25 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var checkbox: Checkbox!
     @IBOutlet weak var agreementBtn: UIButton!
     @IBOutlet weak var signUpBtn: CustomButton!
+    @IBOutlet weak var waitingView: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.activityIndicator.isHidden = true
+        waitingView.layer.cornerRadius = 10
+        waitingView.layer.opacity = 0.8
+        self.activityIndicator.hidesWhenStopped = true
         self.telText.delegate = self
         telText.keyboardType = UIKeyboardType.numberPad
 //        agreementBtn.titleLabel?.attributedText = NSAttributedString(string: (agreementBtn.titleLabel?.text!)!, attributes: [.underlineStyle: NSUnderlineStyle.styleSingle.rawValue])
         signUpBtn.isEnabled = false
         signUpBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
         checkbox.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        waitingView.isHidden = true
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -41,7 +48,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     @IBAction func signUp(_ sender: Any) {
         //регистрируем пользователя
         signUpBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
-        activityIndicator.isHidden = false
+        waitingView.isHidden = false
         activityIndicator.startAnimating()
         
         let name = nameText.text ?? ""
@@ -61,8 +68,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
                 DispatchQueue.main.async {
-                    self.activityIndicator.isHidden = true
                     self.activityIndicator.stopAnimating()
+                    self.waitingView.isHidden = true
                     Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 }
                 return
@@ -75,8 +82,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 let statusCode = httpResponse!.statusCode
                 print("Status code = \(statusCode)")
                 DispatchQueue.main.async {
-                    self.activityIndicator.isHidden = true
                     self.activityIndicator.stopAnimating()
+                    self.waitingView.isHidden = true
                 }
                 
                 if statusCode == 204 {
@@ -118,8 +125,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             else {
                 print (httpResponse!.allHeaderFields)
                 DispatchQueue.main.async {
-                    self.activityIndicator.isHidden = true
                     self.activityIndicator.stopAnimating()
+                    self.waitingView.isHidden = true
                     Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                 }
             }
