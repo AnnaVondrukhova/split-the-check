@@ -14,6 +14,7 @@ class QrStringInfoObject: Object {
     @objc dynamic var qrString = ""
     @objc dynamic var jsonString: String?
     var checkItems = List<CheckInfoObject>()
+    @objc dynamic var mDate = 0.0
     
     override static func primaryKey() -> String? {
         return "qrString"
@@ -25,7 +26,7 @@ class QrStringInfoObject: Object {
         self.error = error
         self.qrString = qrString
         self.jsonString = jsonString
-        
+        self.mDate = NSDate().timeIntervalSince1970
     }
     
     func addCheckItems(_ checkItems: [CheckInfoObject]) {

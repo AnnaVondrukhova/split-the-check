@@ -114,7 +114,7 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //если информация о чеке загружена, переходим на страницу с информацией
         if (collectionView.cellForItem(at: indexPath) as? LoadedCheckCell) != nil {
-            modifiedString = storedChecks![indexPath.item]
+            modifiedString = storedChecks!.reversed()[indexPath.item]
             performSegue(withIdentifier: "showCheckSegue", sender: nil)
         }
         //если информация о чеке еще не загружена, пробуем загрузить
@@ -123,8 +123,8 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
             waitingLabel.isHidden = false
             waitingView.isHidden = false
             activityIndicator.startAnimating()
-            RequestService.loadData(receivedString: storedChecks![indexPath.item].qrString)
-            RealmServices.getStringFromRealm(VC: self, qrString: storedChecks![indexPath.item].qrString)
+            RequestService.loadData(receivedString: storedChecks!.reversed()[indexPath.item].qrString)
+            RealmServices.getStringFromRealm(VC: self, qrString: storedChecks!.reversed()[indexPath.item].qrString)
         }
     }
 
@@ -135,7 +135,7 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
+        // Если отсканированных чеков еще нет, показываем на экране надпись
         if (storedChecks != nil) && (storedChecks?.isEmpty == false) {
             print ("stored checks not nil or empty")
             self.collectionView?.backgroundView = nil
@@ -156,16 +156,16 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        if storedChecks![indexPath.item].jsonString != nil && storedChecks![indexPath.item].jsonString != "null"  {
+        if storedChecks!.reversed()[indexPath.item].jsonString != nil && storedChecks!.reversed()[indexPath.item].jsonString != "null"  {
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "loadedCheck", for: indexPath) as? LoadedCheckCell {
                 
-                cell.configure(jsonString: storedChecks![indexPath.item].jsonString!)
+                cell.configure(jsonString: storedChecks!.reversed()[indexPath.item].jsonString!)
                 return cell
             }
         } else {
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "notLoadedCheck", for: indexPath) as? NotLoadedCheckCell {
                 
-                cell.configure(qrString: storedChecks![indexPath.item].qrString)
+                cell.configure(qrString: storedChecks!.reversed()[indexPath.item].qrString)
                 return cell
             }
         }
@@ -197,3 +197,4 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
     }
 
 }
+
