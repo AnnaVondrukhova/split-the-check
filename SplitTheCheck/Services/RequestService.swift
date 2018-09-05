@@ -67,5 +67,5 @@ class RequestService {
         print ("loadData func end")
 
     }
-    
+        
 }

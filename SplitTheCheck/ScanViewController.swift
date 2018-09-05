@@ -107,7 +107,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
             qrCodeFrameView?.frame = barCodeObject.bounds
 
 
-            if metadataObj.stringValue != nil {
+            if (metadataObj.stringValue != nil) && (metadataObj.stringValue?.range(of: "&fn=") != nil)  && (metadataObj.stringValue?.range(of: "&fp=") != nil) && (metadataObj.stringValue?.range(of: "&i=") != nil) {
                 qrString = metadataObj.stringValue!
                 activityIndicator.startAnimating()
                 waitingLabel.isHidden = false
@@ -134,6 +134,8 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                 } catch {
                     print(error.localizedDescription)
                 }
+            } else {
+                Alerts.showErrorAlert(VC: self, message: "Неправильный формат QR-кода")
             }
 
 
