@@ -17,9 +17,11 @@ class CheckInfoObject: Object {
     @objc dynamic var name = ""
     @objc dynamic var initialQuantity = 0.0
     @objc dynamic var totalQuantity = 0.0
+    @objc dynamic var isCountable = true
     @objc dynamic var price = 0.0
     @objc dynamic var myQuantity = 0
     @objc dynamic var myQtotalQ = ""
+    @objc dynamic var sum = 0.0
     var parent = LinkingObjects(fromType: QrStringInfoObject.self, property: "checkItems")
     
     static var classId = 1
@@ -34,12 +36,13 @@ class CheckInfoObject: Object {
         self.price = json["price"].doubleValue/100
 //        self.myQuantity = json["quantity"].intValue
         self.myQtotalQ = json["quantity"].stringValue
+        self.sum = json["sum"].doubleValue/100
         
         CheckInfoObject.classId += 1
         print ("id = \(id)")
     }
     
-    convenience init (sectionId: Int, sectionName: String, id: Int, name: String, initialQuantity: Double, totalQuantity: Double, price: Double) {
+    convenience init (sectionId: Int, sectionName: String, id: Int, name: String, initialQuantity: Double, totalQuantity: Double, price: Double, sum: Double) {
         self.init()
         
         self.sectionId = sectionId
@@ -50,7 +53,16 @@ class CheckInfoObject: Object {
         self.totalQuantity = totalQuantity
         self.price = price
         self.myQuantity = 0
-        self.myQtotalQ = "\(Int(totalQuantity))"
+        //если totalQuantity - не целое значение, отображаем его не целым
+        //если totalQuantity - целое значение, отображаем его без нулей
+        if totalQuantity != Double(Int(totalQuantity)) {
+            self.myQtotalQ = "\(totalQuantity)"
+            self.isCountable = false
+        } else {
+            self.myQtotalQ = "\(Int(totalQuantity))"
+            self.isCountable = true
+        }
+        self.sum = round(sum)/100
         
     }
     
@@ -87,7 +99,7 @@ class CheckInfoObject: Object {
     }
     
     func copyItem() -> CheckInfoObject {
-        let copy = CheckInfoObject(sectionId: sectionId, sectionName: sectionName, id: id, name: name, initialQuantity: initialQuantity, totalQuantity: totalQuantity, price: price)
+        let copy = CheckInfoObject(sectionId: sectionId, sectionName: sectionName, id: id, name: name, initialQuantity: initialQuantity, totalQuantity: totalQuantity, price: price, sum: sum*100)
         return copy
     }
 

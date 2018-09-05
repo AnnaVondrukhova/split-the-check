@@ -18,10 +18,10 @@ class CheckInfoViewController: UIViewController, ResultCellDelegate {
     @IBOutlet weak var checkTableView: UITableView!
     
 //    let requestResult = RequestService()
-    var parentString = QrStringInfoObject()
-    var items = [[CheckInfoObject]]()
+    var parentString = QrStringInfoObject() //qr-строка, по которой получали чек
+    var items = [[CheckInfoObject]]()   //позиции в чеке
     var selectedItems: [CheckInfoObject] = []
-    var guests = [GuestInfoObject]()
+    var guests = [GuestInfoObject]()    //гости, на которых разбит этот чек
     var totalSum = [Double]()
     var guestSum = 0.0
     
@@ -40,12 +40,15 @@ class CheckInfoViewController: UIViewController, ResultCellDelegate {
             let realm = try Realm()
             print (parentString.qrString)
             let realmItems = realm.objects(CheckInfoObject.self).filter("%@ IN parent", parentString).sorted(byKeyPath: "sectionId")
-            var realItems = [CheckInfoObject]()
+            //создаем отдельную от базы данных копию чека и в дальнейшем работаем с ней,
+            //чтобы не записывать в базу все промежуточные результаты
+            var realItemsCopy = [CheckInfoObject]()
             for item in Array(realmItems) {
                 let copyItem = item.copyItem()
-                realItems.append(copyItem)
+                realItemsCopy.append(copyItem)
             }
-            self.items = realItems.reduce([[CheckInfoObject]]()) {
+            //группируем позиции в чеке по секциям (если чек ранее уже разбивался на группы)
+            self.items = realItemsCopy.reduce([[CheckInfoObject]]()) {
                 guard var last = $0.last else { return [[$1]] }
                 var collection = $0
                 if last.first!.sectionId == $1.sectionId {
@@ -56,7 +59,8 @@ class CheckInfoViewController: UIViewController, ResultCellDelegate {
                 }
                 return collection
             }
-            
+            //в список гостей этого чека добавляем имена из секций (если чек ранее уже разбивался на группы)
+            //каждому гостю ставим в соответствие общую стоимость его позиций
             for item in items {
                 guests.append(GuestInfoObject(name: (item.first?.sectionName)!))
                 totalSum.append(item.reduce(0){$0 + round(100*$1.price*$1.totalQuantity)/100})
@@ -148,19 +152,26 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         let indexPath = self.checkTableView.indexPath(for: cell)!
         let item = items[indexPath.section][indexPath.row]
         
+        //myQuantity - количество выбранных единиц товара
         let myQuantityOld = item.myQuantity
         
+        //если товар не был выбран - выбираем его, выделяем ячейку
         if myQuantityOld == 0 {
             checkTableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
             self.tableView(checkTableView, didSelectRowAt: indexPath)
-        } else {
-            item.myQuantity = myQuantityOld % Int(item.totalQuantity) + 1
-            item.myQtotalQ = "\(item.myQuantity)/\(Int(item.totalQuantity))"
-            
-            cell.itemAmount.text = item.myQtotalQ
-            
-            guestSum += Double(item.myQuantity-myQuantityOld)*item.price
-            addGuest.titleLabel?.text = "\(guestSum)"
+        }
+        //если товар уже выбран - добавляем количество выбранных единиц товара
+        else {
+            //обрабатываем тап только если товар счетный и его больше 1
+            if item.isCountable && (item.totalQuantity > 1) {
+                item.myQuantity = myQuantityOld % Int(item.totalQuantity) + 1
+                item.myQtotalQ = "\(item.myQuantity)/\(Int(item.totalQuantity))"
+                
+                cell.itemAmount.text = item.myQtotalQ
+                
+                guestSum += Double(item.myQuantity-myQuantityOld)*item.price
+                addGuest.titleLabel?.text = "\(guestSum)"
+            }
         }
     }
     
@@ -170,20 +181,29 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         
     }
     
-    //выделение ячейки. Устанавливаем количество выбранных единиц товара = 1
+    //выделение ячейки.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)! as! CheckInfoCell
         let item = items[indexPath.section][indexPath.row]
         print("choose: \(item.myQtotalQ)")
         
-        item.myQuantity += 1
-        guestSum += Double(item.myQuantity)*item.price
         
-        if item.totalQuantity == 1 {
-            item.myQtotalQ = "1"
-        } else {
-            item.myQtotalQ = "\(item.myQuantity)/\(Int(item.totalQuantity))"
+        if !item.isCountable {
+            item.myQtotalQ = "\(item.totalQuantity)"
+            guestSum += item.sum
         }
+        else {
+            //Устанавливаем количество выбранных единиц товара = 1
+            item.myQuantity = 1 //<-- поменяла += на =
+            guestSum += Double(item.myQuantity)*item.price
+            
+            if item.totalQuantity == 1 {
+                item.myQtotalQ = "1"
+            } else {
+                item.myQtotalQ = "\(item.myQuantity)/\(Int(item.totalQuantity))"
+            }
+        }
+        
         cell.itemAmount.text = item.myQtotalQ
         selectedItems.append(item)
         print("appended, total \(selectedItems.count)")
@@ -193,20 +213,29 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         
     }
     
-    //снятие выделения ячейки.  Устанавливаем количество выбранных единиц товара = totalQuantity
+    //снятие выделения ячейки.
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let deselectedCell = tableView.cellForRow(at: indexPath) as! CheckInfoCell
         let item = items[indexPath.section][indexPath.row]
         
+        //Устанавливаем количество единиц товара = totalQuantity, выбранных единиц товара = 0
+        //Уменьшаем guestSum
         if(selectedItems.contains(item)){
             print("contains")
-            guestSum -= Double(item.myQuantity)*item.price
+            if item.isCountable {
+                guestSum -= Double(item.myQuantity)*item.price
+                item.myQtotalQ = "\(Int(item.totalQuantity))"
+            } else {
+                guestSum -= item.sum
+                item.myQtotalQ = "\(item.totalQuantity)"
+            }
+            
             addGuest.titleLabel?.text = "\(guestSum)"
             item.myQuantity = 0
             
             let index = selectedItems.index(of: item)
             selectedItems.remove(at: index!)
-            deselectedCell.itemAmount.text = "\(Int(item.totalQuantity))"
+            deselectedCell.itemAmount.text = item.myQtotalQ
             print("removed, total  \(selectedItems.count)")
         } else {
             print("not removed, total  \(selectedItems.count)")
@@ -217,7 +246,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    //удаляем запись
+    //устанавливаем стиль .delete для всех ячеек кроме первой секции
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
         if indexPath.section == 0 {
             return .none
@@ -226,12 +255,15 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
+    //удаляем запись
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             print("delete")
             let item = items[indexPath.section][indexPath.row]
             item.printInfo()
             
+            //при удалении позиции у гостя смотрим, есть ли эти же позиции в общем чеке
+            //если в общем чеке есть этот товар, добавляем к его количеству количество из удаленной строки
             if items[0].contains(where: {$0 == item}) {
                 print("Check contains item")
                 
@@ -242,7 +274,9 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                 items[0][index!].myQtotalQ = "\(Int(items[0][index!].totalQuantity))"
                 print(items[0][index!].totalQuantity)
                 
-            } else {
+            }
+            //если в общем чеке нет этого товара, вставляем в общем чеке строку с ним
+            else {
                 print ("Check doesn't contain item")
                 
                 items[0].append(item)
@@ -253,11 +287,19 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                 checkTableView.endUpdates()
             }
             
+            //удаляем строку из секции гостя и обновляем значения сумм
             items[indexPath.section].remove(at: indexPath.row)
-            totalSum[indexPath.section] -= item.totalQuantity*item.price
-            totalSum[0] += item.totalQuantity*item.price
+            var itemSum = 0.0
+            if item.isCountable {
+                itemSum = item.totalQuantity*item.price
+            } else {
+                itemSum = item.sum
+            }
+            totalSum[indexPath.section] -= itemSum
+            totalSum[0] += itemSum
             checkTableView.deleteRows(at: [indexPath], with: .left)
             
+            //если в секции не осталось строк, удаляем секцию
             if items[indexPath.section].count == 0 {
                 items.remove(at: indexPath.section)
                 guests.remove(at: indexPath.section)
@@ -298,18 +340,27 @@ extension CheckInfoViewController {
         var newSectionItems = [CheckInfoObject]()
         let sectionNo = items.count
         
+        //создаем копии элементов из selectedItems и с новым порядковым номером секции
         for item in selectedItems {
-            newSectionItems.append(CheckInfoObject(sectionId: sectionNo, sectionName: sectionName, id: item.id, name: item.name, initialQuantity: item.initialQuantity, totalQuantity: Double(item.myQuantity), price: item.price))
+            var itemQuantity = 0.0
+            if item.isCountable {
+                itemQuantity = Double(item.myQuantity)
+            } else {
+                itemQuantity = item.totalQuantity
+            }
+            newSectionItems.append(CheckInfoObject(sectionId: sectionNo, sectionName: sectionName, id: item.id, name: item.name, initialQuantity: item.initialQuantity, totalQuantity: itemQuantity, price: item.price, sum: item.sum*100))
             print("new item id: \(newSectionItems.last!.id)")
             
+            //из общего чека удаляем товары, перешедшие к гостю, или уменьшаем их количество
             let index = items[0].index(of: item)
-            if item.totalQuantity == 1 {
+            if !item.isCountable || (item.totalQuantity == 1) {
                 items[0].remove(at: index!)
             } else {
                 items[0][index!].totalQuantity -= Double(items[0][index!].myQuantity)
             }
         }
         
+        //создаем новый элемент массива items, обнуляем список выделенных позиций и сумму гостя
         items.append(newSectionItems)
         selectedItems.removeAll()
         totalSum[0] -= guestSum
@@ -318,7 +369,12 @@ extension CheckInfoViewController {
         
         for item in items[0] {
             item.myQuantity = 0
-            item.myQtotalQ = "\(Int(item.totalQuantity))"
+            if item.isCountable {
+                item.myQtotalQ = "\(Int(item.totalQuantity))"
+            } else {
+                item.myQtotalQ = "\(item.totalQuantity)"
+            }
+            
         }
         
         addGuest.titleLabel?.text = "Выберите позиции"
@@ -327,6 +383,7 @@ extension CheckInfoViewController {
     
     //сохранение чека
     @objc func saveTheCheck() {
+        //создаем новый массив и копируем туда наш чек
         var itemsToRealm: [CheckInfoObject] = []
         
         for section in items {
@@ -335,6 +392,7 @@ extension CheckInfoViewController {
                 itemsToRealm.append(copyItem)
             }
         }
+        //удаляем старый чек, записываем в realm новый массив
         do {
             let realm = try Realm()
             realm.beginWrite()

@@ -125,16 +125,6 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
-		C104596621369036007BD0A7 /* CustomUIObjects */ = {
-			isa = PBXGroup;
-			children = (
-				C1A0672E200CF16E007AD89A /* CustomButton.swift */,
-				C1FCE56C212C38EF009B8C59 /* Checkbox.swift */,
-			);
-			name = CustomUIObjects;
-			path = ..;
-			sourceTree = "<group>";
-		};
 		C1369BC4200F83DD00830D45 /* CheckGuests */ = {
 			isa = PBXGroup;
 			children = (
@@ -204,7 +194,7 @@
 				C169B02D203C393900987727 /* FavouriteGuests */,
 				C104596421368F99007BD0A7 /* LoginViewControllers */,
 				C104596521369001007BD0A7 /* Services */,
-				C104596621369036007BD0A7 /* CustomUIObjects */,
+				C1A980EB213EC4BB000E7A0D /* CustomUIObjects */,
 				C16B3E7D1FF112B6005C99B8 /* ScanViewController.swift */,
 				C16B3E7F1FF112B6005C99B8 /* Main.storyboard */,
 				C1FCE578212D8E64009B8C59 /* Main_2.storyboard */,
@@ -215,6 +205,15 @@
 				C16B3E7B1FF112B6005C99B8 /* AppDelegate.swift */,
 			);
 			path = SplitTheCheck;
+			sourceTree = "<group>";
+		};
+		C1A980EB213EC4BB000E7A0D /* CustomUIObjects */ = {
+			isa = PBXGroup;
+			children = (
+				C1A0672E200CF16E007AD89A /* CustomButton.swift */,
+				C1FCE56C212C38EF009B8C59 /* Checkbox.swift */,
+			);
+			path = CustomUIObjects;
 			sourceTree = "<group>";
 		};
 		E5A7E747308CBDFAC86DB98A /* Pods */ = {

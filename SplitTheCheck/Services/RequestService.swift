@@ -60,7 +60,7 @@ class RequestService {
                 case .failure:
                     let qrStringItem = QrStringInfoObject(error: "\(response.response?.statusCode ?? 500)", qrString: receivedString, jsonString: nil)
                     RealmServices.saveQRString(string: qrStringItem)
-                    print("case error \(String(describing: response.response?.statusCode))")
+                    print("case .failure \(String(describing: response.response?.statusCode))")
                 }
             }
         

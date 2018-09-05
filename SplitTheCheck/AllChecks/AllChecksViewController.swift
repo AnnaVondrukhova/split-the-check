@@ -25,6 +25,7 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //задаем параметры ActivityIndicatorView и сопутствующих элементов
         waitingView.backgroundColor = UIColor.lightGray
         waitingView.layer.cornerRadius = 10
         waitingView.frame.size = CGSize(width: 180, height: 20 + activityIndicator.frame.height + 48)
@@ -63,7 +64,7 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
 //        }
 //        UserDefaults.standard.set(false, forKey: "notFirstLaunch")
 //
-
+//
 //                    Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
 //                    print("configuration changed")
         

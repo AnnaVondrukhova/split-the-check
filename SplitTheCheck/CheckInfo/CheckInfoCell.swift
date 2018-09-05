@@ -32,14 +32,17 @@ class CheckInfoCell: UITableViewCell {
         itemName.text = item.name
         itemPrice.text = String(item.price)
         itemAmount.text = item.myQtotalQ
-                
+        if item.isCountable {
+            itemSum.text = String(format: "%.2f", round(100*item.totalQuantity*item.price)/100)
+        } else {
+            itemSum.text = String(item.sum)
+        }
+        
         if section == 0 {
             self.isUserInteractionEnabled = true
         } else {
             self.isUserInteractionEnabled = false
         }
-
-        itemSum.text = String(round(100*item.totalQuantity*item.price)/100)
     }
     
     @objc func labelAmountTapped(_ sender: UITapGestureRecognizer) {

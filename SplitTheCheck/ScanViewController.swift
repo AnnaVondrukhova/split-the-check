@@ -29,38 +29,27 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     var qrString = ""
     
     let requestResult = RequestService()
-
-    //    var qrString = "t=20180105T155500&s=2226.73&fn=8710000100911559&i=14618&fp=3957131101&n=1"
-    //  var qrString = "t=20180105T155500&s=2226.73&fn=8710000100599785&i=38218&fp=1962650997&n=1"
-    //    var qrString = "t=20180105T155500&s=2226.73&fn=8710000101875181&i=38489&fp=75246098&n=1"
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        qrString = "t=20180128T163700&s=3222.80&fn=8710000100599785&i=40518&fp=2860351511&n=1"
+//        qrString = "t=20180902T154200&s=2412.30&fn=9286000100156559&i=12259&fp=2970651064&n=1"
+//        qrString = "t=20180126T185600&s=1576.00&fn=8710000100961732&i=20194&fp=2759156229&n=1"
         
         print ("scan view controller did load")
         activityIndicator.hidesWhenStopped = true
         waitingView.layer.cornerRadius = 10
         waitingView.layer.opacity = 0.8
+        
+//        RequestService.loadData(receivedString: qrString)
+//        RealmServices.getStringFromRealm(VC: self)
     }
-
-//    func saveCheckItems(checkItems: [CheckInfo], qrString: String) {
-//        do {
-//            let realm = try Realm()
-//            guard let qrString = realm.object(ofType: QrStringInfo.self, forPrimaryKey: qrString) else {return}
-//            let oldCheckItems = qrString.checkItems
-//            realm.beginWrite()
-//            realm.delete(oldCheckItems)
-//            qrString.checkItems.append(objectsIn: checkItems)
-//            try realm.commitWrite()
-//        } catch {
-//            print (error)
-//        }
-//    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tabBarController?.tabBar.isHidden = false
-        
+
         //запускаем камеру
         let captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
         //var error: NSError?
@@ -79,7 +68,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
             videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
             videoPreviewLayer?.frame = view.layer.bounds
             view.layer.addSublayer(videoPreviewLayer!)
-            
+
             activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
             view.bringSubview(toFront: waitingView)
             view.bringSubview(toFront: waitingLabel)
@@ -111,20 +100,20 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         print ("got metadataObjects: \(metadataObjects)")
 
         let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-        
+
         //если засекли qr-код, то пытаемся получить по нему данные
         if metadataObj.type == AVMetadataObject.ObjectType.qr {
             let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj) as! AVMetadataMachineReadableCodeObject
             qrCodeFrameView?.frame = barCodeObject.bounds
 
-            
+
             if metadataObj.stringValue != nil {
                 qrString = metadataObj.stringValue!
                 activityIndicator.startAnimating()
                 waitingLabel.isHidden = false
                 waitingView.isHidden = false
                 print("started activity indicator")
-                
+
                 //проверяем, что такого чека еще нет в базе
                 do {
                     let realm = try Realm()
@@ -146,8 +135,8 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                     print(error.localizedDescription)
                 }
             }
-            
-            
+
+
         }
     }
 
