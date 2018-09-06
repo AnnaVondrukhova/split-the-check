@@ -12,6 +12,7 @@ class HeaderCell: UITableViewCell {
 
     @IBOutlet weak var totalSum: UILabel!
     @IBOutlet weak var sectionTitle: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -264,7 +264,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
             
             //при удалении позиции у гостя смотрим, есть ли эти же позиции в общем чеке
             //если в общем чеке есть этот товар, добавляем к его количеству количество из удаленной строки
-            if items[0].contains(where: {$0 == item}) {
+            if items[0].contains(where: {$0.id == item.id}) {
                 print("Check contains item")
                 
                 let itemInCheck = items[0].first(where: {$0 == item})
@@ -279,6 +279,8 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
             else {
                 print ("Check doesn't contain item")
                 
+                item.sectionId = 0
+                item.sectionName = "Общий чек"
                 items[0].append(item)
                 items[0].sort(by: {$0.id < $1.id})
                 
@@ -319,9 +321,17 @@ extension CheckInfoViewController {
             
             if let indexPath = guestViewCotroller.tableView.indexPathForSelectedRow {
                 let guest = guestViewCotroller.favouriteGuests[indexPath.row]
-                guests.append(guest)
+                //если такой гость уже существует, добавляем позиции к нему.
+                //если гость еще не существует, добавляем новую секцию
+                if guests.contains(where: {$0.name == guest.name}){
+                    let sectionNo = guests.index(of: guests.first(where: {$0.name == guest.name})!)
+                    addToSection(sectionNo: sectionNo!, sectionName: guest.name)
+
+                } else {
+                    guests.append(guest)
+                    addNewSection(sectionName: guest.name)
+                }
                 
-                addNewSection(sectionName: guest.name)
             }
         } else if  segue.identifier == "addNewGuestToCheck" {
             let guestViewCotroller = segue.source as! CheckGuestsViewController
@@ -335,7 +345,7 @@ extension CheckInfoViewController {
         }
     }
     
-    //добавление секции с гостем
+    //добавление новой секции с гостем
     func addNewSection(sectionName: String) {
         var newSectionItems = [CheckInfoObject]()
         let sectionNo = items.count
@@ -365,6 +375,61 @@ extension CheckInfoViewController {
         selectedItems.removeAll()
         totalSum[0] -= guestSum
         totalSum.append(guestSum)
+        guestSum = 0
+        
+        for item in items[0] {
+            item.myQuantity = 0
+            if item.isCountable {
+                item.myQtotalQ = "\(Int(item.totalQuantity))"
+            } else {
+                item.myQtotalQ = "\(item.totalQuantity)"
+            }
+            
+        }
+        
+        addGuest.titleLabel?.text = "Выберите позиции"
+        checkTableView.reloadData()
+    }
+    
+    //добавление позиций к существующей секции с гостем
+    func addToSection(sectionNo: Int, sectionName: String) {
+        var newItems = [CheckInfoObject]()
+        
+        //создаем копии элементов из selectedItems и с переданным в функцию порядковым номером секции
+        for item in selectedItems {
+            var itemQuantity = 0.0
+            if item.isCountable {
+                itemQuantity = Double(item.myQuantity)
+            } else {
+                itemQuantity = item.totalQuantity
+            }
+            newItems.append(CheckInfoObject(sectionId: sectionNo, sectionName: sectionName, id: item.id, name: item.name, initialQuantity: item.initialQuantity, totalQuantity: itemQuantity, price: item.price, sum: item.sum*100))
+            print("new item id: \(newItems.last!.id)")
+            
+            //из общего чека удаляем товары, перешедшие к гостю, или уменьшаем их количество
+            let index = items[0].index(of: item)
+            if !item.isCountable || (item.totalQuantity == 1) {
+                items[0].remove(at: index!)
+            } else {
+                items[0][index!].totalQuantity -= Double(items[0][index!].myQuantity)
+            }
+        }
+        
+        //если такой товар у гостя уже есть - добавляем его количество. Если нет - добавляем новый товар
+        for item in newItems {
+            if items[sectionNo].contains(where: {$0.id == item.id}){
+                let existingItem = items[sectionNo].first(where: {$0.id == item.id})
+                existingItem?.totalQuantity += item.totalQuantity
+                existingItem?.myQtotalQ = "\(Int((existingItem?.totalQuantity)!))"
+
+            } else {
+                items[sectionNo].append(item)
+            }
+        }
+        
+        selectedItems.removeAll()
+        totalSum[0] -= guestSum
+        totalSum[sectionNo] += guestSum
         guestSum = 0
         
         for item in items[0] {
