@@ -132,7 +132,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeader") as! HeaderCell
         
         cell.sectionTitle.text = guests[section].name
-        cell.totalSum.text = "\(totalSum[section])"
+        cell.totalSum.text = String(format: "%.2f", totalSum[section])
         
         return cell.contentView
     }

@@ -18,6 +18,7 @@ class CheckGuestsViewController: UITableViewController, addGuestDelegate  {
         super.viewDidLoad()
         self.tableView?.rowHeight = 50
         self.tabBarController?.tabBar.isHidden = true
+    
         
         
 //        if let favouriteGuestsData = UserDefaults.standard.object(forKey: "favouriteGuests") as? Data {
@@ -90,8 +91,6 @@ class CheckGuestsViewController: UITableViewController, addGuestDelegate  {
     func addNewGuest(_ cell: AddGuestCell) {
         newGuest = GuestInfoObject(name: cell.guestName.text!)
         
-        if cell.addToFavouritesBtnState == true {
-            
             do {
                 let realm = try Realm()
                 realm.beginWrite()
@@ -107,20 +106,19 @@ class CheckGuestsViewController: UITableViewController, addGuestDelegate  {
 //            UserDefaults.standard.set(favouriteGuestsData, forKey: "favouriteGuests")
 //            print ("fav guests set:  \(favouriteGuests)")
 //            UserDefaults.standard.synchronize()
-        }
 
     }
     
     //добавляем нового гостя в favouriteGuests по нажатию кнопки
-    func addToFavourites(_ cell: AddGuestCell) {
-        cell.addToFavouritesBtnState = !cell.addToFavouritesBtnState
-        
-        if cell.addToFavouritesBtnState == true {
-            cell.addToFavouritesBtn.setImage(UIImage(named: "starTrue"), for: .normal)
-        } else {
-            cell.addToFavouritesBtn.setImage(UIImage(named: "starFalse"), for: .normal)
-        }
-    }
+//    func addToFavourites(_ cell: AddGuestCell) {
+//        cell.addToFavouritesBtnState = !cell.addToFavouritesBtnState
+//        
+//        if cell.addToFavouritesBtnState == true {
+//            cell.addToFavouritesBtn.setImage(UIImage(named: "starTrue"), for: .normal)
+//        } else {
+//            cell.addToFavouritesBtn.setImage(UIImage(named: "starFalse"), for: .normal)
+//        }
+//    }
 
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 50

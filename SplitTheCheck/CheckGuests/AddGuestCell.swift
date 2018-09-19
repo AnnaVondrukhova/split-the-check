@@ -10,15 +10,13 @@ import UIKit
 
 protocol addGuestDelegate {
     func addNewGuest (_ cell: AddGuestCell)
-    func addToFavourites (_ cell: AddGuestCell)
+//    func addToFavourites (_ cell: AddGuestCell)
 }
 
 class AddGuestCell: UITableViewCell {
     @IBOutlet weak var guestName: UITextField!
-    @IBOutlet weak var addToFavouritesBtn: CustomButton!
-    @IBOutlet weak var addGuestBtn: CustomButton!
+    @IBOutlet weak var addGuestBtn: UIButton!
     
-    var addToFavouritesBtnState = false
     
     var delegate: addGuestDelegate?
     
@@ -37,8 +35,8 @@ class AddGuestCell: UITableViewCell {
         delegate?.addNewGuest(self)
         print ("+ pressed")
     }
-    @IBAction func addToFavouritesBtnTap(_ sender: CustomButton) {
-        delegate?.addToFavourites(self)
-        print ("star pressed")
-    }
+//    @IBAction func addToFavouritesBtnTap(_ sender: CustomButton) {
+//        delegate?.addToFavourites(self)
+//        print ("star pressed")
+//    }
 }

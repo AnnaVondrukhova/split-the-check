@@ -40,12 +40,12 @@ class FavGuestCell: UITableViewCell {
     
     func configure(guest: GuestInfoObject) {
         favGuestName.text = guest.name
-        favGuestChar.text = String(guest.name.uppercased().first ?? " ")
+        favGuestChar.text = ""
         
         favGuestPhoto.image = nil
-        favGuestPhoto.backgroundColor = UIColor(red:0.28, green:0.36, blue:0.72, alpha:1.0)
-        favGuestPhoto.layer.cornerRadius = favGuestPhoto.frame.width/2
-        favGuestPhoto.clipsToBounds = true
+//        favGuestPhoto.backgroundColor = UIColor(red:0.28, green:0.36, blue:0.72, alpha:1.0)
+//        favGuestPhoto.layer.cornerRadius = favGuestPhoto.frame.width/2
+//        favGuestPhoto.clipsToBounds = true
         self.isNew = false
 //        guestId = guest.id
     }
@@ -83,7 +83,7 @@ extension FavGuestCell: UITextFieldDelegate {
             do {
                 let realm = try Realm()
                 realm.beginWrite()
-                if favGuestName.text! != nil && favGuestName.text! != "" {
+                if favGuestName.text != nil && favGuestName.text?.replacingOccurrences(of: " ", with: "") != "" {
                     let newGuest = GuestInfoObject(name: favGuestName.text!)
                     self.delegate.favouriteGuests.append(newGuest)
 //                    realm.add(newGuest)
@@ -102,7 +102,6 @@ extension FavGuestCell: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 
-        
         if let nextField = textField.superview?.superview?.superview?.viewWithTag(textField.tag + 1) as? UITextField {
             nextField.becomeFirstResponder()
             print ("move to next field: \(nextField.tag)")
