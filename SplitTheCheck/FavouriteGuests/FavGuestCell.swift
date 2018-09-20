@@ -11,8 +11,6 @@ import RealmSwift
 
 class FavGuestCell: UITableViewCell {
 
-    @IBOutlet weak var favGuestPhoto: UIImageView!
-    @IBOutlet weak var favGuestChar: UILabel!
     @IBOutlet weak var favGuestName: UITextField! {
         didSet {favGuestName.delegate = self}
     }
@@ -40,24 +38,14 @@ class FavGuestCell: UITableViewCell {
     
     func configure(guest: GuestInfoObject) {
         favGuestName.text = guest.name
-        favGuestChar.text = ""
-        
-        favGuestPhoto.image = nil
-//        favGuestPhoto.backgroundColor = UIColor(red:0.28, green:0.36, blue:0.72, alpha:1.0)
-//        favGuestPhoto.layer.cornerRadius = favGuestPhoto.frame.width/2
-//        favGuestPhoto.clipsToBounds = true
+
         self.isNew = false
 //        guestId = guest.id
     }
     
     func configureDefault() {
         favGuestName.text = ""
-        favGuestChar.text = ""
-        
-        favGuestPhoto.backgroundColor = nil
-        favGuestPhoto.image = UIImage(named: "add1")
-        favGuestPhoto.layer.cornerRadius = favGuestPhoto.frame.width/2
-        favGuestPhoto.clipsToBounds = true
+
         self.isNew = true
     }
 

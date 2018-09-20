@@ -83,33 +83,33 @@ class FavGuestViewController: UITableViewController {
         return cell
     }
 
-    func syncTableWithRealm() {
-        guard let realm = try? Realm() else {return}
-        let user = realm.objects(User.self).first
-        let realmFavouriteGuests = user?.guests
-        token = realmFavouriteGuests?.observe{[weak self] (changes: RealmCollectionChange) in
-            guard let tableView  =  self?.tableView else {return}
-            switch changes {
-            case .initial:
-                tableView.reloadData()
-                break
-            case .update(_, let deletions, let insertions, let modifications):
-                tableView.beginUpdates()
-                print("insertions: \(insertions)")
-                tableView.insertRows(at: insertions.map({IndexPath(row: $0, section: 0)}), with: .automatic)
-                print ("deletions: \(deletions)")
-                tableView.deleteRows(at: deletions.map({IndexPath(row: $0, section: 0)}), with: .automatic)
-                print ("modifications: \(modifications)")
-                tableView.reloadRows(at: modifications.map({IndexPath(row: $0, section: 0)}), with: .automatic)
-                tableView.endUpdates()
-//                print (self?.favouriteGuests)
-                break
-            case .error(let error):
-                fatalError("\(error)")
-                break
-            }
-        }
-    }
+//    func syncTableWithRealm() {
+//        guard let realm = try? Realm() else {return}
+//        let user = realm.objects(User.self).first
+//        let realmFavouriteGuests = user?.guests
+//        token = realmFavouriteGuests?.observe{[weak self] (changes: RealmCollectionChange) in
+//            guard let tableView  =  self?.tableView else {return}
+//            switch changes {
+//            case .initial:
+//                tableView.reloadData()
+//                break
+//            case .update(_, let deletions, let insertions, let modifications):
+//                tableView.beginUpdates()
+//                print("insertions: \(insertions)")
+//                tableView.insertRows(at: insertions.map({IndexPath(row: $0, section: 0)}), with: .automatic)
+//                print ("deletions: \(deletions)")
+//                tableView.deleteRows(at: deletions.map({IndexPath(row: $0, section: 0)}), with: .automatic)
+//                print ("modifications: \(modifications)")
+//                tableView.reloadRows(at: modifications.map({IndexPath(row: $0, section: 0)}), with: .automatic)
+//                tableView.endUpdates()
+////                print (self?.favouriteGuests)
+//                break
+//            case .error(let error):
+//                fatalError("\(error)")
+//                break
+//            }
+//        }
+//    }
     
 //    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 //        let view = UIView()

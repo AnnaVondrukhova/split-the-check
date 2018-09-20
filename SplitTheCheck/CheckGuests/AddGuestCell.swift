@@ -7,18 +7,22 @@
 //
 
 import UIKit
+import RealmSwift
 
 protocol addGuestDelegate {
     func addNewGuest (_ cell: AddGuestCell)
 //    func addToFavourites (_ cell: AddGuestCell)
 }
 
-class AddGuestCell: UITableViewCell {
-    @IBOutlet weak var guestName: UITextField!
+class AddGuestCell: UITableViewCell, UITextFieldDelegate {
+    @IBOutlet weak var guestName: UITextField! {
+        didSet {guestName.delegate = self}
+    }
     @IBOutlet weak var addGuestBtn: UIButton!
     
     
-    var delegate: addGuestDelegate?
+    var delegate = CheckGuestsViewController()
+//    var delegateVC = CheckGuestsViewController()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -32,11 +36,39 @@ class AddGuestCell: UITableViewCell {
     }
     
     @IBAction func addGuestBtnTap(_ sender: CustomButton) {
-        delegate?.addNewGuest(self)
+        delegate.addNewGuest(self)
         print ("+ pressed")
     }
 //    @IBAction func addToFavouritesBtnTap(_ sender: CustomButton) {
 //        delegate?.addToFavourites(self)
 //        print ("star pressed")
 //    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        print ("****** did end editing")
+        do {
+            let realm = try Realm()
+            realm.beginWrite()
+            if guestName.text != nil && guestName.text?.replacingOccurrences(of: " ", with: "") != "" {
+                let newGuest = GuestInfoObject(name: guestName.text!)
+                self.delegate.favouriteGuests.append(newGuest)
+                //                    realm.add(newGuest)
+                print ("new name added: \(guestName.text!)")
+                print (self.delegate.favouriteGuests.count)
+            }
+            try realm.commitWrite()
+            self.delegate.tableView.reloadData()
+            
+            self.guestName.text = ""
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        textField.resignFirstResponder()
+        return false
+    }
+
 }

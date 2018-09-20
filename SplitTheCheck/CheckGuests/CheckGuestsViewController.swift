@@ -64,44 +64,53 @@ class CheckGuestsViewController: UITableViewController, addGuestDelegate  {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return favouriteGuests.count
+        return favouriteGuests.count + 1
     }
 
     //конфигурация ячейки
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
+        if indexPath.row < favouriteGuests.count {
             let cell = tableView.dequeueReusableCell(withIdentifier: "favouriteGuest", for: indexPath) as! FavouriteGuestCell
             
             cell.guestName.text = favouriteGuests[indexPath.row].name
             return cell
-
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "addGuest") as! AddGuestCell
+            cell.delegate = self
+            cell.selectionStyle = .none
+            return cell
+            
+        }
     }
     
  
-    //ячейка с добавлением нового гостя
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "addGuest") as! AddGuestCell
-        cell.delegate = self
-        cell.guestName.text = "Гость 1"
-        
-        return cell
-    }
+//    //ячейка с добавлением нового гостя
+//    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "addGuest") as! AddGuestCell
+//        cell.delegate = self
+//        cell.guestName.text = "Гость 1"
+//        
+//        return cell
+//    }
     
     //добавляем нового гостя в guests по нажатию кнопки
     func addNewGuest(_ cell: AddGuestCell) {
         newGuest = GuestInfoObject(name: cell.guestName.text!)
         
-            do {
-                let realm = try Realm()
-                realm.beginWrite()
-                favouriteGuests.append(GuestInfoObject(name: cell.guestName.text!))
-                print ("fav guests: \(favouriteGuests)")
-//                realm.add(newGuest, update: true)
-                try realm.commitWrite()
-            } catch {
-                print (error.localizedDescription)
-            }
-
+//        if cell.guestName.text?.replacingOccurrences(of: " ", with: "") != "" {
+//            do {
+//                let realm = try Realm()
+//                realm.beginWrite()
+//                favouriteGuests.append(GuestInfoObject(name: cell.guestName.text!))
+//                print ("fav guests: \(favouriteGuests)")
+//                //                realm.add(newGuest, update: true)
+//                try realm.commitWrite()
+//            } catch {
+//                print (error.localizedDescription)
+//            }
+//        }
+        
 //            let favouriteGuestsData = NSKeyedArchiver.archivedData(withRootObject: favouriteGuests)
 //            UserDefaults.standard.set(favouriteGuestsData, forKey: "favouriteGuests")
 //            print ("fav guests set:  \(favouriteGuests)")
@@ -119,14 +128,4 @@ class CheckGuestsViewController: UITableViewController, addGuestDelegate  {
 //            cell.addToFavouritesBtn.setImage(UIImage(named: "starFalse"), for: .normal)
 //        }
 //    }
-
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 50
-    }
-
-
-
-
-
-
 }
