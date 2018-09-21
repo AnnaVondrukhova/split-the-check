@@ -131,7 +131,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeader") as! HeaderCell
         
-        cell.sectionTitle.text = guests[section].name
+        cell.sectionTitle.setTitle(guests[section].name, for: .normal)
         cell.totalSum.text = String(format: "%.2f", totalSum[section])
         
         return cell.contentView

@@ -11,7 +11,7 @@ import UIKit
 class HeaderCell: UITableViewCell {
 
     @IBOutlet weak var totalSum: UILabel!
-    @IBOutlet weak var sectionTitle: UILabel!
+    @IBOutlet weak var sectionTitle: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
