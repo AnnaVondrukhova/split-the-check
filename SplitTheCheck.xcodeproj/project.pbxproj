@@ -29,6 +29,9 @@
 		C16B3E7E1FF112B6005C99B8 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16B3E7D1FF112B6005C99B8 /* ScanViewController.swift */; };
 		C16B3E811FF112B6005C99B8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C16B3E7F1FF112B6005C99B8 /* Main.storyboard */; };
 		C16B3E861FF112B6005C99B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C16B3E841FF112B6005C99B8 /* LaunchScreen.storyboard */; };
+		C175891F215906590042E01E /* ChangeGuestNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C175891E215906590042E01E /* ChangeGuestNameViewController.swift */; };
+		C1758921215906960042E01E /* FavGuestNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1758920215906960042E01E /* FavGuestNameCell.swift */; };
+		C1758923215906B10042E01E /* AddGuestNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1758922215906B10042E01E /* AddGuestNameCell.swift */; };
 		C18BDA771FF2951F0008E58F /* CheckInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */; };
 		C1902DB1212ED026009F00CF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1902DB0212ED026009F00CF /* GoogleService-Info.plist */; };
 		C1A0672F200CF16E007AD89A /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0672E200CF16E007AD89A /* CustomButton.swift */; };
@@ -67,6 +70,9 @@
 		C16B3E801FF112B6005C99B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C16B3E851FF112B6005C99B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C16B3E871FF112B6005C99B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C175891E215906590042E01E /* ChangeGuestNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeGuestNameViewController.swift; sourceTree = "<group>"; };
+		C1758920215906960042E01E /* FavGuestNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavGuestNameCell.swift; sourceTree = "<group>"; };
+		C1758922215906B10042E01E /* AddGuestNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddGuestNameCell.swift; sourceTree = "<group>"; };
 		C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInfoViewController.swift; sourceTree = "<group>"; };
 		C1902DB0212ED026009F00CF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C1A0672E200CF16E007AD89A /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
@@ -189,8 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				C1690C6C2015F55C00C3638E /* AllChecks */,
-				C1619CB22008EAEA004640ED /* CheckInfo */,
-				C1369BC4200F83DD00830D45 /* CheckGuests */,
+				C175891C215903080042E01E /* ScanCheck */,
 				C169B02D203C393900987727 /* FavouriteGuests */,
 				C104596421368F99007BD0A7 /* LoginViewControllers */,
 				C104596521369001007BD0A7 /* Services */,
@@ -205,6 +210,26 @@
 				C16B3E7B1FF112B6005C99B8 /* AppDelegate.swift */,
 			);
 			path = SplitTheCheck;
+			sourceTree = "<group>";
+		};
+		C175891C215903080042E01E /* ScanCheck */ = {
+			isa = PBXGroup;
+			children = (
+				C1619CB22008EAEA004640ED /* CheckInfo */,
+				C1369BC4200F83DD00830D45 /* CheckGuests */,
+				C175891D2159034D0042E01E /* ChangeName */,
+			);
+			path = ScanCheck;
+			sourceTree = "<group>";
+		};
+		C175891D2159034D0042E01E /* ChangeName */ = {
+			isa = PBXGroup;
+			children = (
+				C175891E215906590042E01E /* ChangeGuestNameViewController.swift */,
+				C1758920215906960042E01E /* FavGuestNameCell.swift */,
+				C1758922215906B10042E01E /* AddGuestNameCell.swift */,
+			);
+			path = ChangeName;
 			sourceTree = "<group>";
 		};
 		C1A980EB213EC4BB000E7A0D /* CustomUIObjects */ = {
@@ -398,13 +423,16 @@
 				C1369BC3200D227000830D45 /* HeaderCell.swift in Sources */,
 				C1A22E2320FCB3E100286CD3 /* LoginViewController.swift in Sources */,
 				C1690C6E2015F58F00C3638E /* AllChecksViewController.swift in Sources */,
+				C1758923215906B10042E01E /* AddGuestNameCell.swift in Sources */,
 				C1369BC8200F86B100830D45 /* CheckGuestsViewController.swift in Sources */,
 				C1690C702015F5E400C3638E /* LoadedCheckCell.swift in Sources */,
 				C1A0672F200CF16E007AD89A /* CustomButton.swift in Sources */,
+				C175891F215906590042E01E /* ChangeGuestNameViewController.swift in Sources */,
 				C104596821369A9A007BD0A7 /* Alerts.swift in Sources */,
 				C1369BCA200F870B00830D45 /* FavouriteGuestCell.swift in Sources */,
 				C104596321368F0C007BD0A7 /* RealmServices.swift in Sources */,
 				C1369BC6200F841700830D45 /* GuestInfoObject.swift in Sources */,
+				C1758921215906960042E01E /* FavGuestNameCell.swift in Sources */,
 				C1A22E2520FE208400286CD3 /* SignUpViewController.swift in Sources */,
 				C1A8F73320FA904A00B0B644 /* StartViewController.swift in Sources */,
 				C16B3E7E1FF112B6005C99B8 /* ScanViewController.swift in Sources */,

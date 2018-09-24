@@ -1,17 +1,15 @@
 //
-//  HeaderCell.swift
+//  FavGuestNameCell.swift
 //  SplitTheCheck
 //
-//  Created by Anya on 15/01/2018.
+//  Created by Anya on 24/09/2018.
 //  Copyright © 2018 Anna Zhulidova. All rights reserved.
 //
 
 import UIKit
 
-class HeaderCell: UITableViewCell {
-
-    @IBOutlet weak var totalSum: UILabel!
-    @IBOutlet weak var sectionTitle: UIButton!
+class FavGuestNameCell: UITableViewCell {
+    @IBOutlet weak var guestName: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

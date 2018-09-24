@@ -9,10 +9,6 @@
 import UIKit
 import RealmSwift
 
-protocol addGuestDelegate {
-    func addNewGuest (_ cell: AddGuestCell)
-//    func addToFavourites (_ cell: AddGuestCell)
-}
 
 class AddGuestCell: UITableViewCell, UITextFieldDelegate {
     @IBOutlet weak var guestName: UITextField! {
@@ -35,14 +31,11 @@ class AddGuestCell: UITableViewCell, UITextFieldDelegate {
         // Configure the view for the selected state
     }
     
+    //добавляем нового гостя в guests по нажатию кнопки
     @IBAction func addGuestBtnTap(_ sender: CustomButton) {
-        delegate.addNewGuest(self)
+        delegate.newGuest = GuestInfoObject(name: self.guestName.text!)
         print ("+ pressed")
     }
-//    @IBAction func addToFavouritesBtnTap(_ sender: CustomButton) {
-//        delegate?.addToFavourites(self)
-//        print ("star pressed")
-//    }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         print ("****** did end editing")

@@ -14,7 +14,7 @@ class FavouriteGuestCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        guestName.font = UIFont.boldSystemFont(ofSize: 17)
+//        guestName.font = UIFont.boldSystemFont(ofSize: 17)
         // Initialization code
     }
 

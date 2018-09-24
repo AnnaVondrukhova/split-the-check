@@ -42,13 +42,13 @@ class CheckInfoViewController: UIViewController, ResultCellDelegate {
             let realmItems = realm.objects(CheckInfoObject.self).filter("%@ IN parent", parentString).sorted(byKeyPath: "sectionId")
             //создаем отдельную от базы данных копию чека и в дальнейшем работаем с ней,
             //чтобы не записывать в базу все промежуточные результаты
-            var realItemsCopy = [CheckInfoObject]()
+            var realmItemsCopy = [CheckInfoObject]()
             for item in Array(realmItems) {
                 let copyItem = item.copyItem()
-                realItemsCopy.append(copyItem)
+                realmItemsCopy.append(copyItem)
             }
             //группируем позиции в чеке по секциям (если чек ранее уже разбивался на группы)
-            self.items = realItemsCopy.reduce([[CheckInfoObject]]()) {
+            self.items = realmItemsCopy.reduce([[CheckInfoObject]]()) {
                 guard var last = $0.last else { return [[$1]] }
                 var collection = $0
                 if last.first!.sectionId == $1.sectionId {
@@ -97,7 +97,7 @@ class CheckInfoViewController: UIViewController, ResultCellDelegate {
 
     override func viewWillAppear(_ animated: Bool) {
         if guestSum != 0 {
-            addGuest.titleLabel?.text = "\(guestSum)"
+            addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
         }
         
     }
@@ -105,7 +105,7 @@ class CheckInfoViewController: UIViewController, ResultCellDelegate {
     override func viewDidDisappear(_ animated: Bool) {
         if guestSum != 0 {
             print ("view did disappear")
-            addGuest.titleLabel?.text = "\(guestSum)"
+            addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
         }
     }
 
@@ -133,6 +133,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         
         cell.sectionTitle.setTitle(guests[section].name, for: .normal)
         cell.totalSum.text = String(format: "%.2f", totalSum[section])
+        cell.sectionTitle.tag = section
         
         return cell.contentView
     }
@@ -170,7 +171,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.itemAmount.text = item.myQtotalQ
                 
                 guestSum += Double(item.myQuantity-myQuantityOld)*item.price
-                addGuest.titleLabel?.text = "\(guestSum)"
+                addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
             }
         }
     }
@@ -208,7 +209,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         selectedItems.append(item)
         print("appended, total \(selectedItems.count)")
         
-        addGuest.titleLabel?.text = "\(guestSum)"
+        addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
         
         
     }
@@ -230,7 +231,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                 item.myQtotalQ = "\(item.totalQuantity)"
             }
             
-            addGuest.titleLabel?.text = "\(guestSum)"
+            addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
             item.myQuantity = 0
             
             let index = selectedItems.index(of: item)
@@ -310,9 +311,20 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
             checkTableView.reloadData()
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "changeGuestName" {
+            let controller = segue.destination as! ChangeGuestNameViewController
+            if let button = sender as! UIButton? {
+                print ("pressed button \(button.tag)")
+                controller.sectionNo = button.tag
+            }
+        }
+    }
 }
 
 extension CheckInfoViewController {
+    
     //добавляем favouriteGuest на экран с чеком по нажатию на ячейку или кнопку +
     @IBAction func addGuestToCheck (segue: UIStoryboardSegue) {
         if segue.identifier == "addFavouriteGuestToCheck" {
@@ -320,7 +332,7 @@ extension CheckInfoViewController {
 //            let resultViewController = segue.destination as! ResultViewController
             
             if let indexPath = guestViewCotroller.tableView.indexPathForSelectedRow {
-                let guest = guestViewCotroller.favouriteGuests[indexPath.row]
+                let guest = GuestInfoObject(name: guestViewCotroller.favouriteGuests[indexPath.row].name) 
                 //если такой гость уже существует, добавляем позиции к нему.
                 //если гость еще не существует, добавляем новую секцию
                 if guests.contains(where: {$0.name == guest.name}){
@@ -333,7 +345,7 @@ extension CheckInfoViewController {
                 }
                 
             }
-        } else if  segue.identifier == "addNewGuestToCheck" {
+        } else if segue.identifier == "addNewGuestToCheck" {
             let guestViewCotroller = segue.source as! CheckGuestsViewController
             //            let resultViewController = segue.destination as! ResultViewController
             
@@ -470,6 +482,49 @@ extension CheckInfoViewController {
             try realm.commitWrite()
         } catch {
             print(error)
+        }
+    }
+}
+
+extension CheckInfoViewController {
+    @IBAction func changeGuestName (segue: UIStoryboardSegue) {
+        if segue.identifier == "changeNameToFavourite" {
+            let guestNameVC = segue.source as! ChangeGuestNameViewController
+            let sectionNo = guestNameVC.sectionNo
+            
+            if let indexPath = guestNameVC.tableView.indexPathForSelectedRow {
+                print ("changing name to \(guestNameVC.favouriteGuests[indexPath.row].name)")
+                do {
+                    let realm = try! Realm()
+                    realm.beginWrite()
+                    guests[sectionNo].name = guestNameVC.favouriteGuests[indexPath.row].name
+                    for item in items[sectionNo] {
+                        item.sectionName = guestNameVC.favouriteGuests[indexPath.row].name
+                    }
+                    try realm.commitWrite()
+                } catch {
+                    print (error)
+                }
+                checkTableView.reloadData()
+            }
+        } else if segue.identifier == "changeNameToNew" {
+            let guestNameVC = segue.source as! ChangeGuestNameViewController
+            let sectionNo = guestNameVC.sectionNo
+            let guest = guestNameVC.newGuest
+            
+            print ("changing name to \(guest.name)")
+            do {
+                let realm = try! Realm()
+                realm.beginWrite()
+                guests[sectionNo].name = guest.name
+                for item in items[sectionNo] {
+                    item.sectionName = guest.name
+                }
+                try realm.commitWrite()
+            } catch {
+                print (error)
+            }
+            checkTableView.reloadData()
         }
     }
 }
