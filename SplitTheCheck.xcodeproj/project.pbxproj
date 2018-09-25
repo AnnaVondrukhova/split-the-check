@@ -32,6 +32,7 @@
 		C175891F215906590042E01E /* ChangeGuestNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C175891E215906590042E01E /* ChangeGuestNameViewController.swift */; };
 		C1758921215906960042E01E /* FavGuestNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1758920215906960042E01E /* FavGuestNameCell.swift */; };
 		C1758923215906B10042E01E /* AddGuestNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1758922215906B10042E01E /* AddGuestNameCell.swift */; };
+		C1758925215A275C0042E01E /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1758924215A275C0042E01E /* CustomTextField.swift */; };
 		C18BDA771FF2951F0008E58F /* CheckInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */; };
 		C1902DB1212ED026009F00CF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1902DB0212ED026009F00CF /* GoogleService-Info.plist */; };
 		C1A0672F200CF16E007AD89A /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0672E200CF16E007AD89A /* CustomButton.swift */; };
@@ -73,6 +74,7 @@
 		C175891E215906590042E01E /* ChangeGuestNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeGuestNameViewController.swift; sourceTree = "<group>"; };
 		C1758920215906960042E01E /* FavGuestNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavGuestNameCell.swift; sourceTree = "<group>"; };
 		C1758922215906B10042E01E /* AddGuestNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddGuestNameCell.swift; sourceTree = "<group>"; };
+		C1758924215A275C0042E01E /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInfoViewController.swift; sourceTree = "<group>"; };
 		C1902DB0212ED026009F00CF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C1A0672E200CF16E007AD89A /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 			children = (
 				C1A0672E200CF16E007AD89A /* CustomButton.swift */,
 				C1FCE56C212C38EF009B8C59 /* Checkbox.swift */,
+				C1758924215A275C0042E01E /* CustomTextField.swift */,
 			);
 			path = CustomUIObjects;
 			sourceTree = "<group>";
@@ -420,6 +423,7 @@
 				C169B02F203C397100987727 /* FavGuestViewController.swift in Sources */,
 				C1619CAF2008CBE2004640ED /* RequestService.swift in Sources */,
 				C1FCE56D212C38EF009B8C59 /* Checkbox.swift in Sources */,
+				C1758925215A275C0042E01E /* CustomTextField.swift in Sources */,
 				C1369BC3200D227000830D45 /* HeaderCell.swift in Sources */,
 				C1A22E2320FCB3E100286CD3 /* LoginViewController.swift in Sources */,
 				C1690C6E2015F58F00C3638E /* AllChecksViewController.swift in Sources */,

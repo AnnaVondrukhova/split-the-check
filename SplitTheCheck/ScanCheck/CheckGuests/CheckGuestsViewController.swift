@@ -19,7 +19,6 @@ class CheckGuestsViewController: UITableViewController  {
         self.tableView?.rowHeight = 50
         self.tabBarController?.tabBar.isHidden = true
     
-        
         print(favouriteGuests)
     }
     
@@ -59,8 +58,12 @@ class CheckGuestsViewController: UITableViewController  {
 
         if indexPath.row < favouriteGuests.count {
             let cell = tableView.dequeueReusableCell(withIdentifier: "favouriteGuest", for: indexPath) as! FavouriteGuestCell
+            cell.delegate = self
             
             cell.guestName.text = favouriteGuests[indexPath.row].name
+            cell.setTag(tag: indexPath.row)
+            cell.guestId = favouriteGuests[indexPath.row].id
+            print ("cell tag: \(cell.guestName.tag)")
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "addGuest") as! AddGuestCell
