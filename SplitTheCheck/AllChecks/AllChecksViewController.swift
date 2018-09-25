@@ -21,6 +21,7 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
     var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     var waitingLabel: UILabel = UILabel()
     var waitingView: UIView = UIView()
+    var sortedKeys =  [YearMonth]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,6 +101,18 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
         } catch {
             print(error.localizedDescription)
         }
+        
+        //группируем чеки
+        var groupedChecks = [YearMonth: [QrStringInfoObject]]()
+        guard self.storedChecks != nil else { return }
+        for check in storedChecks! {
+            let yearMonth = YearMonth(date: check.checkDate!)
+            var yearMonthChecks = groupedChecks[yearMonth, default: [QrStringInfoObject]()]
+            yearMonthChecks.append(check)
+            groupedChecks[yearMonth] = yearMonthChecks
+        }
+        
+        self.sortedKeys = groupedChecks.keys.sorted(by: >)
 
         self.collectionView?.reloadData()
         print("data reloaded")
