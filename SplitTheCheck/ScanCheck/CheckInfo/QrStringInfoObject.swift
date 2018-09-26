@@ -42,7 +42,7 @@ class QrStringInfoObject: Object {
             self.checkDate = dateFormatter.date(from: String(qrString[range]))
         } else {
             dateFormatter.dateFormat = "yyyyMMdd'T'HHmm"
-            end = qrString.index(qrString.startIndex, offsetBy: 17)
+            end = qrString.index(qrString.startIndex, offsetBy: 15)
             range = start..<end
             self.checkDate = dateFormatter.date(from: String(qrString[range]))
         }

@@ -31,7 +31,7 @@ class CheckInfoViewController: UIViewController, ResultCellDelegate {
         
         self.checkTableView?.rowHeight = 60
         self.tabBarController?.tabBar.isHidden = true
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveTheCheck))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(saveTheCheck))
 //        tableView.delegate = self
         addGuest.titleLabel?.textAlignment = .center
         addGuest.titleLabel?.text = "Выберите позиции"

@@ -14,6 +14,7 @@ import RealmSwift
 class AllChecksViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
     var storedChecks: Results<QrStringInfoObject>?
+    var groupedChecks: [YearMonth: [QrStringInfoObject]]?
     var jsonString = ""
     let requestResult = RequestService()
     var token: NotificationToken?
@@ -22,6 +23,7 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
     var waitingLabel: UILabel = UILabel()
     var waitingView: UIView = UIView()
     var sortedKeys =  [YearMonth]()
+    @IBOutlet var noChecksLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,7 +67,7 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
 //        }
 //        UserDefaults.standard.set(false, forKey: "notFirstLaunch")
 //
-//
+
 //                    Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
 //                    print("configuration changed")
         
@@ -102,17 +104,22 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
             print(error.localizedDescription)
         }
         
+        self.groupedChecks = [YearMonth: [QrStringInfoObject]]()
+        
         //группируем чеки
-        var groupedChecks = [YearMonth: [QrStringInfoObject]]()
         guard self.storedChecks != nil else { return }
-        for check in storedChecks! {
+        var yearMonthChecks = [QrStringInfoObject]()
+            //сортируем чеки по убыванию даты, чтобы в пределах группы они располагались по убыванию
+        let storedChecksSorted = storedChecks?.sorted(byKeyPath: "checkDate", ascending: false)
+        for check in storedChecksSorted! {
             let yearMonth = YearMonth(date: check.checkDate!)
-            var yearMonthChecks = groupedChecks[yearMonth, default: [QrStringInfoObject]()]
+            yearMonthChecks = groupedChecks![yearMonth, default: [QrStringInfoObject]()]
             yearMonthChecks.append(check)
-            groupedChecks[yearMonth] = yearMonthChecks
+            self.groupedChecks![yearMonth] = yearMonthChecks
         }
         
-        self.sortedKeys = groupedChecks.keys.sorted(by: >)
+            //сортируем ключи бо убыванию
+        self.sortedKeys = groupedChecks!.keys.sorted(by: >)
 
         self.collectionView?.reloadData()
         print("data reloaded")
@@ -127,7 +134,7 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //если информация о чеке загружена, переходим на страницу с информацией
         if (collectionView.cellForItem(at: indexPath) as? LoadedCheckCell) != nil {
-            modifiedString = storedChecks!.reversed()[indexPath.item]
+            modifiedString = groupedChecks![sortedKeys[indexPath.section]]![indexPath.item]
             performSegue(withIdentifier: "showCheckSegue", sender: nil)
         }
         //если информация о чеке еще не загружена, пробуем загрузить
@@ -136,14 +143,14 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
             waitingLabel.isHidden = false
             waitingView.isHidden = false
             activityIndicator.startAnimating()
-            RequestService.loadData(receivedString: storedChecks!.reversed()[indexPath.item].qrString)
-            RealmServices.getStringFromRealm(VC: self, qrString: storedChecks!.reversed()[indexPath.item].qrString)
+            RequestService.loadData(receivedString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.item].qrString)
+            RealmServices.getStringFromRealm(VC: self, qrString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.item].qrString)
         }
     }
 
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return sortedKeys.count
     }
 
 
@@ -151,34 +158,46 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
         // Если отсканированных чеков еще нет, показываем на экране надпись
         if (storedChecks != nil) && (storedChecks?.isEmpty == false) {
             print ("stored checks not nil or empty")
+            self.noChecksLabel.isHidden = true
             self.collectionView?.backgroundView = nil
-            return storedChecks!.count
+            return groupedChecks![sortedKeys[section]]!.count
         } else {
-            let bounds = CGRect(x: 0, y: 0, width: (self.collectionView?.bounds.size.width)!, height: (self.collectionView?.bounds.size.height)!)
-            let noDataLabel = UILabel(frame: bounds)
-            noDataLabel.text = "Нет отсканированных чеков"
-            noDataLabel.textAlignment = .center
-            noDataLabel.textColor = UIColor.lightGray
-            noDataLabel.font = UIFont.systemFont(ofSize: 15)
-            noDataLabel.sizeToFit()
-            self.collectionView?.backgroundView = noDataLabel
-            
+//            let bounds = CGRect(x: 0, y: 0, width: (self.collectionView?.bounds.size.width)!, height: (self.collectionView?.bounds.size.height)!)
+//            let noDataLabel = UILabel(frame: bounds)
+//            noDataLabel.text = "Нет отсканированных чеков"
+//            noDataLabel.textAlignment = .center
+//            noDataLabel.textColor = UIColor.lightGray
+//            noDataLabel.font = UIFont.systemFont(ofSize: 15)
+//            noDataLabel.sizeToFit()
+//            self.collectionView?.backgroundView = noDataLabel
+            self.noChecksLabel.isHidden = false
             return 0
         }
     }
-
+    
+    //задаем конфигурацию header view
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "dateHeader", for: indexPath) as? AllChecksHeaderCell {
+            sectionHeader.configure(date: sortedKeys[indexPath.section])
+            return sectionHeader
+        }
+        
+        return UICollectionReusableView()
+    }
+    
+    //задаем конфигурацию ячейки
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        if storedChecks!.reversed()[indexPath.item].jsonString != nil && storedChecks!.reversed()[indexPath.item].jsonString != "null"  {
+        if groupedChecks![sortedKeys[indexPath.section]]![indexPath.item].jsonString != nil && groupedChecks![sortedKeys[indexPath.section]]![indexPath.item].jsonString != "null"  {
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "loadedCheck", for: indexPath) as? LoadedCheckCell {
                 
-                cell.configure(jsonString: storedChecks!.reversed()[indexPath.item].jsonString!)
+                cell.configure(jsonString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.item].jsonString!)
                 return cell
             }
         } else {
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "notLoadedCheck", for: indexPath) as? NotLoadedCheckCell {
                 
-                cell.configure(qrString: storedChecks!.reversed()[indexPath.item].qrString)
+                cell.configure(qrString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.item].qrString)
                 return cell
             }
         }

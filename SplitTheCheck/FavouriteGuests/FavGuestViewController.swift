@@ -18,11 +18,9 @@ class FavGuestViewController: UITableViewController {
         super.viewDidLoad()
         self.tableView?.rowHeight = 50
 
-        // Uncomment the following line to preserve selection between presentations
-//         self.clearsSelectionOnViewWillAppear = false
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         self.navigationItem.rightBarButtonItem = self.editButtonItem
+        self.navigationItem.rightBarButtonItem?.title = "Править"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -162,17 +160,8 @@ class FavGuestViewController: UITableViewController {
         do {
             let realm = try Realm()
             realm.beginWrite()
-//            let user = realm.objects(User.self).first
-//            let oldGuests = user?.guests
-//            self.favouriteGuests = Array(realmGuests)
             favouriteGuests.remove(at: sourceIndexPath.row)
             favouriteGuests.insert(rowToMove, at: destinationIndexPath.row)
-            
-//            user?.guests.remove(at: sourceIndexPath.row)
-//            user?.guests.insert(rowToMove, at: destinationIndexPath.row)
-//            realm.delete(oldGuests!)
-//            user?.guests.append(objectsIn: favouriteGuests)
-//            realm.add(favouriteGuests, update: true)
             try realm.commitWrite()
             print (favouriteGuests)
         } catch {
