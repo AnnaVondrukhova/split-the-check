@@ -11,7 +11,7 @@ import SwiftyJSON
 import RealmSwift
 
 
-class AllChecksViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class AllChecksViewController: UITableViewController {
 
     var storedChecks: Results<QrStringInfoObject>?
     var groupedChecks: [YearMonth: [QrStringInfoObject]]?
@@ -23,25 +23,39 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
     var waitingLabel: UILabel = UILabel()
     var waitingView: UIView = UIView()
     var sortedKeys =  [YearMonth]()
-    @IBOutlet var noChecksLabel: UILabel!
+    var noChecksLabel: UILabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //задаем параметры надписи на заднем плане по умолчанию
+        let bounds = CGRect(x: 0, y: 0, width: (self.tableView?.bounds.size.width)!, height: (self.tableView?.bounds.size.height)!)
+        noChecksLabel.bounds = bounds
+        noChecksLabel.text = "Нет отсканированных чеков"
+        noChecksLabel.textAlignment = .center
+        noChecksLabel.textColor = UIColor.lightGray
+        noChecksLabel.font = UIFont.systemFont(ofSize: 15)
+        noChecksLabel.sizeToFit()
+        self.tableView?.backgroundView = noChecksLabel
+
+        //убираем разделитель
+        self.tableView.separatorColor = UIColor.clear
         
         //задаем параметры ActivityIndicatorView и сопутствующих элементов
         waitingView.backgroundColor = UIColor.lightGray
         waitingView.layer.cornerRadius = 10
         waitingView.frame.size = CGSize(width: 180, height: 20 + activityIndicator.frame.height + 48)
-        waitingView.center = self.view.center
+        waitingView.center = CGPoint(x: UIScreen.main.bounds.width/2, y: UIScreen.main.bounds.height/2)
+        print (waitingView.center)
         waitingView.layer.opacity = 0.8
-        self.view.addSubview(waitingView)
-        self.view.bringSubview(toFront: waitingView)
+        self.navigationController?.view.addSubview(waitingView)
+        self.navigationController?.view.bringSubview(toFront: waitingView)
         
         activityIndicator.color = UIColor.white
         activityIndicator.center.x = waitingView.center.x
         activityIndicator.center.y = waitingView.frame.minY + 20 + activityIndicator.frame.height/2
-        self.view.addSubview(activityIndicator)
-        self.view.bringSubview(toFront: activityIndicator)
+        self.navigationController?.view.addSubview(activityIndicator)
+        self.navigationController?.view.bringSubview(toFront: activityIndicator)
         activityIndicator.isHidden = false
         activityIndicator.hidesWhenStopped = true
         
@@ -52,8 +66,8 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
         waitingLabel.frame.size = CGSize(width: 140, height: 20)
         waitingLabel.center.x = waitingView.center.x
         waitingLabel.center.y = activityIndicator.frame.maxY + 18
-        self.view.addSubview(waitingLabel)
-        self.view.bringSubview(toFront: waitingLabel)
+        self.navigationController?.view.addSubview(waitingLabel)
+        self.navigationController?.view.bringSubview(toFront: waitingLabel)
         
 //        do {
 //            let realm = try Realm()
@@ -121,87 +135,109 @@ class AllChecksViewController: UICollectionViewController, UICollectionViewDeleg
             //сортируем ключи бо убыванию
         self.sortedKeys = groupedChecks!.keys.sorted(by: >)
 
-        self.collectionView?.reloadData()
+        self.tableView?.reloadData()
         print("data reloaded")
     }
     
-    //задаем ширину ячеек
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.bounds.width - 20, height: 60)
-    }
-    
     //если мы выбираем в списке чек, то...
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //если информация о чеке загружена, переходим на страницу с информацией
-        if (collectionView.cellForItem(at: indexPath) as? LoadedCheckCell) != nil {
-            modifiedString = groupedChecks![sortedKeys[indexPath.section]]![indexPath.item]
-            performSegue(withIdentifier: "showCheckSegue", sender: nil)
+        if (tableView.cellForRow(at: indexPath) as? LoadedCheckCell) != nil {
+            modifiedString = groupedChecks![sortedKeys[indexPath.section]]![indexPath.row]
+            performSegue(withIdentifier: "showCheckSegue", sender: self)
         }
         //если информация о чеке еще не загружена, пробуем загрузить
-        else if (collectionView.cellForItem(at: indexPath) as? NotLoadedCheckCell) != nil {
+        else if (tableView.cellForRow(at: indexPath) as? NotLoadedCheckCell) != nil {
             print("cell as NotLoadedCheckCell")
             waitingLabel.isHidden = false
             waitingView.isHidden = false
             activityIndicator.startAnimating()
-            RequestService.loadData(receivedString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.item].qrString)
-            RealmServices.getStringFromRealm(VC: self, qrString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.item].qrString)
+            RequestService.loadData(receivedString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].qrString)
+            RealmServices.getStringFromRealm(VC: self, qrString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].qrString)
         }
     }
 
 
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        if sortedKeys.count == 0 {
+            self.tableView?.backgroundView = noChecksLabel
+        } else {
+            self.tableView?.backgroundView = nil
+        }
         return sortedKeys.count
     }
 
 
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Если отсканированных чеков еще нет, показываем на экране надпись
         if (storedChecks != nil) && (storedChecks?.isEmpty == false) {
             print ("stored checks not nil or empty")
-            self.noChecksLabel.isHidden = true
-            self.collectionView?.backgroundView = nil
+//            self.noChecksLabel.isHidden = true
+//            self.tableView?.backgroundView = nil
             return groupedChecks![sortedKeys[section]]!.count
         } else {
-//            let bounds = CGRect(x: 0, y: 0, width: (self.collectionView?.bounds.size.width)!, height: (self.collectionView?.bounds.size.height)!)
-//            let noDataLabel = UILabel(frame: bounds)
-//            noDataLabel.text = "Нет отсканированных чеков"
-//            noDataLabel.textAlignment = .center
-//            noDataLabel.textColor = UIColor.lightGray
-//            noDataLabel.font = UIFont.systemFont(ofSize: 15)
-//            noDataLabel.sizeToFit()
-//            self.collectionView?.backgroundView = noDataLabel
-            self.noChecksLabel.isHidden = false
+//            self.tableView?.backgroundView = noChecksLabel
+//            self.noChecksLabel.isHidden = false
             return 0
         }
     }
     
     //задаем конфигурацию header view
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "dateHeader", for: indexPath) as? AllChecksHeaderCell {
-            sectionHeader.configure(date: sortedKeys[indexPath.section])
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if let sectionHeader = tableView.dequeueReusableCell(withIdentifier: "dateHeader") as? AllChecksHeaderCell {
+            sectionHeader.configure(date: sortedKeys[section])
             return sectionHeader
         }
         
         return UICollectionReusableView()
     }
     
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
     //задаем конфигурацию ячейки
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        if groupedChecks![sortedKeys[indexPath.section]]![indexPath.item].jsonString != nil && groupedChecks![sortedKeys[indexPath.section]]![indexPath.item].jsonString != "null"  {
-            if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "loadedCheck", for: indexPath) as? LoadedCheckCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].jsonString != nil && groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].jsonString != "null"  {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: "loadedCheck", for: indexPath) as? LoadedCheckCell {
                 
-                cell.configure(jsonString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.item].jsonString!)
+                cell.configure(jsonString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].jsonString!)
                 return cell
             }
         } else {
-            if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "notLoadedCheck", for: indexPath) as? NotLoadedCheckCell {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: "notLoadedCheck", for: indexPath) as? NotLoadedCheckCell {
                 
-                cell.configure(qrString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.item].qrString)
+                cell.configure(qrString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].qrString)
                 return cell
             }
         }
-        return UICollectionViewCell()
+        return UITableViewCell()
+    }
+    
+    //если удаляем строку, то удаляем чек из базы
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .delete
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            do {
+                let realm = try Realm()
+                realm.beginWrite()
+                let qrString = groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].qrString
+                groupedChecks![sortedKeys[indexPath.section]]!.remove(at: indexPath.row)
+                if groupedChecks![sortedKeys[indexPath.section]]!.isEmpty {
+                    sortedKeys.remove(at: indexPath.section)
+                }
+                let realmQrString = realm.object(ofType: QrStringInfoObject.self, forPrimaryKey: qrString)!
+                realm.delete(realmQrString)
+                try realm.commitWrite()
+                print ("deleted row \(qrString)")
+                tableView.reloadData()
+            } catch {
+                print (error.localizedDescription)
+            }
+        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -9,8 +9,8 @@
 import UIKit
 @IBDesignable
 
-class NotLoadedCheckCell: UICollectionViewCell {
-    
+class NotLoadedCheckCell: UITableViewCell {
+    @IBOutlet weak var backColorView: UIView!
     @IBOutlet weak var qrImage: UIImageView!
     @IBOutlet weak var date: UILabel!
     @IBOutlet weak var sum: UILabel!
@@ -23,6 +23,9 @@ class NotLoadedCheckCell: UICollectionViewCell {
 
     
     func configure (qrString: String) {
+        self.selectionStyle = .none
+        self.backColorView.layer.cornerRadius = 10
+        
         let fullDate: Date?
         let params = qrString
             .components(separatedBy: "&")

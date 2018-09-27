@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AllChecksHeaderCell: UICollectionReusableView {
+class AllChecksHeaderCell: UITableViewCell {
         
     @IBOutlet weak var yearMonthLabel: UILabel!
     

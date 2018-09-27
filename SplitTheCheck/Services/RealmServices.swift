@@ -136,7 +136,7 @@ class RealmServices {
                     }
                 } else {
                     VC.activityIndicator.stopAnimating()
-                    VC.performSegue(withIdentifier: "showCheckSegue", sender: nil)
+                    VC.performSegue(withIdentifier: "showCheckSegue", sender: self)
                     print("showCheckSegue performed")
                 }
             case .error(let error):

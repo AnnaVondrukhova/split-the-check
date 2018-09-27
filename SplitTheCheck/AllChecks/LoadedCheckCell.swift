@@ -10,7 +10,8 @@ import UIKit
 import SwiftyJSON
 @IBDesignable
 
-class LoadedCheckCell: UICollectionViewCell {
+class LoadedCheckCell: UITableViewCell {
+    @IBOutlet weak var backColorView: UIView!
     @IBOutlet weak var date: UILabel!
     
     @IBOutlet weak var sum: UILabel!
@@ -18,13 +19,16 @@ class LoadedCheckCell: UICollectionViewCell {
     
     @IBInspectable var cornerRadius: CGFloat = 0{
         didSet{
-            self.layer.cornerRadius = cornerRadius
+            self.backColorView.layer.cornerRadius = cornerRadius
         }
     }
     
     
     
     func configure(jsonString: String) {
+        self.selectionStyle = .none
+        self.backColorView.layer.cornerRadius = 10
+        
         let json = JSON.init(parseJSON: jsonString)
         
         print(json["document"]["receipt"]["dateTime"].stringValue)
