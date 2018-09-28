@@ -12,7 +12,7 @@ import SwiftyJSON
 import RealmSwift
 
 
-class CheckInfoViewController: UIViewController, ResultCellDelegate {
+class CheckInfoViewController: UIViewController {
 
     @IBOutlet weak var addGuest: CustomButton!
     @IBOutlet weak var checkTableView: UITableView!
@@ -24,6 +24,7 @@ class CheckInfoViewController: UIViewController, ResultCellDelegate {
     var guests = [GuestInfoObject]()    //гости, на которых разбит этот чек
     var totalSum = [Double]()
     var guestSum = 0.0
+    var isFolded:[Bool] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,6 +66,12 @@ class CheckInfoViewController: UIViewController, ResultCellDelegate {
                 guests.append(GuestInfoObject(name: (item.first?.sectionName)!))
                 totalSum.append(item.reduce(0){$0 + round(100*$1.price*$1.totalQuantity)/100})
             }
+            //каждому гостю ставим в соответствие, свернуты ли его позиции
+            for _ in 0..<guests.count {
+                isFolded.append(false)
+            }
+            
+            
             
 //                groupItems(items: realmItems)
             print("items grouped")
@@ -99,7 +106,7 @@ class CheckInfoViewController: UIViewController, ResultCellDelegate {
         if guestSum != 0 {
             addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
         }
-        
+        print ("foldings - \(isFolded.count)")
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -130,12 +137,31 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
     //заголовок секции
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeader") as! HeaderCell
+        cell.isUserInteractionEnabled = true
         
         cell.sectionTitle.setTitle(guests[section].name, for: .normal)
         cell.totalSum.text = String(format: "%.2f", totalSum[section])
         cell.sectionTitle.tag = section
-        
+
+        cell.foldBtn.addTarget(self, action: #selector(foldBtnTap(_:)), for: .touchUpInside)
+        cell.foldBtn.tag = section
+        if isFolded[section] {
+            cell.foldBtn.setImage(UIImage(named: "folded"), for: .normal)
+        } else {
+            cell.foldBtn.setImage(UIImage(named: "unfolded"), for: .normal)
+        }
         return cell.contentView
+    }
+    
+    @objc func foldBtnTap(_ sender: UIButton) {
+        isFolded[sender.tag] = !isFolded[sender.tag]
+        print ("@@isFolded - \(isFolded[sender.tag])")
+        if isFolded[sender.tag] {
+            sender.setImage(UIImage(named: "folded"), for: .normal)
+        } else {
+            sender.setImage(UIImage(named: "unfolded"), for: .normal)
+        }
+        checkTableView.reloadData()
     }
     
     //конфигурация ячейки
@@ -146,6 +172,14 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         cell.configure(item: items[indexPath.section][indexPath.row], section: indexPath.section)
 
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if isFolded[indexPath.section] {
+            return 0
+        } else {
+            return 60
+        }
     }
     
     //изменение количества выбранных единиц товара
@@ -307,6 +341,13 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                 items.remove(at: indexPath.section)
                 guests.remove(at: indexPath.section)
                 totalSum.remove(at: indexPath.section)
+                isFolded.remove(at: indexPath.section)
+                
+                for i in indexPath.section..<items.count {
+                    for item in items[i] {
+                        item.sectionId -= 1
+                    }
+                }
             }
             checkTableView.reloadData()
         }
@@ -359,6 +400,9 @@ extension CheckInfoViewController {
     
     //добавление новой секции с гостем
     func addNewSection(sectionName: String) {
+        //добавляем состояние isFolded для секции - false по умолчанию
+        isFolded.append(false)
+        
         var newSectionItems = [CheckInfoObject]()
         let sectionNo = items.count
         

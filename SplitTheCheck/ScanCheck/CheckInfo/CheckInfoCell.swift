@@ -8,10 +8,6 @@
 
 import UIKit
 
-protocol ResultCellDelegate {
-    func amountTapped(_ cell: CheckInfoCell)
-}
-
 class CheckInfoCell: UITableViewCell {
 
     @IBOutlet weak var itemName: UILabel!
@@ -19,7 +15,7 @@ class CheckInfoCell: UITableViewCell {
     @IBOutlet weak var itemAmount: UILabel!
     @IBOutlet weak var itemSum: UILabel!
     
-    var delegate: ResultCellDelegate?
+    var delegate: CheckInfoViewController?
     
     override func awakeFromNib() {
         super.awakeFromNib()

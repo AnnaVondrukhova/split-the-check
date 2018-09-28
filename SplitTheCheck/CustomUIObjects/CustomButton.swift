@@ -10,6 +10,7 @@ import UIKit
 
 @IBDesignable
 class CustomButton: UIButton {
+    var isFolded = false
     
     //добавляем возможность установки радиуса скругления угла, ширины и цвета границы кнопки через Attributes inspector
     @IBInspectable var cornerRadius: CGFloat = 0{
