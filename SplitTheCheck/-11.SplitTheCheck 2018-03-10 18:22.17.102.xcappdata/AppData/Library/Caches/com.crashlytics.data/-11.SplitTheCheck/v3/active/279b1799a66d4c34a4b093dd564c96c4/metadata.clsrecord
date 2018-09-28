@@ -1,4 +1,0 @@
-{"identity":{"generator":"Crashlytics iOS SDK/3.10.0","build_version":"129","display_version":"3.10.0","api_key":"faee069a639b04331c0f6f295c531d082669a3e2","started_at":1520695303,"session_id":"279b1799a66d4c34a4b093dd564c96c4","install_id":"C8A399A3-31E8-44DE-89D7-AF2BC4C240B5","beta_token":null,"absolute_log_timestamps":true}}
-{"host":{"model":"iPhone10,4","machine":"D201AP","os_build_version":"15D100","os_display_version":"11.2.6","platform":"ios","locale":"en_RU"}}
-{"application":{"bundle_id":"-11.SplitTheCheck","custom_bundle_id":null,"build_version":"1","display_version":"1.0","extension_id":null}}
-{"executable":{"architecture":"arm64","uuid":"0e352c2ba98335dc997d8f8ba7a445ab","base":4375019520,"size":2310144,"encrypted":false,"minimum_sdk_version":"11.2.0","built_sdk_version":"11.2.0"}}

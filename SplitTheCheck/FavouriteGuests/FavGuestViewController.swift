@@ -20,7 +20,7 @@ class FavGuestViewController: UITableViewController {
 
 
         self.navigationItem.rightBarButtonItem = self.editButtonItem
-        self.navigationItem.rightBarButtonItem?.title = "Править"
+        self.navigationItem.rightBarButtonItem?.title = "Изменить"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -171,6 +171,17 @@ class FavGuestViewController: UITableViewController {
         tableView.reloadData()
     }
  
+    override func setEditing (_ editing:Bool, animated:Bool)
+    {
+        super.setEditing(editing,animated:animated)
+        if(self.isEditing)
+        {
+            self.editButtonItem.title = "Готово"
+        }else
+        {
+            self.editButtonItem.title = "Изменить"
+        }
+    }
 
 
 }
