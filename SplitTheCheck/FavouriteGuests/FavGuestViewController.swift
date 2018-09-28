@@ -13,6 +13,7 @@ class FavGuestViewController: UITableViewController {
 
     var favouriteGuests = List<GuestInfoObject>()
     var token: NotificationToken?
+    let userId = UserDefaults.standard.string(forKey: "user")
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +29,7 @@ class FavGuestViewController: UITableViewController {
         do {
             let realm = try Realm()
             realm.beginWrite()
-            let user = realm.objects(User.self).first
+            let user = realm.object(ofType: User.self, forPrimaryKey: self.userId)
             if user?.guests != nil {
                 self.favouriteGuests = (user?.guests)!
             }

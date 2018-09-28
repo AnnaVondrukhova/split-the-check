@@ -17,9 +17,9 @@ class QrStringInfoObject: Object {
     @objc dynamic var checkDate: Date?
     @objc dynamic var mDate: Date?
     
-    override static func primaryKey() -> String? {
-        return "qrString"
-    }
+//    override static func primaryKey() -> String? {
+//        return "qrString"
+//    }
     
     convenience init(error: String?, qrString: String, jsonString: String?) {
         self.init()

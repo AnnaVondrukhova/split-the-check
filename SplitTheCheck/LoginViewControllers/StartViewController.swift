@@ -21,7 +21,7 @@ class StartViewController: UIViewController {
 //        UserDefaults.standard.removePersistentDomain(forName: domain)
 //
 //        print ("UserDefaults cleared")
-//
+//        UserDefaults.standard.set(false, forKey: "isLoggedIn")
 
     }
     

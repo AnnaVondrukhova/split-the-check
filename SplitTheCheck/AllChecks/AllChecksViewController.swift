@@ -13,7 +13,7 @@ import RealmSwift
 
 class AllChecksViewController: UITableViewController {
 
-    var storedChecks: Results<QrStringInfoObject>?
+    var storedChecks: List<QrStringInfoObject>?
     var groupedChecks: [YearMonth: [QrStringInfoObject]]?
     var jsonString = ""
     let requestResult = RequestService()
@@ -24,6 +24,7 @@ class AllChecksViewController: UITableViewController {
     var waitingView: UIView = UIView()
     var sortedKeys =  [YearMonth]()
     var noChecksLabel: UILabel = UILabel()
+    let userId = UserDefaults.standard.string(forKey: "user")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,27 +80,27 @@ class AllChecksViewController: UITableViewController {
 //        } catch {
 //            print(error.localizedDescription)
 //        }
-//        UserDefaults.standard.set(false, forKey: "notFirstLaunch")
+//        UserDefaults.standard.set(false, forKey: "notFirstLaunchFor\(userId!)")
 //
-
 //                    Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
 //                    print("configuration changed")
         
         //если это первый запуск программы, записываем имя пользователя как первого гостя
-        if !UserDefaults.standard.bool(forKey: "notFirstLaunch") {
+        
+        if !UserDefaults.standard.bool(forKey: "notFirstLaunchFor\(userId!)") {
             let userName = UserDefaults.standard.string(forKey: "name") ?? "Я"
             do {
                 let realm = try Realm()
                 realm.beginWrite()
-                realm.add(User())
-                let user = realm.objects(User.self).first
+                realm.add(User(id: userId!))
+                let user = realm.object(ofType: User.self, forPrimaryKey: userId)
                 user?.guests.append(GuestInfoObject(name: userName))
                 try realm.commitWrite()
             } catch {
                 print(error.localizedDescription)
             }
             
-            UserDefaults.standard.set(true, forKey: "notFirstLaunch")
+            UserDefaults.standard.set(true, forKey: "notFirstLaunchFor\(userId!)")
         }
         
     }
@@ -112,7 +113,10 @@ class AllChecksViewController: UITableViewController {
         
         do {
             let realm = try Realm()
-            self.storedChecks = realm.objects(QrStringInfoObject.self)
+            let user = realm.object(ofType: User.self, forPrimaryKey: self.userId)
+            if user?.checks != nil {
+                self.storedChecks = user?.checks
+            }
             print(realm.configuration.fileURL as Any)
         } catch {
             print(error.localizedDescription)
@@ -230,6 +234,8 @@ class AllChecksViewController: UITableViewController {
                     sortedKeys.remove(at: indexPath.section)
                 }
                 let realmQrString = realm.object(ofType: QrStringInfoObject.self, forPrimaryKey: qrString)!
+                let realmItems = realm.objects(CheckInfoObject.self).filter("%@ IN parent", realmQrString)
+                realm.delete(realmItems)
                 realm.delete(realmQrString)
                 try realm.commitWrite()
                 print ("deleted row \(qrString)")

@@ -10,11 +10,17 @@ import Foundation
 import RealmSwift
 
 class User: Object {
-    @objc dynamic var id = UUID().uuidString
+    @objc dynamic var id = UserDefaults.standard.string(forKey: "user")
     var guests = List<GuestInfoObject>()
+    var checks = List<QrStringInfoObject>()
     
     override static func primaryKey() -> String? {
         return "id"
+    }
+    
+    convenience init(id: String) {
+        self.init()
+        self.id = id
     }
     
 }

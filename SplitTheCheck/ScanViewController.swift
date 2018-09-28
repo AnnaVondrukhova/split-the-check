@@ -34,7 +34,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         super.viewDidLoad()
         
 //        qrString = "t=20180128T163700&s=3222.80&fn=8710000100599785&i=40518&fp=2860351511&n=1"
-//        qrString = "t=20180902T154200&s=2412.30&fn=9286000100156559&i=12259&fp=2970651064&n=1"
+        qrString = "t=20180902T154200&s=2412.30&fn=9286000100156559&i=12259&fp=2970651064&n=1"
 //        qrString = "t=20180126T185600&s=1576.00&fn=8710000100961732&i=20194&fp=2759156229&n=1"
 //        qrString = "t=20180729T100900&s=2402.30&fn=8710000101834587&i=66815&fp=1196724422&n=1"
         
@@ -43,8 +43,30 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         waitingView.layer.cornerRadius = 10
         waitingView.layer.opacity = 0.8
         
-//        RequestService.loadData(receivedString: qrString)
-//        RealmServices.getStringFromRealm(VC: self)
+        
+//        //проверяем, что такого чека еще нет в базе
+//        do {
+//            let realm = try Realm()
+//
+//            let user = realm.object(ofType: User.self, forPrimaryKey: UserDefaults.standard.string(forKey: "user"))
+//            print ("qrString = \(qrString)")
+//            let realmQrString = user?.checks.filter("qrString = %@", qrString).isEmpty
+//            print (realmQrString)
+//            //если есть, выдаем ошибку
+//            if !realmQrString! {
+//                activityIndicator.stopAnimating()
+//                waitingLabel.isHidden = true
+//                waitingView.isHidden = true
+//                showDuplicateAlert(qrString: self.qrString)
+//            }
+//                //если нет, добавляем строку в базу и пробуем загрузить данные
+//            else {
+//                RequestService.loadData(receivedString: qrString)
+//                RealmServices.getStringFromRealm(VC: self)
+//            }
+//        } catch {
+//            print(error.localizedDescription)
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -119,9 +141,11 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                 do {
                     let realm = try Realm()
 
-                    let realmQrString = realm.objects(QrStringInfoObject.self).filter("qrString = %@", qrString).isEmpty
+                    let user = realm.object(ofType: User.self, forPrimaryKey: UserDefaults.standard.string(forKey: "user"))
+                    print ("qrString = \(qrString)")
+                    let realmQrString = user?.checks.filter("qrString = %@", qrString).isEmpty
                     //если есть, выдаем ошибку
-                    if !realmQrString {
+                    if !realmQrString! {
                         activityIndicator.stopAnimating()
                         waitingLabel.isHidden = true
                         waitingView.isHidden = true

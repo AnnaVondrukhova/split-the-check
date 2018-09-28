@@ -14,6 +14,7 @@ class ChangeGuestNameViewController: UITableViewController {
     var favouriteGuests = List<GuestInfoObject>()
     var newGuest = GuestInfoObject(name: "Гость 1")
     var sectionNo = 0
+    let userId = UserDefaults.standard.string(forKey: "user")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,11 +28,9 @@ class ChangeGuestNameViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         do {
-            //            Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
-            //            print("configuration changed")
             let realm = try Realm()
             realm.beginWrite()
-            let user = realm.objects(User.self).first
+            let user = realm.object(ofType: User.self, forPrimaryKey: self.userId)
             self.favouriteGuests = (user?.guests)!
             try realm.commitWrite()
             print(realm.configuration.fileURL as Any)

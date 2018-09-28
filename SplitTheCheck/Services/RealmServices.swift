@@ -13,13 +13,23 @@ class RealmServices {
     
     //сохраняем наш объект QrStringInfo в базу данных
     static func saveQRString(string: QrStringInfoObject) {
+        let userId = UserDefaults.standard.string(forKey: "user")
         do {
             //            Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
             //            print("configuration changed")
             let realm = try Realm()
             realm.beginWrite()
-            realm.add(string, update: true)
-            print ("added string to Realm")
+            let user = realm.object(ofType: User.self, forPrimaryKey: userId)
+            if (user?.checks.filter("qrString = %@", string.qrString).isEmpty)! {
+                user?.checks.append(string)
+                print ("added string to Realm")
+            } else {
+                let oldQrString = user?.checks.filter("qrString = %@", string.qrString)
+                realm.delete(oldQrString!)
+                user?.checks.append(string)
+                print ("updated string in Realm")
+            }
+            
             try realm.commitWrite()
             print(realm.configuration.fileURL as Any)
         } catch {
@@ -98,7 +108,8 @@ class RealmServices {
     static func getStringFromRealm(VC: AllChecksViewController, qrString: String) {
         print ("getStringFromRealm for AllChecksViewController")
         guard let realm = try? Realm() else {return}
-        VC.storedChecks = realm.objects(QrStringInfoObject.self)
+        let user = realm.object(ofType: User.self, forPrimaryKey: UserDefaults.standard.string(forKey: "user"))
+        VC.storedChecks = user?.checks
         VC.token = VC.storedChecks?.observe {(changes: RealmCollectionChange) in
             switch changes {
             case .initial ( _):
@@ -150,11 +161,13 @@ class RealmServices {
     //--Если не загружен, пробуем загрузить.
     static func getStringInfo(VC: ScanViewController, token: NotificationToken?, qrStringInfo: String) {
         print("starting getStringInfo")
+        let userId = UserDefaults.standard.string(forKey: "user")
         var realmQrString = QrStringInfoObject()
         
         do {
             let realm = try Realm()
-            realmQrString = realm.object(ofType: QrStringInfoObject.self, forPrimaryKey: qrStringInfo)!
+            let user = realm.object(ofType: User.self, forPrimaryKey: userId)
+            realmQrString = (user?.checks.filter("qrString = %@", qrStringInfo).first)!
         } catch {
             print (error)
         }
