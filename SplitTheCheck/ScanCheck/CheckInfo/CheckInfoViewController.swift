@@ -32,7 +32,11 @@ class CheckInfoViewController: UIViewController {
         
         self.checkTableView?.rowHeight = 60
         self.tabBarController?.tabBar.isHidden = true
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(saveTheCheck))
+        
+        if !UserDefaults.standard.bool(forKey: "autoSave") {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(saveTheCheck))
+        }
+
 //        tableView.delegate = self
         addGuest.titleLabel?.textAlignment = .center
         addGuest.titleLabel?.text = "Выберите позиции"
@@ -114,7 +118,13 @@ class CheckInfoViewController: UIViewController {
             print ("view did disappear")
             addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
         }
+        if self.isMovingFromParentViewController {
+            if UserDefaults.standard.bool(forKey: "autoSave") {
+                self.saveTheCheck()
+            }
+        }
     }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -161,7 +171,8 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         } else {
             sender.setImage(UIImage(named: "unfolded"), for: .normal)
         }
-        checkTableView.reloadData()
+        checkTableView.beginUpdates()
+        checkTableView.endUpdates()
     }
     
     //конфигурация ячейки
@@ -527,6 +538,7 @@ extension CheckInfoViewController {
         } catch {
             print(error)
         }
+        print ("check saved")
     }
 }
 

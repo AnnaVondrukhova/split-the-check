@@ -101,6 +101,8 @@ class AllChecksViewController: UITableViewController {
             }
             
             UserDefaults.standard.set(true, forKey: "notFirstLaunchFor\(userId!)")
+            UserDefaults.standard.set(1, forKey: "sortType")
+            UserDefaults.standard.set(true, forKey: "autoSave")
         }
         
     }
@@ -127,14 +129,28 @@ class AllChecksViewController: UITableViewController {
         //группируем чеки
         guard self.storedChecks != nil else { return }
         var yearMonthChecks = [QrStringInfoObject]()
-            //сортируем чеки по убыванию даты, чтобы в пределах группы они располагались по убыванию
-        let storedChecksSorted = storedChecks?.sorted(byKeyPath: "checkDate", ascending: false)
-        for check in storedChecksSorted! {
-            let yearMonth = YearMonth(date: check.checkDate!)
-            yearMonthChecks = groupedChecks![yearMonth, default: [QrStringInfoObject]()]
-            yearMonthChecks.append(check)
-            self.groupedChecks![yearMonth] = yearMonthChecks
+        //сортируем чеки по убыванию даты, чтобы в пределах группы они располагались по убыванию
+        //в зависимости от настроек сортируем либо по дате изменения чека, либо по дате чека
+        if UserDefaults.standard.integer(forKey: "sortType") == 0 {
+            let storedChecksSorted = storedChecks?.sorted(byKeyPath: "mDate", ascending: false)
+            for check in storedChecksSorted! {
+                let yearMonth = YearMonth(date: check.mDate!)
+                yearMonthChecks = groupedChecks![yearMonth, default: [QrStringInfoObject]()]
+                yearMonthChecks.append(check)
+                self.groupedChecks![yearMonth] = yearMonthChecks
+            }
+        } else if UserDefaults.standard.integer(forKey: "sortType") == 1 {
+                let storedChecksSorted = storedChecks?.sorted(byKeyPath: "checkDate", ascending: false)
+                for check in storedChecksSorted! {
+                    let yearMonth = YearMonth(date: check.checkDate!)
+                    yearMonthChecks = groupedChecks![yearMonth, default: [QrStringInfoObject]()]
+                    yearMonthChecks.append(check)
+                    self.groupedChecks![yearMonth] = yearMonthChecks
+                }
+        } else {
+            print ("Unknown sorting")
         }
+        
         
             //сортируем ключи бо убыванию
         self.sortedKeys = groupedChecks!.keys.sorted(by: >)
@@ -228,17 +244,17 @@ class AllChecksViewController: UITableViewController {
             do {
                 let realm = try Realm()
                 realm.beginWrite()
-                let qrString = groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].qrString
+                let qrStringId = groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].id
                 groupedChecks![sortedKeys[indexPath.section]]!.remove(at: indexPath.row)
                 if groupedChecks![sortedKeys[indexPath.section]]!.isEmpty {
                     sortedKeys.remove(at: indexPath.section)
                 }
-                let realmQrString = realm.object(ofType: QrStringInfoObject.self, forPrimaryKey: qrString)!
+                let realmQrString = realm.object(ofType: QrStringInfoObject.self, forPrimaryKey: qrStringId)!
                 let realmItems = realm.objects(CheckInfoObject.self).filter("%@ IN parent", realmQrString)
                 realm.delete(realmItems)
                 realm.delete(realmQrString)
                 try realm.commitWrite()
-                print ("deleted row \(qrString)")
+                print ("deleted row \(qrStringId)")
                 tableView.reloadData()
             } catch {
                 print (error.localizedDescription)
@@ -263,7 +279,7 @@ class AllChecksViewController: UITableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        print ("checkHistoryView disappears")
+        print ("allChecksVC disappears")
         token = nil
     }
     deinit {

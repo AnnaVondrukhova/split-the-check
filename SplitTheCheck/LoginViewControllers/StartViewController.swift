@@ -15,6 +15,7 @@ class StartViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("StartView did load")
+        print("Is logged in = \(UserDefaults.standard.bool(forKey: "isLoggedIn"))")
         
         //Тестовый блок - УДАЛИТЬ
 //        let domain = Bundle.main.bundleIdentifier!

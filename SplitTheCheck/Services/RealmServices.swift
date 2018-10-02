@@ -24,12 +24,10 @@ class RealmServices {
                 user?.checks.append(string)
                 print ("added string to Realm")
             } else {
-                let oldQrString = user?.checks.filter("qrString = %@", string.qrString)
-                realm.delete(oldQrString!)
-                user?.checks.append(string)
+                realm.add(string, update: true)
                 print ("updated string in Realm")
             }
-            
+//            realm.add(string, update: true)
             try realm.commitWrite()
             print(realm.configuration.fileURL as Any)
         } catch {
@@ -92,6 +90,8 @@ class RealmServices {
                     //!!ВОПРОС!! Переходить ли на страницу со списком чеков?
                 } else {
                     VC.activityIndicator.stopAnimating()
+                    VC.waitingLabel.isHidden = true
+                    VC.waitingView.isHidden = true
                     VC.performSegue(withIdentifier: "qrResult", sender: nil)
                     print("qrResult segue performed from GetStringFromRealm")
                 }
@@ -117,7 +117,14 @@ class RealmServices {
             case .update(_, _, let insertions, let modifications):
                 print("insertions: \(insertions)")
                 print("modifications: \(modifications)")
-                VC.modifiedString = (VC.storedChecks?[modifications[0]])!
+                if insertions != [] {
+                    VC.modifiedString = (VC.storedChecks?[insertions[0]])!
+                } else if modifications != [] {
+                    VC.modifiedString = (VC.storedChecks?[modifications[0]])!
+                } else {
+                    print ("no insertions or modifications")
+                }
+
                 if VC.modifiedString.error != nil {
                     switch  VC.modifiedString.error {
                     case "403":
@@ -147,6 +154,8 @@ class RealmServices {
                     }
                 } else {
                     VC.activityIndicator.stopAnimating()
+                    VC.waitingLabel.isHidden = true
+                    VC.waitingView.isHidden = true
                     VC.performSegue(withIdentifier: "showCheckSegue", sender: self)
                     print("showCheckSegue performed")
                 }

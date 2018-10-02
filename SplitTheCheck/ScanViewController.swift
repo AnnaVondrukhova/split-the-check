@@ -143,9 +143,9 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
 
                     let user = realm.object(ofType: User.self, forPrimaryKey: UserDefaults.standard.string(forKey: "user"))
                     print ("qrString = \(qrString)")
-                    let realmQrString = user?.checks.filter("qrString = %@", qrString).isEmpty
+                    let realmQrString = user!.checks.filter("qrString = %@", qrString).isEmpty
                     //если есть, выдаем ошибку
-                    if !realmQrString! {
+                    if !realmQrString {
                         activityIndicator.stopAnimating()
                         waitingLabel.isHidden = true
                         waitingView.isHidden = true

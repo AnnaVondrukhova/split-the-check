@@ -10,6 +10,7 @@ import Foundation
 import RealmSwift
 
 class QrStringInfoObject: Object {
+    @objc dynamic var id = ""
     @objc dynamic var error: String?
     @objc dynamic var qrString = ""
     @objc dynamic var jsonString: String?
@@ -17,14 +18,15 @@ class QrStringInfoObject: Object {
     @objc dynamic var checkDate: Date?
     @objc dynamic var mDate: Date?
     
-//    override static func primaryKey() -> String? {
-//        return "qrString"
-//    }
+    override static func primaryKey() -> String? {
+        return "id"
+    }
     
     convenience init(error: String?, qrString: String, jsonString: String?) {
         self.init()
         
         self.error = error
+        self.id = UserDefaults.standard.string(forKey: "user")! + qrString
         self.qrString = qrString
         self.jsonString = jsonString
         self.mDate = Date()

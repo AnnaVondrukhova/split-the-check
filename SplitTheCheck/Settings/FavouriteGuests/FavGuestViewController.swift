@@ -19,7 +19,7 @@ class FavGuestViewController: UITableViewController {
         super.viewDidLoad()
         self.tableView?.rowHeight = 50
 
-
+        self.tabBarController?.tabBar.isHidden = true
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         self.navigationItem.rightBarButtonItem?.title = "Изменить"
     }
