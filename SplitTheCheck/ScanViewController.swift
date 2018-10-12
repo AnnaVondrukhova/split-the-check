@@ -21,7 +21,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     
     var captureSession: AVCaptureSession?
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
-    var qrCodeFrameView: UIView?
+//    var qrCodeFrameView: UIView?
     
     var token: NotificationToken?
     var storedChecks: Results<QrStringInfoObject>?
@@ -34,7 +34,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         super.viewDidLoad()
         
 //        qrString = "t=20180128T163700&s=3222.80&fn=8710000100599785&i=40518&fp=2860351511&n=1"
-        qrString = "t=20180902T154200&s=2412.30&fn=9286000100156559&i=12259&fp=2970651064&n=1"
+//        qrString = "t=20180902T154200&s=2412.30&fn=9286000100156559&i=12259&fp=2970651064&n=1"
 //        qrString = "t=20180126T185600&s=1576.00&fn=8710000100961732&i=20194&fp=2759156229&n=1"
 //        qrString = "t=20180729T100900&s=2402.30&fn=8710000101834587&i=66815&fp=1196724422&n=1"
         
@@ -106,28 +106,28 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         }
 
         //вызываем зеленую рамку
-        qrCodeFrameView = UIView()
-        qrCodeFrameView?.layer.borderColor = UIColor.green.cgColor
-        qrCodeFrameView?.layer.borderWidth = 2
-        view.addSubview(qrCodeFrameView!)
-        view.bringSubview(toFront: qrCodeFrameView!)
+//        qrCodeFrameView = UIView()
+//        qrCodeFrameView?.layer.borderColor = UIColor.green.cgColor
+//        qrCodeFrameView?.layer.borderWidth = 2
+//        view.addSubview(qrCodeFrameView!)
+//        view.bringSubview(toFront: qrCodeFrameView!)
 
     }
 
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        if metadataObjects.count == 0 {
-            qrCodeFrameView?.frame = CGRect.zero
-        }
+//        if metadataObjects.count == 0 {
+//            qrCodeFrameView?.frame = CGRect.zero
+//        }
         captureSession?.stopRunning()
-        qrCodeFrameView?.isHidden = true
+//        qrCodeFrameView?.isHidden = true
         print ("got metadataObjects: \(metadataObjects)")
 
         let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
 
         //если засекли qr-код, то пытаемся получить по нему данные
         if metadataObj.type == AVMetadataObject.ObjectType.qr {
-            let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj) as! AVMetadataMachineReadableCodeObject
-            qrCodeFrameView?.frame = barCodeObject.bounds
+//            let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj) as! AVMetadataMachineReadableCodeObject
+//            qrCodeFrameView?.frame = barCodeObject.bounds
 
 
             if (metadataObj.stringValue != nil) && (metadataObj.stringValue?.range(of: "&fn=") != nil)  && (metadataObj.stringValue?.range(of: "&fp=") != nil) && (metadataObj.stringValue?.range(of: "&i=") != nil) {
@@ -174,7 +174,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         
         let actionCancel = UIAlertAction(title: "Oтмена", style: .cancel, handler: {(action: UIAlertAction) in
             self.videoPreviewLayer?.isHidden = false
-            self.qrCodeFrameView?.isHidden = false
+//            self.qrCodeFrameView?.isHidden = false
             self.captureSession?.startRunning()
         })
         //если выбираем "Перейти к чеку", то пытаемся загрузить данные
