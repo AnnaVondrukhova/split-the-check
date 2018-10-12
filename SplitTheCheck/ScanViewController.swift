@@ -29,6 +29,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     var qrString = ""
     
     let requestResult = RequestService()
+    var captureDevice: AVCaptureDevice?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,7 +75,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         self.tabBarController?.tabBar.isHidden = false
 
         //запускаем камеру
-        let captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
+        captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
         //var error: NSError?
         do {
             let input = try AVCaptureDeviceInput(device: captureDevice!)
@@ -112,6 +113,33 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
 //        view.addSubview(qrCodeFrameView!)
 //        view.bringSubview(toFront: qrCodeFrameView!)
 
+    }
+    
+    //ручная фокусировка
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let screenSize = view.bounds.size
+        if let touchPoint = touches.first {
+            let x = touchPoint.location(in: view).y / screenSize.height
+            let y = 1.0 - touchPoint.location(in: view).x / screenSize.width
+            let focusPoint = CGPoint(x: x, y: y)
+            
+            if let device = captureDevice {
+                do {
+                    try device.lockForConfiguration()
+                    
+                    device.focusPointOfInterest = focusPoint
+                    //device.focusMode = .continuousAutoFocus
+                    device.focusMode = .autoFocus
+                    //device.focusMode = .locked
+                    device.exposurePointOfInterest = focusPoint
+                    device.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
+                    device.unlockForConfiguration()
+                }
+                catch {
+                    // just ignore
+                }
+            }
+        }
     }
 
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
