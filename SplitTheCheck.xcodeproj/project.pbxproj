@@ -11,6 +11,7 @@
 		C104596321368F0C007BD0A7 /* RealmServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = C104596221368F0C007BD0A7 /* RealmServices.swift */; };
 		C104596821369A9A007BD0A7 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C104596721369A9A007BD0A7 /* Alerts.swift */; };
 		C10CB24D2109E24400652794 /* NewPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10CB24C2109E24400652794 /* NewPasswordViewController.swift */; };
+		C1317EA8215E852E00D23C6A /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1317EA7215E852E00D23C6A /* SettingsViewController.swift */; };
 		C1369BC3200D227000830D45 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1369BC2200D227000830D45 /* HeaderCell.swift */; };
 		C1369BC6200F841700830D45 /* GuestInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1369BC5200F841700830D45 /* GuestInfoObject.swift */; };
 		C1369BC8200F86B100830D45 /* CheckGuestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1369BC7200F86B100830D45 /* CheckGuestsViewController.swift */; };
@@ -41,6 +42,12 @@
 		C1A22E2320FCB3E100286CD3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A22E2220FCB3E100286CD3 /* LoginViewController.swift */; };
 		C1A22E2520FE208400286CD3 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A22E2420FE208400286CD3 /* SignUpViewController.swift */; };
 		C1A22E2720FF38D600286CD3 /* ForgetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A22E2620FF38D600286CD3 /* ForgetViewController.swift */; };
+		C1A364D9216CFB3E006F7605 /* ext1CheckInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A364D8216CFB3D006F7605 /* ext1CheckInfoViewController.swift */; };
+		C1A364DB216CFCC1006F7605 /* ext2CheckInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A364DA216CFCC1006F7605 /* ext2CheckInfoViewController.swift */; };
+		C1A364E0216E3A57006F7605 /* sectionRow.html in Resources */ = {isa = PBXBuildFile; fileRef = C1A364DD216E3A57006F7605 /* sectionRow.html */; };
+		C1A364E1216E3A57006F7605 /* sectionHeader.html in Resources */ = {isa = PBXBuildFile; fileRef = C1A364DE216E3A57006F7605 /* sectionHeader.html */; };
+		C1A364E2216E3A57006F7605 /* check.html in Resources */ = {isa = PBXBuildFile; fileRef = C1A364DF216E3A57006F7605 /* check.html */; };
+		C1A364E4216F6F4D006F7605 /* checkHeader.html in Resources */ = {isa = PBXBuildFile; fileRef = C1A364E3216F6F4D006F7605 /* checkHeader.html */; };
 		C1A8F73320FA904A00B0B644 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A8F73220FA904A00B0B644 /* StartViewController.swift */; };
 		C1DA9E1B203EC67D0014C0DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1DA9E1A203EC67D0014C0DB /* Assets.xcassets */; };
 		C1FCE56B212C2FDB009B8C59 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FCE56A212C2FDB009B8C59 /* UserAgreementViewController.swift */; };
@@ -53,6 +60,7 @@
 		C104596221368F0C007BD0A7 /* RealmServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmServices.swift; sourceTree = "<group>"; };
 		C104596721369A9A007BD0A7 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		C10CB24C2109E24400652794 /* NewPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPasswordViewController.swift; sourceTree = "<group>"; };
+		C1317EA7215E852E00D23C6A /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		C1369BC2200D227000830D45 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		C1369BC5200F841700830D45 /* GuestInfoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestInfoObject.swift; sourceTree = "<group>"; };
 		C1369BC7200F86B100830D45 /* CheckGuestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckGuestsViewController.swift; sourceTree = "<group>"; };
@@ -85,6 +93,12 @@
 		C1A22E2220FCB3E100286CD3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		C1A22E2420FE208400286CD3 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		C1A22E2620FF38D600286CD3 /* ForgetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetViewController.swift; sourceTree = "<group>"; };
+		C1A364D8216CFB3D006F7605 /* ext1CheckInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ext1CheckInfoViewController.swift; sourceTree = "<group>"; };
+		C1A364DA216CFCC1006F7605 /* ext2CheckInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ext2CheckInfoViewController.swift; sourceTree = "<group>"; };
+		C1A364DD216E3A57006F7605 /* sectionRow.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = sectionRow.html; sourceTree = "<group>"; };
+		C1A364DE216E3A57006F7605 /* sectionHeader.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = sectionHeader.html; sourceTree = "<group>"; };
+		C1A364DF216E3A57006F7605 /* check.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = check.html; sourceTree = "<group>"; };
+		C1A364E3216F6F4D006F7605 /* checkHeader.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = checkHeader.html; sourceTree = "<group>"; };
 		C1A8F73220FA904A00B0B644 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		C1DA9E1A203EC67D0014C0DB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C1FCE56A212C2FDB009B8C59 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
@@ -137,6 +151,15 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		C1317EA6215E84EF00D23C6A /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				C169B02D203C393900987727 /* FavouriteGuests */,
+				C1317EA7215E852E00D23C6A /* SettingsViewController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		C1369BC4200F83DD00830D45 /* CheckGuests */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +174,8 @@
 			isa = PBXGroup;
 			children = (
 				C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */,
+				C1A364D8216CFB3D006F7605 /* ext1CheckInfoViewController.swift */,
+				C1A364DA216CFCC1006F7605 /* ext2CheckInfoViewController.swift */,
 				C1619CB32008EB61004640ED /* CheckInfoCell.swift */,
 				C1369BC2200D227000830D45 /* HeaderCell.swift */,
 				C1619CB02008D339004640ED /* CheckInfoObject.swift */,
@@ -183,6 +208,7 @@
 		C16B3E6F1FF112B6005C99B8 = {
 			isa = PBXGroup;
 			children = (
+				C1A364DC216E39FA006F7605 /* HTMLtemplates */,
 				C16B3E7A1FF112B6005C99B8 /* SplitTheCheck */,
 				C16B3E791FF112B6005C99B8 /* Products */,
 				E5A7E747308CBDFAC86DB98A /* Pods */,
@@ -203,7 +229,7 @@
 			children = (
 				C1690C6C2015F55C00C3638E /* AllChecks */,
 				C175891C215903080042E01E /* ScanCheck */,
-				C169B02D203C393900987727 /* FavouriteGuests */,
+				C1317EA6215E84EF00D23C6A /* Settings */,
 				C104596421368F99007BD0A7 /* LoginViewControllers */,
 				C104596521369001007BD0A7 /* Services */,
 				C1A980EB213EC4BB000E7A0D /* CustomUIObjects */,
@@ -237,6 +263,17 @@
 				C1758922215906B10042E01E /* AddGuestNameCell.swift */,
 			);
 			path = ChangeName;
+			sourceTree = "<group>";
+		};
+		C1A364DC216E39FA006F7605 /* HTMLtemplates */ = {
+			isa = PBXGroup;
+			children = (
+				C1A364DF216E3A57006F7605 /* check.html */,
+				C1A364DE216E3A57006F7605 /* sectionHeader.html */,
+				C1A364DD216E3A57006F7605 /* sectionRow.html */,
+				C1A364E3216F6F4D006F7605 /* checkHeader.html */,
+			);
+			path = HTMLtemplates;
 			sourceTree = "<group>";
 		};
 		C1A980EB213EC4BB000E7A0D /* CustomUIObjects */ = {
@@ -325,6 +362,10 @@
 				C16B3E861FF112B6005C99B8 /* LaunchScreen.storyboard in Resources */,
 				C1DA9E1B203EC67D0014C0DB /* Assets.xcassets in Resources */,
 				C16B3E811FF112B6005C99B8 /* Main.storyboard in Resources */,
+				C1A364E2216E3A57006F7605 /* check.html in Resources */,
+				C1A364E1216E3A57006F7605 /* sectionHeader.html in Resources */,
+				C1A364E4216F6F4D006F7605 /* checkHeader.html in Resources */,
+				C1A364E0216E3A57006F7605 /* sectionRow.html in Resources */,
 				C1FCE576212D8E64009B8C59 /* Main_2.storyboard in Resources */,
 				C1902DB1212ED026009F00CF /* GoogleService-Info.plist in Resources */,
 			);
@@ -443,11 +484,14 @@
 				C1369BCA200F870B00830D45 /* FavouriteGuestCell.swift in Sources */,
 				C104596321368F0C007BD0A7 /* RealmServices.swift in Sources */,
 				C1369BC6200F841700830D45 /* GuestInfoObject.swift in Sources */,
+				C1A364DB216CFCC1006F7605 /* ext2CheckInfoViewController.swift in Sources */,
 				C1758921215906960042E01E /* FavGuestNameCell.swift in Sources */,
 				C175892B215B84E50042E01E /* AllChecksHeaderCell.swift in Sources */,
 				C1A22E2520FE208400286CD3 /* SignUpViewController.swift in Sources */,
 				C1A8F73320FA904A00B0B644 /* StartViewController.swift in Sources */,
 				C16B3E7E1FF112B6005C99B8 /* ScanViewController.swift in Sources */,
+				C1317EA8215E852E00D23C6A /* SettingsViewController.swift in Sources */,
+				C1A364D9216CFB3E006F7605 /* ext1CheckInfoViewController.swift in Sources */,
 				C1690C722015F60000C3638E /* NotLoadedCheckCell.swift in Sources */,
 				C1369BCC200F873D00830D45 /* AddGuestCell.swift in Sources */,
 				C16B3E7C1FF112B6005C99B8 /* AppDelegate.swift in Sources */,

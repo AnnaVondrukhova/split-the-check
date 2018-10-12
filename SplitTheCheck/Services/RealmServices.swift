@@ -13,13 +13,21 @@ class RealmServices {
     
     //сохраняем наш объект QrStringInfo в базу данных
     static func saveQRString(string: QrStringInfoObject) {
+        let userId = UserDefaults.standard.string(forKey: "user")
         do {
             //            Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
             //            print("configuration changed")
             let realm = try Realm()
             realm.beginWrite()
-            realm.add(string, update: true)
-            print ("added string to Realm")
+            let user = realm.object(ofType: User.self, forPrimaryKey: userId)
+            if (user?.checks.filter("qrString = %@", string.qrString).isEmpty)! {
+                user?.checks.append(string)
+                print ("added string to Realm")
+            } else {
+                realm.add(string, update: true)
+                print ("updated string in Realm")
+            }
+//            realm.add(string, update: true)
             try realm.commitWrite()
             print(realm.configuration.fileURL as Any)
         } catch {
@@ -82,6 +90,8 @@ class RealmServices {
                     //!!ВОПРОС!! Переходить ли на страницу со списком чеков?
                 } else {
                     VC.activityIndicator.stopAnimating()
+                    VC.waitingLabel.isHidden = true
+                    VC.waitingView.isHidden = true
                     VC.performSegue(withIdentifier: "qrResult", sender: nil)
                     print("qrResult segue performed from GetStringFromRealm")
                 }
@@ -98,7 +108,8 @@ class RealmServices {
     static func getStringFromRealm(VC: AllChecksViewController, qrString: String) {
         print ("getStringFromRealm for AllChecksViewController")
         guard let realm = try? Realm() else {return}
-        VC.storedChecks = realm.objects(QrStringInfoObject.self)
+        let user = realm.object(ofType: User.self, forPrimaryKey: UserDefaults.standard.string(forKey: "user"))
+        VC.storedChecks = user?.checks
         VC.token = VC.storedChecks?.observe {(changes: RealmCollectionChange) in
             switch changes {
             case .initial ( _):
@@ -106,7 +117,14 @@ class RealmServices {
             case .update(_, _, let insertions, let modifications):
                 print("insertions: \(insertions)")
                 print("modifications: \(modifications)")
-                VC.modifiedString = (VC.storedChecks?[modifications[0]])!
+                if insertions != [] {
+                    VC.modifiedString = (VC.storedChecks?[insertions[0]])!
+                } else if modifications != [] {
+                    VC.modifiedString = (VC.storedChecks?[modifications[0]])!
+                } else {
+                    print ("no insertions or modifications")
+                }
+
                 if VC.modifiedString.error != nil {
                     switch  VC.modifiedString.error {
                     case "403":
@@ -136,6 +154,8 @@ class RealmServices {
                     }
                 } else {
                     VC.activityIndicator.stopAnimating()
+                    VC.waitingLabel.isHidden = true
+                    VC.waitingView.isHidden = true
                     VC.performSegue(withIdentifier: "showCheckSegue", sender: self)
                     print("showCheckSegue performed")
                 }
@@ -150,11 +170,13 @@ class RealmServices {
     //--Если не загружен, пробуем загрузить.
     static func getStringInfo(VC: ScanViewController, token: NotificationToken?, qrStringInfo: String) {
         print("starting getStringInfo")
+        let userId = UserDefaults.standard.string(forKey: "user")
         var realmQrString = QrStringInfoObject()
         
         do {
             let realm = try Realm()
-            realmQrString = realm.object(ofType: QrStringInfoObject.self, forPrimaryKey: qrStringInfo)!
+            let user = realm.object(ofType: User.self, forPrimaryKey: userId)
+            realmQrString = (user?.checks.filter("qrString = %@", qrStringInfo).first)!
         } catch {
             print (error)
         }

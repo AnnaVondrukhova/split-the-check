@@ -21,7 +21,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     
     var captureSession: AVCaptureSession?
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
-    var qrCodeFrameView: UIView?
+//    var qrCodeFrameView: UIView?
     
     var token: NotificationToken?
     var storedChecks: Results<QrStringInfoObject>?
@@ -43,8 +43,30 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         waitingView.layer.cornerRadius = 10
         waitingView.layer.opacity = 0.8
         
-//        RequestService.loadData(receivedString: qrString)
-//        RealmServices.getStringFromRealm(VC: self)
+        
+//        //проверяем, что такого чека еще нет в базе
+//        do {
+//            let realm = try Realm()
+//
+//            let user = realm.object(ofType: User.self, forPrimaryKey: UserDefaults.standard.string(forKey: "user"))
+//            print ("qrString = \(qrString)")
+//            let realmQrString = user?.checks.filter("qrString = %@", qrString).isEmpty
+//            print (realmQrString)
+//            //если есть, выдаем ошибку
+//            if !realmQrString! {
+//                activityIndicator.stopAnimating()
+//                waitingLabel.isHidden = true
+//                waitingView.isHidden = true
+//                showDuplicateAlert(qrString: self.qrString)
+//            }
+//                //если нет, добавляем строку в базу и пробуем загрузить данные
+//            else {
+//                RequestService.loadData(receivedString: qrString)
+//                RealmServices.getStringFromRealm(VC: self)
+//            }
+//        } catch {
+//            print(error.localizedDescription)
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,28 +106,28 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         }
 
         //вызываем зеленую рамку
-        qrCodeFrameView = UIView()
-        qrCodeFrameView?.layer.borderColor = UIColor.green.cgColor
-        qrCodeFrameView?.layer.borderWidth = 2
-        view.addSubview(qrCodeFrameView!)
-        view.bringSubview(toFront: qrCodeFrameView!)
+//        qrCodeFrameView = UIView()
+//        qrCodeFrameView?.layer.borderColor = UIColor.green.cgColor
+//        qrCodeFrameView?.layer.borderWidth = 2
+//        view.addSubview(qrCodeFrameView!)
+//        view.bringSubview(toFront: qrCodeFrameView!)
 
     }
 
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        if metadataObjects.count == 0 {
-            qrCodeFrameView?.frame = CGRect.zero
-        }
+//        if metadataObjects.count == 0 {
+//            qrCodeFrameView?.frame = CGRect.zero
+//        }
         captureSession?.stopRunning()
-        qrCodeFrameView?.isHidden = true
+//        qrCodeFrameView?.isHidden = true
         print ("got metadataObjects: \(metadataObjects)")
 
         let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
 
         //если засекли qr-код, то пытаемся получить по нему данные
         if metadataObj.type == AVMetadataObject.ObjectType.qr {
-            let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj) as! AVMetadataMachineReadableCodeObject
-            qrCodeFrameView?.frame = barCodeObject.bounds
+//            let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj) as! AVMetadataMachineReadableCodeObject
+//            qrCodeFrameView?.frame = barCodeObject.bounds
 
 
             if (metadataObj.stringValue != nil) && (metadataObj.stringValue?.range(of: "&fn=") != nil)  && (metadataObj.stringValue?.range(of: "&fp=") != nil) && (metadataObj.stringValue?.range(of: "&i=") != nil) {
@@ -119,7 +141,9 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                 do {
                     let realm = try Realm()
 
-                    let realmQrString = realm.objects(QrStringInfoObject.self).filter("qrString = %@", qrString).isEmpty
+                    let user = realm.object(ofType: User.self, forPrimaryKey: UserDefaults.standard.string(forKey: "user"))
+                    print ("qrString = \(qrString)")
+                    let realmQrString = user!.checks.filter("qrString = %@", qrString).isEmpty
                     //если есть, выдаем ошибку
                     if !realmQrString {
                         activityIndicator.stopAnimating()
@@ -150,7 +174,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         
         let actionCancel = UIAlertAction(title: "Oтмена", style: .cancel, handler: {(action: UIAlertAction) in
             self.videoPreviewLayer?.isHidden = false
-            self.qrCodeFrameView?.isHidden = false
+//            self.qrCodeFrameView?.isHidden = false
             self.captureSession?.startRunning()
         })
         //если выбираем "Перейти к чеку", то пытаемся загрузить данные

@@ -20,7 +20,7 @@ class Alerts {
             if (VC as? ScanViewController) != nil {
                 let scanVC = VC as! ScanViewController
                 scanVC.videoPreviewLayer?.isHidden = false
-                scanVC.qrCodeFrameView?.isHidden = false
+//                scanVC.qrCodeFrameView?.isHidden = false
                 scanVC.captureSession?.startRunning()
             }
 
@@ -37,7 +37,7 @@ class Alerts {
             if (VC as? ScanViewController) != nil {
                 let scanVC = VC as! ScanViewController
                 scanVC.videoPreviewLayer?.isHidden = false
-                scanVC.qrCodeFrameView?.isHidden = false
+//                scanVC.qrCodeFrameView?.isHidden = false
                 scanVC.captureSession?.startRunning()
             }
         })

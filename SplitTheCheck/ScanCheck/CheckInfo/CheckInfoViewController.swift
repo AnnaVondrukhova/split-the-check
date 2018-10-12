@@ -10,9 +10,15 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import RealmSwift
+import MessageUI
+import QuickLook
 
+<<<<<<< HEAD
 
 class CheckInfoViewController: UIViewController {
+=======
+class CheckInfoViewController: UIViewController  {
+>>>>>>> multy_users
 
     @IBOutlet weak var addGuest: CustomButton!
     @IBOutlet weak var checkTableView: UITableView!
@@ -25,6 +31,11 @@ class CheckInfoViewController: UIViewController {
     var totalSum = [Double]()
     var guestSum = 0.0
     var isFolded:[Bool] = []
+<<<<<<< HEAD
+=======
+    var checkPlace = ""
+    var checkDate = ""
+>>>>>>> multy_users
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +43,25 @@ class CheckInfoViewController: UIViewController {
         
         self.checkTableView?.rowHeight = 60
         self.tabBarController?.tabBar.isHidden = true
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(saveTheCheck))
+        
+        if !UserDefaults.standard.bool(forKey: "autoSave") {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(showActionSheet))
+        }
+        
+        let json = JSON.init(parseJSON: parentString.jsonString!)
+        if json["document"]["receipt"]["user"].stringValue.replacingOccurrences(of: " ", with: "") != "" {
+            self.checkPlace = json["document"]["receipt"]["user"].stringValue.replacingOccurrences(of: " ", with: "", options: [.anchored], range: nil )
+        }
+        else {
+            self.checkPlace = ""
+        }
+        
+        let string = "\(parentString.checkDate!)"
+        let start = string.index(string.startIndex, offsetBy: 0)
+        let end = string.index(string.startIndex, offsetBy: 16)
+        let range = start..<end
+        checkDate = String(string[range])
+
 //        tableView.delegate = self
         addGuest.titleLabel?.textAlignment = .center
         addGuest.titleLabel?.text = "Выберите позиции"
@@ -114,7 +143,13 @@ class CheckInfoViewController: UIViewController {
             print ("view did disappear")
             addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
         }
+        if self.isMovingFromParentViewController {
+            if UserDefaults.standard.bool(forKey: "autoSave") {
+                self.saveTheCheck()
+            }
+        }
     }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -161,7 +196,12 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         } else {
             sender.setImage(UIImage(named: "unfolded"), for: .normal)
         }
+<<<<<<< HEAD
         checkTableView.reloadData()
+=======
+        checkTableView.beginUpdates()
+        checkTableView.endUpdates()
+>>>>>>> multy_users
     }
     
     //конфигурация ячейки
@@ -363,6 +403,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
 }
+<<<<<<< HEAD
 
 extension CheckInfoViewController {
     
@@ -572,3 +613,5 @@ extension CheckInfoViewController {
         }
     }
 }
+=======
+>>>>>>> multy_users

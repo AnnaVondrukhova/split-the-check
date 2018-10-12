@@ -1,0 +1,70 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <style type="text/css">
+     p {
+      text-align: center;
+      font-size: 12pt;
+     }
+     table.checkHeader tr {
+       height: 25px;
+       font-size: 12pt;
+     }
+     table.checkHeader td.guestName {
+      width: 200px;
+      text-align: left;
+     }
+     table.checkHeader td.guestSum {
+      width: 75px;
+      text-align: right;
+     }
+	   table.checkBody tr {
+			height: 20px;
+	   }
+	   table.checkBody tr.sectionHeader {
+			font-size: 12pt;
+			background-color: #ffd27d;
+	   }
+	   table.checkBody tr.sectionHeader td.sectionName {
+			width: 70%;
+			text-align: left;
+	   }
+	   table.checkBody tr.sectionHeader td.sectionSum {
+			width: 15%;
+			text-align: right;
+	   }
+	   table.checkBody tr.sectionRow {
+			font-size: 9pt;
+			background-color: #ffffff;
+	   }
+	   table.checkBody tr.sectionRow td.itemName {
+			width: 40%;
+			text-align: left;
+	   }
+	   table.checkBody tr.sectionRow td.priceAmount {
+			width: 15%;
+			text-align: center;
+	   }
+	   table.checkBody tr.sectionRow td.sum {
+			width: 15%;
+			text-align: right;
+	   }
+  </style>
+</head>
+<body>
+  <p>#CHECK_PLACE#</p>
+  <p>#CHECK_DATE#</p>
+  <p>&nbsp;</p>
+    <table class = "checkHeader" style="border-collapse: collapse; width: 275px; margin-left: 7.5%;" border="1" frame="void" rules="rows">
+    <tbody>
+      #CHECK_HEADER#
+    </tbody>
+    </table>
+    <p>&nbsp;</p>
+    <table class="checkBody" style="border-collapse: collapse; width: 85%; margin-left: auto; margin-right: auto;" border="1">
+		<tbody>
+			#CHECK_BODY#
+		</tbody>
+	</table>
+</body>
+</html>
