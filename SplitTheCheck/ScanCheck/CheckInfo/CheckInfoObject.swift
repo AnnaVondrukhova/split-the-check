@@ -35,14 +35,22 @@ class CheckInfoObject: Object {
         self.totalQuantity = json["quantity"].doubleValue
         self.price = json["price"].doubleValue/100
 //        self.myQuantity = json["quantity"].intValue
-        self.myQtotalQ = json["quantity"].stringValue
+//        self.myQtotalQ = json["quantity"].stringValue
+        if self.totalQuantity != Double(Int(self.totalQuantity)) {
+            self.myQtotalQ = "\(self.totalQuantity)"
+            self.isCountable = false
+        } else {
+            self.myQtotalQ = "\(Int(self.totalQuantity))"
+            self.isCountable = true
+        }
+
         self.sum = json["sum"].doubleValue/100
         
         CheckInfoObject.classId += 1
         print ("id = \(id)")
     }
     
-    convenience init (sectionId: Int, sectionName: String, id: Int, name: String, initialQuantity: Double, totalQuantity: Double, price: Double, sum: Double) {
+    convenience init (sectionId: Int, sectionName: String, id: Int, name: String, initialQuantity: Double, totalQuantity: Double, isCountable: Bool, price: Double, sum: Double) {
         self.init()
         
         self.sectionId = sectionId
@@ -57,11 +65,10 @@ class CheckInfoObject: Object {
         //если totalQuantity - целое значение, отображаем его без нулей
         if totalQuantity != Double(Int(totalQuantity)) {
             self.myQtotalQ = "\(totalQuantity)"
-            self.isCountable = false
         } else {
             self.myQtotalQ = "\(Int(totalQuantity))"
-            self.isCountable = true
         }
+        self.isCountable = isCountable
         self.sum = round(sum)/100
         
     }
@@ -99,7 +106,7 @@ class CheckInfoObject: Object {
     }
     
     func copyItem() -> CheckInfoObject {
-        let copy = CheckInfoObject(sectionId: sectionId, sectionName: sectionName, id: id, name: name, initialQuantity: initialQuantity, totalQuantity: totalQuantity, price: price, sum: sum*100)
+        let copy = CheckInfoObject(sectionId: sectionId, sectionName: sectionName, id: id, name: name, initialQuantity: initialQuantity, totalQuantity: totalQuantity, isCountable: isCountable, price: price, sum: sum*100)
         return copy
     }
 

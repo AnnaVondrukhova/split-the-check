@@ -238,6 +238,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                 addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
             }
         }
+        print ("item.myQuantity = \(item.myQuantity)")
     }
     
     //высота заголовка секции
@@ -255,6 +256,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         
         if !item.isCountable {
             item.myQtotalQ = "\(item.totalQuantity)"
+            item.myQuantity  = 1
             guestSum += item.sum
         }
         else {

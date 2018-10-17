@@ -63,7 +63,7 @@ extension CheckInfoViewController {
             } else {
                 itemQuantity = item.totalQuantity
             }
-            newSectionItems.append(CheckInfoObject(sectionId: sectionNo, sectionName: sectionName, id: item.id, name: item.name, initialQuantity: item.initialQuantity, totalQuantity: itemQuantity, price: item.price, sum: item.sum*100))
+            newSectionItems.append(CheckInfoObject(sectionId: sectionNo, sectionName: sectionName, id: item.id, name: item.name, initialQuantity: item.initialQuantity, totalQuantity: itemQuantity, isCountable: item.isCountable, price: item.price, sum: item.sum*100))
             print("new item id: \(newSectionItems.last!.id)")
             
             //из общего чека удаляем товары, перешедшие к гостю, или уменьшаем их количество
@@ -108,7 +108,7 @@ extension CheckInfoViewController {
             } else {
                 itemQuantity = item.totalQuantity
             }
-            newItems.append(CheckInfoObject(sectionId: sectionNo, sectionName: sectionName, id: item.id, name: item.name, initialQuantity: item.initialQuantity, totalQuantity: itemQuantity, price: item.price, sum: item.sum*100))
+            newItems.append(CheckInfoObject(sectionId: sectionNo, sectionName: sectionName, id: item.id, name: item.name, initialQuantity: item.initialQuantity, totalQuantity: itemQuantity, isCountable: item.isCountable, price: item.price, sum: item.sum*100))
             print("new item id: \(newItems.last!.id)")
             
             //из общего чека удаляем товары, перешедшие к гостю, или уменьшаем их количество

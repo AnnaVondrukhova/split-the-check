@@ -94,31 +94,6 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
     }
     
     //делаем pdf
-//    func pdfDataWithTableView(tableView: UITableView) {
-//        let priorBounds = tableView.bounds
-//        let fittedSize = tableView.sizeThatFits(CGSize(width:priorBounds.size.width, height:tableView.contentSize.height))
-//        tableView.bounds = CGRect(x:0, y:0, width:fittedSize.width, height:fittedSize.height)
-//        let pdfPageBounds = CGRect(x:-25, y:25, width:tableView.frame.width + 50, height:self.view.frame.height)
-//        let pdfData = NSMutableData()
-//        UIGraphicsBeginPDFContextToData(pdfData, pdfPageBounds,nil)
-//        var pageOriginY: CGFloat = 0
-//        while pageOriginY < fittedSize.height {
-//            UIGraphicsBeginPDFPageWithInfo(pdfPageBounds, nil)
-//            UIGraphicsGetCurrentContext()!.saveGState()
-//            UIGraphicsGetCurrentContext()!.translateBy(x: 0, y: -pageOriginY)
-//            tableView.layer.render(in: UIGraphicsGetCurrentContext()!)
-//            UIGraphicsGetCurrentContext()!.restoreGState()
-//            pageOriginY += pdfPageBounds.size.height
-//        }
-//        UIGraphicsEndPDFContext()
-//        tableView.bounds = priorBounds
-//        var docURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)).first! as URL
-//        docURL = docURL.appendingPathComponent("myDocument.pdf")
-//        pdfData.write(to: docURL as URL, atomically: false)
-//        print ("pdf created")
-//        openQlPreview()
-//    }
-    
     func openAsPDF() {
         let HTMLContent = self.createHTML()
         let pageRenderer = UIPrintPageRenderer()
@@ -131,7 +106,8 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
         
         let pdfData = drawPDFwithPrintPageRender(printPageRenderer: pageRenderer)
         
-        var docURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)).first! as URL
+        var docURL = FileManager.default.temporaryDirectory as URL
+
         docURL = docURL.appendingPathComponent("Чек_\(checkDate).pdf")
         pdfData.write(to: docURL as URL, atomically: false)
         print ("pdf created")
@@ -165,9 +141,9 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
     
     public func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
         //  pass your document url here
-        let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        let dir = FileManager.default.temporaryDirectory
         
-        let path = dir?.appendingPathComponent("Чек_\(checkDate).pdf")
+        let path = dir.appendingPathComponent("Чек_\(checkDate).pdf")
         return path as! QLPreviewItem
     }
     
