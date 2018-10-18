@@ -30,7 +30,7 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
         self.present(actionSheet, animated: true, completion: nil)
     }
     
-    //делаем из чека html и сограняем в файл
+    //делаем из чека html и сохраняем в файл
     func createHTML() -> String {
         let pathToCheckTemplate = Bundle.main.path(forResource: "check", ofType: "html")
         let pathToCheckHeaderTemplate = Bundle.main.path(forResource: "checkHeader", ofType: "html")
@@ -83,7 +83,7 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
             checkHTML = checkHTML.replacingOccurrences(of: "#CHECK_DATE#", with: checkDate)
             checkHTML = checkHTML.replacingOccurrences(of: "#CHECK_HEADER#", with: checkHeader)
             checkHTML = checkHTML.replacingOccurrences(of: "#CHECK_BODY#", with: checkBody)
-            createMessageBody(text: checkHTML)
+//            createMessageBody(text: checkHTML)
             print ("html created")
             return checkHTML
             
@@ -166,20 +166,20 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
         self.present(mailVC, animated: true, completion: nil)
     }
     
-    func createMessageBody(text: String) {
-        let file = "html.txt"
-        
-        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-            let fileURL = dir.appendingPathComponent(file)
-            
-            do {
-                try text.write(to: fileURL, atomically: false, encoding: .utf8)
-                print ("file created")
-            } catch {
-                print ("error while writing the file: \(error.localizedDescription)")
-            }
-        }
-    }
+//    func createMessageBody(text: String) {
+//        let file = "html.txt"
+//        
+//        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+//            let fileURL = dir.appendingPathComponent(file)
+//            
+//            do {
+//                try text.write(to: fileURL, atomically: false, encoding: .utf8)
+//                print ("file created")
+//            } catch {
+//                print ("error while writing the file: \(error.localizedDescription)")
+//            }
+//        }
+//    }
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         print ("mail sent")

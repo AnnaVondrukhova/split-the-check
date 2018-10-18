@@ -18,6 +18,9 @@ class AllChecksHeaderCell: UITableViewCell {
                                  10:"Октябрь", 11: "Ноябрь", 12: "Декабрь"]
     
     func configure (date: YearMonth) {
+        let blurEffect = UIBlurEffect(style: .extraLight)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        self.backgroundView = blurEffectView
         self.yearMonthLabel.text = months[date.month]! + " \(date.year)"
     }
 }

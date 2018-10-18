@@ -13,10 +13,12 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
     @IBOutlet weak var sortButton: UIButton!
     @IBOutlet weak var sortPicker: UIPickerView!
     @IBOutlet weak var saveSwitch: UISwitch!
+    @IBOutlet weak var infoLabel: UILabel!
     
     var sortPickerData = [String]()
-    let sortType = UserDefaults.standard.integer(forKey: "sortType")
-    
+    var sortType = UserDefaults.standard.integer(forKey: "sortType")
+    let infoLabelText = [true: "Изменения в чеке сохраняются автоматически при выходе из него", false: "Изменения в чеке сохраняются вручную по нажатию кнопки \"Сохранить\". Включите, чтобы сохранять изменения автоматически."]
+    var colors = [Bool: UIColor]()
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,18 +26,21 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         self.sortPicker.dataSource = self
         
         sortPickerData = ["По дате добавления", "По дате чека"]
-        sortPicker.isHidden = true
+        colors =  [false: self.view.tintColor, true: UIColor.lightGray]
         
-        saveSwitch.isOn = true
-
+        saveSwitch.isOn = UserDefaults.standard.bool(forKey: "autoSave")
+        infoLabel.text = infoLabelText[saveSwitch.isOn]
         // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        print ("sortType = \(sortType)")
         super.viewWillAppear(animated)
         self.tabBarController?.tabBar.isHidden = false
+        sortPicker.isHidden = true
+        sortPicker.selectRow(sortType, inComponent: 0, animated: false)
         
-        self.self.sortButton.setTitle(self.sortPickerData[sortType], for: .normal)
+        self.sortButton.setTitle(self.sortPickerData[sortType], for: .normal)
     }
     
     //настраиваем log out
@@ -62,19 +67,22 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        self.sortType = row
+        UserDefaults.standard.set(sortType, forKey: "sortType")
         self.sortButton.setTitle(self.sortPickerData[row], for: .normal)
-        UserDefaults.standard.set(row, forKey: "sortType")
     }
 
-    //обрабатываем нажатие кнопки сиртировки
+    //обрабатываем нажатие кнопки сортировки
     @IBAction func sortBtnTap(_ sender: Any) {
         sortPicker.isHidden = !sortPicker.isHidden
+        sortButton.setTitleColor(colors[sortPicker.isHidden], for: .normal)
     }
     
     //обрабатываем изменение saveSwitch
     @IBAction func saveSwitchTap(_ sender: Any) {
         saveSwitch.setOn(!saveSwitch.isOn, animated: true)
         saveSwitch.isOn = !saveSwitch.isOn
+        infoLabel.text = infoLabelText[saveSwitch.isOn]
         UserDefaults.standard.set(saveSwitch.isOn, forKey: "autoSave")
         print ("save is on = \(saveSwitch.isOn)")
     }
