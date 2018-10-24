@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SignUpViewController: UIViewController, UITextFieldDelegate {
+class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControllerTransitioningDelegate {
 
     @IBOutlet weak var nameText: UITextField!
     @IBOutlet weak var emailText: UITextField!
@@ -31,6 +31,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         signUpBtn.isEnabled = false
         signUpBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
         checkbox.delegate = self
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,6 +47,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             print ("+7")
             telText.text = "+7"
         }
+    }
+    
+    @objc func dismissKeyboard()
+    {
+        view.endEditing(true)
     }
     
     @IBAction func signUp(_ sender: Any) {
@@ -135,6 +144,24 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         task.resume()
         self.signUpBtn.backgroundColor = UIColor(red:0.37, green:0.75, blue:0.62, alpha:1.0)
     }
+    
+    @IBAction func agreementBtnTap(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let userAgreementVC = storyboard.instantiateViewController(withIdentifier: "UserAgreementVC") as! UserAgreementViewController
+        userAgreementVC.modalPresentationStyle = UIModalPresentationStyle.custom
+        userAgreementVC.transitioningDelegate = self
+        self.present(userAgreementVC, animated: true, completion: nil)
+    }
+    
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return partialVC(presentedViewController: presented, presenting: presenting)
+    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "toUserAgreementVC" {
+//            let vc = segue.destination as! UserAgreementViewController
+//            vc.preferredContentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height - 50)
+//        }
+//    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

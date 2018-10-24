@@ -39,6 +39,7 @@ class NotLoadedCheckCell: UITableViewCell {
         }
         
         print (params["t"])
+        NSLog ("params[t] = \(params["t"])")
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyyMMdd'T'HHmmss"

@@ -50,6 +50,7 @@
 		C1A364E4216F6F4D006F7605 /* checkHeader.html in Resources */ = {isa = PBXBuildFile; fileRef = C1A364E3216F6F4D006F7605 /* checkHeader.html */; };
 		C1A8F73320FA904A00B0B644 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A8F73220FA904A00B0B644 /* StartViewController.swift */; };
 		C1DA9E1B203EC67D0014C0DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1DA9E1A203EC67D0014C0DB /* Assets.xcassets */; };
+		C1F09F132178C442000AF696 /* policy.txt in Resources */ = {isa = PBXBuildFile; fileRef = C1F09F122178C442000AF696 /* policy.txt */; };
 		C1FCE56B212C2FDB009B8C59 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FCE56A212C2FDB009B8C59 /* UserAgreementViewController.swift */; };
 		C1FCE56D212C38EF009B8C59 /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FCE56C212C38EF009B8C59 /* Checkbox.swift */; };
 		C1FCE576212D8E64009B8C59 /* Main_2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C1FCE578212D8E64009B8C59 /* Main_2.storyboard */; };
@@ -101,6 +102,7 @@
 		C1A364E3216F6F4D006F7605 /* checkHeader.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = checkHeader.html; sourceTree = "<group>"; };
 		C1A8F73220FA904A00B0B644 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		C1DA9E1A203EC67D0014C0DB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C1F09F122178C442000AF696 /* policy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = policy.txt; sourceTree = "<group>"; };
 		C1FCE56A212C2FDB009B8C59 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		C1FCE56C212C38EF009B8C59 /* Checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
 		C1FCE577212D8E64009B8C59 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_2.storyboard; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				C1A22E2420FE208400286CD3 /* SignUpViewController.swift */,
 				C1FCE56A212C2FDB009B8C59 /* UserAgreementViewController.swift */,
 				C10CB24C2109E24400652794 /* NewPasswordViewController.swift */,
+				C1F09F122178C442000AF696 /* policy.txt */,
 			);
 			path = LoginViewControllers;
 			sourceTree = "<group>";
@@ -365,6 +368,7 @@
 				C1A364E2216E3A57006F7605 /* check.html in Resources */,
 				C1A364E1216E3A57006F7605 /* sectionHeader.html in Resources */,
 				C1A364E4216F6F4D006F7605 /* checkHeader.html in Resources */,
+				C1F09F132178C442000AF696 /* policy.txt in Resources */,
 				C1A364E0216E3A57006F7605 /* sectionRow.html in Resources */,
 				C1FCE576212D8E64009B8C59 /* Main_2.storyboard in Resources */,
 				C1902DB1212ED026009F00CF /* GoogleService-Info.plist in Resources */,

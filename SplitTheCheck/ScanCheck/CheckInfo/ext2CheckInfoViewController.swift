@@ -14,6 +14,7 @@ import MessageUI
 import QuickLook
 
 extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPreviewControllerDelegate, QLPreviewControllerDataSource {
+    
     //вызов actionSheet
     @objc func showActionSheet() {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -108,7 +109,8 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
         
         var docURL = FileManager.default.temporaryDirectory as URL
 
-        docURL = docURL.appendingPathComponent("Чек_\(checkDate).pdf")
+        docURL = docURL.appendingPathComponent(checkHeader + ".pdf")
+        
         pdfData.write(to: docURL as URL, atomically: false)
         print ("pdf created")
         openQlPreview()
@@ -143,7 +145,7 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
         //  pass your document url here
         let dir = FileManager.default.temporaryDirectory
         
-        let path = dir.appendingPathComponent("Чек_\(checkDate).pdf")
+        let path = dir.appendingPathComponent(checkHeader + ".pdf")
         return path as! QLPreviewItem
     }
     
@@ -160,7 +162,7 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
         let text = self.createHTML()
         
         mailVC.setToRecipients([UserDefaults.standard.string(forKey: "email")!])
-        mailVC.setSubject("")
+        mailVC.setSubject(checkHeader)
         mailVC.setMessageBody(text, isHTML: true)
         
         self.present(mailVC, animated: true, completion: nil)

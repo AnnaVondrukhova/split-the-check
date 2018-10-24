@@ -31,7 +31,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         loginText.keyboardType = UIKeyboardType.numberPad
         pwdText.keyboardType = UIKeyboardType.numberPad
         
-        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -45,6 +47,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             print ("+7")
             textField.text = "+7"
         }
+    }
+    
+    @objc func dismissKeyboard()
+    {
+        view.endEditing(true)
     }
 
     @IBAction func logIn(_ sender: Any) {

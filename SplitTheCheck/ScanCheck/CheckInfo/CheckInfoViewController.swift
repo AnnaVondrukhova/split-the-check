@@ -29,6 +29,7 @@ class CheckInfoViewController: UIViewController {
     var isFolded:[Bool] = []
     var checkPlace = ""
     var checkDate = ""
+    var checkHeader = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,9 +38,7 @@ class CheckInfoViewController: UIViewController {
         self.checkTableView?.rowHeight = 60
         self.tabBarController?.tabBar.isHidden = true
         
-        if !UserDefaults.standard.bool(forKey: "autoSave") {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "more"), style: .plain, target: self, action: #selector(showActionSheet))
-        }
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "more"), style: .plain, target: self, action: #selector(showActionSheet))
         
         let json = JSON.init(parseJSON: parentString.jsonString!)
         if json["document"]["receipt"]["user"].stringValue.replacingOccurrences(of: " ", with: "") != "" {
@@ -54,10 +53,17 @@ class CheckInfoViewController: UIViewController {
         let end = string.index(string.startIndex, offsetBy: 16)
         let range = start..<end
         checkDate = String(string[range])
+        
+        if checkPlace != "" {
+            checkHeader = checkPlace + "_" + checkDate
+        } else {
+            checkHeader = "Чек_" + checkDate
+        }
 
 //        tableView.delegate = self
         addGuest.titleLabel?.textAlignment = .center
         addGuest.titleLabel?.text = "Выберите позиции"
+//        addGuest.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         
         do {
             let realm = try Realm()

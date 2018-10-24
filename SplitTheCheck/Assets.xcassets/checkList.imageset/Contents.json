@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "note25.png",
+      "filename" : "checkList25.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "note50.png",
+      "filename" : "checkList50.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "note50-1.png",
+      "filename" : "checkList75.png",
       "scale" : "3x"
     }
   ],

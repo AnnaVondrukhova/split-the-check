@@ -22,10 +22,19 @@ class NewPasswordViewController: UIViewController {
         waitingView.layer.opacity = 0.8
         self.activityIndicator.hidesWhenStopped = true
         pwdText.keyboardType = UIKeyboardType.numberPad
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         waitingView.isHidden = true
+    }
+    
+    @objc func dismissKeyboard()
+    {
+        view.endEditing(true)
     }
 
     @IBAction func logIn(_ sender: Any) {

@@ -21,7 +21,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     
     var captureSession: AVCaptureSession?
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
-//    var qrCodeFrameView: UIView?
+    var qrCodeFrameView: UIView?
     
     var token: NotificationToken?
     var storedChecks: Results<QrStringInfoObject>?
@@ -107,11 +107,14 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         }
 
         //вызываем зеленую рамку
-//        qrCodeFrameView = UIView()
-//        qrCodeFrameView?.layer.borderColor = UIColor.green.cgColor
-//        qrCodeFrameView?.layer.borderWidth = 2
-//        view.addSubview(qrCodeFrameView!)
-//        view.bringSubview(toFront: qrCodeFrameView!)
+        qrCodeFrameView = UIView()
+        qrCodeFrameView?.layer.borderColor = UIColor(red:0.26, green:0.71, blue:0.56, alpha:1.0).cgColor
+        qrCodeFrameView?.layer.borderWidth = 2
+        qrCodeFrameView?.layer.cornerRadius = 15
+        qrCodeFrameView?.frame.size = CGSize(width: self.view.frame.width - 50, height: self.view.frame.width - 50)
+        qrCodeFrameView?.center = self.view.center
+        view.addSubview(qrCodeFrameView!)
+        view.bringSubview(toFront: qrCodeFrameView!)
 
     }
     
@@ -147,7 +150,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
 //            qrCodeFrameView?.frame = CGRect.zero
 //        }
         captureSession?.stopRunning()
-//        qrCodeFrameView?.isHidden = true
+        qrCodeFrameView?.isHidden = true
         print ("got metadataObjects: \(metadataObjects)")
 
         let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
@@ -202,7 +205,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         
         let actionCancel = UIAlertAction(title: "Oтмена", style: .cancel, handler: {(action: UIAlertAction) in
             self.videoPreviewLayer?.isHidden = false
-//            self.qrCodeFrameView?.isHidden = false
+            self.qrCodeFrameView?.isHidden = false
             self.captureSession?.startRunning()
         })
         //если выбираем "Перейти к чеку", то пытаемся загрузить данные

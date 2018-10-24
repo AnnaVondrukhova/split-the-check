@@ -23,6 +23,10 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
         self.activityIndicator.hidesWhenStopped = true
         self.telText.delegate = self
         telText.keyboardType = UIKeyboardType.numberPad
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -35,6 +39,11 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
             print ("+7")
             telText.text = "+7"
         }
+    }
+    
+    @objc func dismissKeyboard()
+    {
+        view.endEditing(true)
     }
     
     @IBAction func getNewPwd(_ sender: Any) {

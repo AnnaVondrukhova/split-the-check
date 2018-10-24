@@ -14,8 +14,14 @@ class StartViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let docDirectory: NSString = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0] as NSString
+        let logpath = docDirectory.appendingPathComponent("log.txt")
+        freopen(logpath.cString(using: String.Encoding.ascii)!, "w+", stderr)
+        
         print("StartView did load")
-        print("Is logged in = \(UserDefaults.standard.bool(forKey: "isLoggedIn"))")
+        NSLog("Is logged in = \(UserDefaults.standard.bool(forKey: "isLoggedIn"))")
+        
+        
         
         //Тестовый блок - УДАЛИТЬ
 //        let domain = Bundle.main.bundleIdentifier!

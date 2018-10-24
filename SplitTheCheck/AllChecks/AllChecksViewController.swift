@@ -98,6 +98,7 @@ class AllChecksViewController: UITableViewController {
                 try realm.commitWrite()
             } catch {
                 print(error.localizedDescription)
+                NSLog(error.localizedDescription)
             }
             
             UserDefaults.standard.set(true, forKey: "notFirstLaunchFor\(userId!)")
@@ -122,6 +123,7 @@ class AllChecksViewController: UITableViewController {
             print(realm.configuration.fileURL as Any)
         } catch {
             print(error.localizedDescription)
+            NSLog(error.localizedDescription)
         }
         
         self.groupedChecks = [YearMonth: [QrStringInfoObject]]()
@@ -149,6 +151,7 @@ class AllChecksViewController: UITableViewController {
                 }
         } else {
             print ("Unknown sorting")
+            NSLog ("Unknown sorting")
         }
         
         
@@ -192,12 +195,8 @@ class AllChecksViewController: UITableViewController {
         // Если отсканированных чеков еще нет, показываем на экране надпись
         if (storedChecks != nil) && (storedChecks?.isEmpty == false) {
             print ("stored checks not nil or empty")
-//            self.noChecksLabel.isHidden = true
-//            self.tableView?.backgroundView = nil
             return groupedChecks![sortedKeys[section]]!.count
         } else {
-//            self.tableView?.backgroundView = noChecksLabel
-//            self.noChecksLabel.isHidden = false
             return 0
         }
     }
@@ -255,9 +254,11 @@ class AllChecksViewController: UITableViewController {
                 realm.delete(realmQrString)
                 try realm.commitWrite()
                 print ("deleted row \(qrStringId)")
+                NSLog ("deleted row")
                 tableView.reloadData()
             } catch {
                 print (error.localizedDescription)
+                NSLog (error.localizedDescription)
             }
         }
     }
@@ -266,6 +267,7 @@ class AllChecksViewController: UITableViewController {
         //если переходим с ячейки с уже загруженным чеком
         if segue.identifier == "showCheckSegue" {
             print ("trying to load check")
+            NSLog ("trying to load check")
             let controller = segue.destination as! CheckInfoViewController
             
             controller.parentString = modifiedString

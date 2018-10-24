@@ -17,7 +17,7 @@ class FavGuestViewController: UITableViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView?.rowHeight = 50
+        self.tableView?.rowHeight = 44
 
         self.tabBarController?.tabBar.isHidden = true
         self.navigationItem.rightBarButtonItem = self.editButtonItem

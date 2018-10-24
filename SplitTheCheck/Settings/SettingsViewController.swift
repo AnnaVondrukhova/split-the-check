@@ -7,21 +7,26 @@
 //
 
 import UIKit
+import MessageUI
 
-class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var logOutBtn: UILabel!
     @IBOutlet weak var sortButton: UIButton!
     @IBOutlet weak var sortPicker: UIPickerView!
     @IBOutlet weak var saveSwitch: UISwitch!
     @IBOutlet weak var infoLabel: UILabel!
+    @IBOutlet weak var supportBtn: UIButton!
     
     var sortPickerData = [String]()
     var sortType = UserDefaults.standard.integer(forKey: "sortType")
     let infoLabelText = [true: "Изменения в чеке сохраняются автоматически при выходе из него", false: "Изменения в чеке сохраняются вручную по нажатию кнопки \"Сохранить\". Включите, чтобы сохранять изменения автоматически."]
     var colors = [Bool: UIColor]()
+    var addReport = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.sortButton.titleLabel?.numberOfLines = 2
         self.sortPicker.delegate = self
         self.sortPicker.dataSource = self
         
@@ -87,4 +92,58 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         print ("save is on = \(saveSwitch.isOn)")
     }
     
+    //обрабатываем нажатие на кнопку поддержки
+    @IBAction func supportBtnTap(_ sender: Any) {
+        self.showReportAlert()
+    }
+    
+    func showReportAlert() {
+        let alert = UIAlertController(title: "Приложить отчет?", message: "Отчет об ошибке - запись действий, которые вы совершали в приложении. Отчет поможет нам найти причины возникшей проблемы", preferredStyle: .alert)
+        
+        let yesAction = UIAlertAction(title: "Да", style: .default, handler: {_ in self.addReport = true
+            self.sendReport()
+        })
+        let noAction = UIAlertAction(title: "Нет", style: .default, handler: {_ in self.addReport = false
+            self.sendReport()
+        })
+        
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    //отправка отчета по e-mail
+    func sendReport() {
+        if !MFMailComposeViewController.canSendMail() {
+            print ("Mail services are not available")
+            return
+        }
+        
+        let reportPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let report = reportPath.appendingPathComponent("log.txt")
+        
+        let mailVC = MFMailComposeViewController()
+        mailVC.mailComposeDelegate = self
+        
+        mailVC.setToRecipients(["splitthecheck.ios@gmail.com"])
+        mailVC.setSubject("Отчет о приложении SplitTheCheck")
+        
+        if addReport == true {
+            do {
+                let reportData = try Data(contentsOf: report)
+                mailVC.addAttachmentData(reportData, mimeType: "text/txt", fileName: "Отчет об ошибке.txt")
+            } catch {
+                print (error)
+                NSLog("Error sending report: \(error)")
+            }
+        }
+        
+        self.present(mailVC, animated: true, completion: nil)
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        print ("mail sent")
+        
+        controller.dismiss(animated: true, completion: nil)
+    }
 }

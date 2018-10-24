@@ -19,16 +19,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchIcon" translatesAutoresizingMaskIntoConstraints="NO" id="DOj-IK-M38">
-                                <rect key="frame" x="117.5" y="257.5" width="140" height="172"/>
+                                <rect key="frame" x="97.5" y="223" width="180" height="221"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="140" id="2sS-J0-YDV"/>
-                                    <constraint firstAttribute="height" constant="172" id="uvP-Ke-svz"/>
+                                    <constraint firstAttribute="width" constant="180" id="2sS-J0-YDV"/>
+                                    <constraint firstAttribute="width" secondItem="DOj-IK-M38" secondAttribute="height" multiplier="35:43" id="ONv-aS-apL"/>
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.19607843137254902" green="0.2627450980392157" blue="0.47450980392156861" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.12549019607843137" green="0.14901960784313725" blue="0.29803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="DOj-IK-M38" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="FVd-sq-rmd"/>
+                            <constraint firstItem="DOj-IK-M38" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="FVd-sq-rmd"/>
                             <constraint firstItem="DOj-IK-M38" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="HYV-uV-8XC"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
