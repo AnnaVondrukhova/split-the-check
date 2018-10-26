@@ -45,6 +45,7 @@ class FavGuestCell: UITableViewCell {
     
     func configureDefault() {
         favGuestName.text = ""
+        favGuestName.placeholder = "Добавить гостя"
 
         self.isNew = true
     }
@@ -55,19 +56,35 @@ extension FavGuestCell: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         print ("****** did end editing")
         if !isNew {
-            do {
-                let realm = try Realm()
-                realm.beginWrite()
-                print (guestId)
-                let guest = realm.object(ofType: GuestInfoObject.self, forPrimaryKey: guestId)
-                print ("\(guest?.name), tag: \(favGuestName.tag)")
-                guest?.name = favGuestName.text!
-                try realm.commitWrite()
-                print ("name edited")
-                NSLog ("edit favGuest name: success")
-            } catch {
-                print (error.localizedDescription)
-                NSLog ("edit favGuest name: error" + error.localizedDescription)
+            //если после изменения имя окажется пустым - возвращаем имя как было (работает как в Reminders). Если нет - записываем изменения в базу
+            if favGuestName.text?.replacingOccurrences(of: " ", with: "") == "" {
+                do {
+                    let realm = try Realm()
+                    print (guestId)
+                    let guest = realm.object(ofType: GuestInfoObject.self, forPrimaryKey: guestId)
+                    print ("\(guest?.name), tag: \(favGuestName.tag)")
+                    favGuestName.text = guest?.name
+                    print ("undo typing")
+                    NSLog ("undo edit favGuest name: success")
+                } catch {
+                    print (error.localizedDescription)
+                    NSLog ("undo edit favGuest name: error" + error.localizedDescription)
+                }
+            } else {
+                do {
+                    let realm = try Realm()
+                    realm.beginWrite()
+                    print (guestId)
+                    let guest = realm.object(ofType: GuestInfoObject.self, forPrimaryKey: guestId)
+                    print ("\(guest?.name), tag: \(favGuestName.tag)")
+                    guest?.name = favGuestName.text!
+                    try realm.commitWrite()
+                    print ("name edited")
+                    NSLog ("edit favGuest name: success")
+                } catch {
+                    print (error.localizedDescription)
+                    NSLog ("edit favGuest name: error" + error.localizedDescription)
+                }
             }
         } else {
             do {

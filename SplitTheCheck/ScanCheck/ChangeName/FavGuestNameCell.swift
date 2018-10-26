@@ -49,20 +49,37 @@ class FavGuestNameCell: UITableViewCell, UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        do {
-            let realm = try Realm()
-            realm.beginWrite()
-            print (guestId)
-            let guest = realm.object(ofType: GuestInfoObject.self, forPrimaryKey: guestId)
-            print ("\(guest?.name), tag: \(guestName.tag)")
-            guest?.name = guestName.text!
-            try realm.commitWrite()
-            print ("name edited")
-            NSLog ("edit favGuest name: success")
-        } catch {
-            print (error.localizedDescription)
-            NSLog ("edit favGuest name: error" + error.localizedDescription)
+        //если после изменения имя окажется пустым - возвращаем имя как было (работает как в Reminders). Если нет - записываем изменения в базу
+        if guestName.text?.replacingOccurrences(of: " ", with: "") == "" {
+            do {
+                let realm = try Realm()
+                print (guestId)
+                let guest = realm.object(ofType: GuestInfoObject.self, forPrimaryKey: guestId)
+                print ("\(guest?.name), tag: \(guestName.tag)")
+                guestName.text = guest?.name
+                print ("undo typing")
+                NSLog ("undo edit favGuest name: success")
+            } catch {
+                print (error.localizedDescription)
+                NSLog ("undo edit favGuest name: error" + error.localizedDescription)
+            }
+        } else {
+            do {
+                let realm = try Realm()
+                realm.beginWrite()
+                print (guestId)
+                let guest = realm.object(ofType: GuestInfoObject.self, forPrimaryKey: guestId)
+                print ("\(guest?.name), tag: \(guestName.tag)")
+                guest?.name = guestName.text!
+                try realm.commitWrite()
+                print ("name edited")
+                NSLog ("edit favGuest name: success")
+            } catch {
+                print (error.localizedDescription)
+                NSLog ("edit favGuest name: error" + error.localizedDescription)
+            }
         }
+        
         
         self.isUserInteractionEnabled = true
         
