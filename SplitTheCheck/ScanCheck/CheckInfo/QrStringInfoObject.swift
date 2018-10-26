@@ -46,7 +46,11 @@ class QrStringInfoObject: Object {
             dateFormatter.dateFormat = "yyyyMMdd'T'HHmm"
             end = qrString.index(qrString.startIndex, offsetBy: 15)
             range = start..<end
-            self.checkDate = dateFormatter.date(from: String(qrString[range]))
+            if dateFormatter.date(from: String(qrString[range])) != nil {
+                self.checkDate = dateFormatter.date(from: String(qrString[range]))
+            } else {
+                NSLog ("QrStringInfoObject: unknown date format")
+            }
         }
         
         print ("check date \(self.checkDate as Any)")

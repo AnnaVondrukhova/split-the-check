@@ -18,6 +18,8 @@ class UserAgreementViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NSLog ("UserAgreementVC did load")
+        
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.swipedDown))
         swipeDown.direction = .down
         self.view.addGestureRecognizer(swipeDown)
@@ -26,12 +28,15 @@ class UserAgreementViewController: UIViewController {
         print (pathToPolicy!)
 
         titleLabel.font = UIFont.boldSystemFont(ofSize: 17)
+        //подгружаем текст пользовательского соглашения из файла
         do {
             policyString = try String(contentsOfFile: pathToPolicy!)
         } catch {
             print("Unable to open and use policy template file.")
+            NSLog("Unable to open and use policy template file.")
         }
         
+        //делаем ссылку на Политику конфиденциальности ФНС
         let attributedString = NSMutableAttributedString(string: policyString)
         let range = policyString.range(of: "Политике конфиденциальности Сервиса ФНС")
         let index = policyString.distance(from: policyString.startIndex, to: (range?.lowerBound)!)
@@ -63,17 +68,14 @@ class UserAgreementViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    //закрываем экран свайпом вниз
     @objc func swipedDown () {
         dismiss(animated: true, completion: nil)
     }
     
-//    @IBAction func cancelAction(_ sender: Any) {
-//        dismiss(animated: true, completion: nil)
-//    }
-    
 }
 
+//задаем границы нашего экрана с пользовательским приложением - он не доходит 30pt до верхней границы
 class partialVC: UIPresentationController {
     override var frameOfPresentedViewInContainerView: CGRect {
         let containerBounds = self.containerView?.bounds

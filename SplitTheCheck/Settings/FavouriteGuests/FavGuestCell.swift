@@ -64,8 +64,10 @@ extension FavGuestCell: UITextFieldDelegate {
                 guest?.name = favGuestName.text!
                 try realm.commitWrite()
                 print ("name edited")
+                NSLog ("edit favGuest name: success")
             } catch {
                 print (error.localizedDescription)
+                NSLog ("edit favGuest name: error" + error.localizedDescription)
             }
         } else {
             do {
@@ -79,11 +81,13 @@ extension FavGuestCell: UITextFieldDelegate {
                     print (self.delegate.favouriteGuests.count)
                 }
                 try realm.commitWrite()
+                NSLog ("add new favGuest: success")
                 self.delegate.tableView.reloadData()
                 
                 self.favGuestName.text = ""
             } catch {
                 print(error.localizedDescription)
+                NSLog ("add new favGuest: error " + error.localizedDescription)
             }
         }
     }

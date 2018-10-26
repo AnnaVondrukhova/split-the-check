@@ -14,12 +14,31 @@ class StartViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //запускаем логирование в файл
         let docDirectory: NSString = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0] as NSString
         let logpath = docDirectory.appendingPathComponent("log.txt")
-        freopen(logpath.cString(using: String.Encoding.ascii)!, "w+", stderr)
+        
+//        freopen(logpath.cString(using: String.Encoding.ascii)!, "w+", stderr)
+//        print ("rewriting file")
+        do {
+            let attributes: NSDictionary = try FileManager.default.attributesOfItem(atPath: logpath) as NSDictionary
+            let fileSize = attributes.fileSize()
+            if fileSize <= 1000000 {
+                freopen(logpath.cString(using: String.Encoding.ascii)!, "a+", stderr)
+                print ("adding to file")
+            } else {
+                freopen(logpath.cString(using: String.Encoding.ascii)!, "w+", stderr)
+                print ("rewriting file")
+            }
+        } catch {
+            print (error)
+            freopen(logpath.cString(using: String.Encoding.ascii)!, "w+", stderr)
+            print ("error: rewriting file")
+        }
         
         print("StartView did load")
-        NSLog("Is logged in = \(UserDefaults.standard.bool(forKey: "isLoggedIn"))")
+        NSLog("StartVC did load. Is logged in = \(UserDefaults.standard.bool(forKey: "isLoggedIn"))")
         
         
         
@@ -42,56 +61,6 @@ class StartViewController: UIViewController {
         else {
             self.performSegue(withIdentifier: "toLoginVC", sender: nil)
         }
-        
-//        let user = UserDefaults.standard.string(forKey: "user") ?? ""
-//        let password = UserDefaults.standard.string(forKey: "password") ?? ""
-//
-//        let url = URL(string: "https://proverkacheka.nalog.ru:9999/v1/mobile/users/login")
-//        var request = URLRequest(url: url!)
-//        request.httpMethod = "GET"
-//
-//        let loginData = String(format: "%@:%@", user, password).data(using: String.Encoding.utf8)!
-//        let base64LoginData = loginData.base64EncodedString()
-//
-//        request.setValue("Basic \(base64LoginData)", forHTTPHeaderField: "Authorization")
-//
-//        print ("\(user), \(password)")
-//        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-//            guard let data = data, error == nil else {
-//                print(error?.localizedDescription ?? "unknown error")
-//                print ("error: Go to LoginViewController")
-//                DispatchQueue.main.async {
-//                    self.performSegue(withIdentifier: "toLoginVC", sender: nil)
-//                }
-//                return
-//            }
-//
-//            //если ответ получен, то:
-//            if let httpResponse = response as? HTTPURLResponse {
-//                let statusCode = httpResponse.statusCode
-//                print("Status code = \(statusCode)")
-//
-//                //если авторизация прошла, переходим на главную страницу приложения
-//                if statusCode == 200 {
-//                    let json = JSON(data)
-//                    print (json.description)
-//                    print ("thread \(Thread.isMainThread)")
-//                    DispatchQueue.main.async {
-//                        self.performSegue(withIdentifier: "toCheckHistoryVC", sender: nil)
-//                    }
-//                }
-//                else {
-//                    //если авторизация не прошла, переходим на страницу логина
-//                    print ("thread \(Thread.isMainThread)")
-//                    print ("Go to LoginViewController")
-//                    DispatchQueue.main.async {
-//                        self.performSegue(withIdentifier: "toLoginVC", sender: nil)
-//                    }
-//                }
-//            }
-//        }
-//
-//        task.resume()
     }
     
     override func didReceiveMemoryWarning() {

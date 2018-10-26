@@ -32,12 +32,14 @@ class LoadedCheckCell: UITableViewCell {
         let json = JSON.init(parseJSON: jsonString)
         
         print(json["document"]["receipt"]["dateTime"].stringValue)
-        NSLog("json stringValue: " + json["document"]["receipt"]["dateTime"].stringValue)
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
         let fullDate = dateFormatter.date(from: json["document"]["receipt"]["dateTime"].stringValue)
+        if fullDate == nil {
+            NSLog ("LoadedCheckCell: something wrong with fullDate")
+        }
         print (fullDate as Any)
         
 

@@ -655,6 +655,7 @@
 				DEVELOPMENT_TEAM = LV8EDW43XJ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SplitTheCheck/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "-11.SplitTheCheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -673,6 +674,7 @@
 				DEVELOPMENT_TEAM = LV8EDW43XJ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SplitTheCheck/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "-11.SplitTheCheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";

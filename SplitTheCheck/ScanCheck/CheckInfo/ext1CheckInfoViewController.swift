@@ -13,13 +13,13 @@ import RealmSwift
 import MessageUI
 import QuickLook
 
+//extension для добавления новой секции
 extension CheckInfoViewController {
     
     //добавляем favouriteGuest на экран с чеком по нажатию на ячейку или кнопку +
     @IBAction func addGuestToCheck (segue: UIStoryboardSegue) {
         if segue.identifier == "addFavouriteGuestToCheck" {
             let guestViewCotroller = segue.source as! CheckGuestsViewController
-            //            let resultViewController = segue.destination as! ResultViewController
             
             if let indexPath = guestViewCotroller.tableView.indexPathForSelectedRow {
                 let guest = GuestInfoObject(name: guestViewCotroller.favouriteGuests[indexPath.row].name)
@@ -28,16 +28,13 @@ extension CheckInfoViewController {
                 if guests.contains(where: {$0.name == guest.name}){
                     let sectionNo = guests.index(of: guests.first(where: {$0.name == guest.name})!)
                     addToSection(sectionNo: sectionNo!, sectionName: guest.name)
-                    
                 } else {
                     guests.append(guest)
                     addNewSection(sectionName: guest.name)
                 }
-                
             }
         } else if segue.identifier == "addNewGuestToCheck" {
             let guestViewCotroller = segue.source as! CheckGuestsViewController
-            //            let resultViewController = segue.destination as! ResultViewController
             
             let guest = guestViewCotroller.newGuest
             print(guest.name)
@@ -68,7 +65,7 @@ extension CheckInfoViewController {
             
             //из общего чека удаляем товары, перешедшие к гостю, или уменьшаем их количество
             let index = items[0].index(of: item)
-            if !item.isCountable || (item.totalQuantity == 1) {
+            if !item.isCountable || (item.totalQuantity == 1)||(items[0][index!].totalQuantity == Double(items[0][index!].myQuantity)) {
                 items[0].remove(at: index!)
             } else {
                 items[0][index!].totalQuantity -= Double(items[0][index!].myQuantity)
@@ -94,6 +91,7 @@ extension CheckInfoViewController {
         
         addGuest.titleLabel?.text = "Выберите позиции"
         checkTableView.reloadData()
+        NSLog ("added new guest section")
     }
     
     //добавление позиций к существующей секции с гостем
@@ -149,6 +147,7 @@ extension CheckInfoViewController {
         
         addGuest.titleLabel?.text = "Выберите позиции"
         checkTableView.reloadData()
+        NSLog ("added to existing guest section")
     }
     
     //изменяем имя гостя
@@ -167,8 +166,10 @@ extension CheckInfoViewController {
                         item.sectionName = guestNameVC.favouriteGuests[indexPath.row].name
                     }
                     try realm.commitWrite()
+                    NSLog("changing section name to favourite: success")
                 } catch {
                     print (error)
+                    NSLog("changing section name to favourite: error" + error.localizedDescription)
                 }
                 checkTableView.reloadData()
             }
@@ -186,8 +187,10 @@ extension CheckInfoViewController {
                     item.sectionName = guest.name
                 }
                 try realm.commitWrite()
+                NSLog("changing section name to new: success")
             } catch {
                 print (error)
+                NSLog("changing section name to new: error" + error.localizedDescription)
             }
             checkTableView.reloadData()
         }

@@ -23,6 +23,7 @@ class ChangeGuestNameViewController: UITableViewController {
         
         
         print(favouriteGuests)
+        NSLog ("ChangeGuestNameVC did load")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -34,8 +35,10 @@ class ChangeGuestNameViewController: UITableViewController {
             self.favouriteGuests = (user?.guests)!
             try realm.commitWrite()
             print(realm.configuration.fileURL as Any)
+            NSLog("get favourite guests: success")
         } catch {
             print(error.localizedDescription)
+            NSLog("get favourite guests: error " + error.localizedDescription)
         }
         
     }

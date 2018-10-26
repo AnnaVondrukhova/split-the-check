@@ -611,7 +611,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="launchIcon" width="88" height="110"/>
+        <image name="launchIcon" width="93" height="114"/>
         <image name="swipeDown" width="26" height="6"/>
     </resources>
     <inferredMetricsTieBreakers>

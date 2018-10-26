@@ -56,8 +56,10 @@ class FavouriteGuestCell: UITableViewCell, UITextFieldDelegate {
             guest?.name = guestName.text!
             try realm.commitWrite()
             print ("name edited")
+            NSLog ("edit favGuest name: success")
         } catch {
             print (error.localizedDescription)
+            NSLog ("edit favGuest name: error" + error.localizedDescription)
         }
         
         self.isUserInteractionEnabled = true

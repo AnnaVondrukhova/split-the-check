@@ -29,6 +29,8 @@ class AllChecksViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NSLog ("AllChecksVC did load")
+        
         //задаем параметры надписи на заднем плане по умолчанию
         let bounds = CGRect(x: 0, y: 0, width: (self.tableView?.bounds.size.width)!, height: (self.tableView?.bounds.size.height)!)
         noChecksLabel.bounds = bounds
@@ -69,11 +71,12 @@ class AllChecksViewController: UITableViewController {
         waitingLabel.center.y = activityIndicator.frame.maxY + 18
         self.navigationController?.view.addSubview(waitingLabel)
         self.navigationController?.view.bringSubview(toFront: waitingLabel)
-        
+
+        //Тестовый блок - УДАЛИТЬ
 //        do {
 //            let realm = try Realm()
 //
-//            //!!!УДАЛИТЬ: очищаем Realm каждый раз перед запуском
+//            //очищаем Realm каждый раз перед запуском
 //            realm.beginWrite()
 //            realm.deleteAll()
 //            try! realm.commitWrite()
@@ -85,8 +88,8 @@ class AllChecksViewController: UITableViewController {
 //                    Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
 //                    print("configuration changed")
         
-        //если это первый запуск программы, записываем имя пользователя как первого гостя
         
+        //если это первый запуск программы, записываем имя пользователя как первого гостя
         if !UserDefaults.standard.bool(forKey: "notFirstLaunchFor\(userId!)") {
             let userName = UserDefaults.standard.string(forKey: "name") ?? "Я"
             do {
@@ -96,9 +99,10 @@ class AllChecksViewController: UITableViewController {
                 let user = realm.object(ofType: User.self, forPrimaryKey: userId)
                 user?.guests.append(GuestInfoObject(name: userName))
                 try realm.commitWrite()
+                NSLog("Append me as guest: success")
             } catch {
                 print(error.localizedDescription)
-                NSLog(error.localizedDescription)
+                NSLog("Append me as guest: " + error.localizedDescription)
             }
             
             UserDefaults.standard.set(true, forKey: "notFirstLaunchFor\(userId!)")
@@ -113,6 +117,7 @@ class AllChecksViewController: UITableViewController {
         self.tabBarController?.tabBar.isHidden = false
         waitingLabel.isHidden = true
         waitingView.isHidden = true
+        NSLog ("AllChecksVC will appear")
         
         do {
             let realm = try Realm()
@@ -121,9 +126,10 @@ class AllChecksViewController: UITableViewController {
                 self.storedChecks = user?.checks
             }
             print(realm.configuration.fileURL as Any)
+            NSLog ("Get checks from database: success")
         } catch {
             print(error.localizedDescription)
-            NSLog(error.localizedDescription)
+            NSLog("Get checks from database: " + error.localizedDescription)
         }
         
         self.groupedChecks = [YearMonth: [QrStringInfoObject]]()
@@ -141,6 +147,7 @@ class AllChecksViewController: UITableViewController {
                 yearMonthChecks.append(check)
                 self.groupedChecks![yearMonth] = yearMonthChecks
             }
+            NSLog ("Checks sorted by mDate")
         } else if UserDefaults.standard.integer(forKey: "sortType") == 1 {
                 let storedChecksSorted = storedChecks?.sorted(byKeyPath: "checkDate", ascending: false)
                 for check in storedChecksSorted! {
@@ -149,6 +156,7 @@ class AllChecksViewController: UITableViewController {
                     yearMonthChecks.append(check)
                     self.groupedChecks![yearMonth] = yearMonthChecks
                 }
+            NSLog ("Checks sorted by checkDate")
         } else {
             print ("Unknown sorting")
             NSLog ("Unknown sorting")
@@ -166,12 +174,13 @@ class AllChecksViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //если информация о чеке загружена, переходим на страницу с информацией
         if (tableView.cellForRow(at: indexPath) as? LoadedCheckCell) != nil {
+            NSLog("cell as LoadedCheckCell")
             modifiedString = groupedChecks![sortedKeys[indexPath.section]]![indexPath.row]
             performSegue(withIdentifier: "showCheckSegue", sender: self)
         }
         //если информация о чеке еще не загружена, пробуем загрузить
         else if (tableView.cellForRow(at: indexPath) as? NotLoadedCheckCell) != nil {
-            print("cell as NotLoadedCheckCell")
+            NSLog("cell as NotLoadedCheckCell")
             waitingLabel.isHidden = false
             waitingView.isHidden = false
             activityIndicator.startAnimating()
@@ -253,12 +262,12 @@ class AllChecksViewController: UITableViewController {
                 realm.delete(realmItems)
                 realm.delete(realmQrString)
                 try realm.commitWrite()
-                print ("deleted row \(qrStringId)")
-                NSLog ("deleted row")
+                print ("deleted check \(qrStringId)")
+                NSLog ("Delete check from database: success")
                 tableView.reloadData()
             } catch {
                 print (error.localizedDescription)
-                NSLog (error.localizedDescription)
+                NSLog ("Delete check from database: " + error.localizedDescription)
             }
         }
     }

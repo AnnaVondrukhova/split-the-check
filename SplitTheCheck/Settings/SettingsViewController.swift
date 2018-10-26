@@ -98,7 +98,7 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
     }
     
     func showReportAlert() {
-        let alert = UIAlertController(title: "Приложить отчет?", message: "Отчет об ошибке - запись действий, которые вы совершали в приложении. Отчет поможет нам найти причины возникшей проблемы", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Приложить отчет?", message: "Системный отчет - запись действий, которые вы совершали в приложении. Отчет поможет нам найти причины возникшей проблемы", preferredStyle: .alert)
         
         let yesAction = UIAlertAction(title: "Да", style: .default, handler: {_ in self.addReport = true
             self.sendReport()
@@ -131,7 +131,7 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         if addReport == true {
             do {
                 let reportData = try Data(contentsOf: report)
-                mailVC.addAttachmentData(reportData, mimeType: "text/txt", fileName: "Отчет об ошибке.txt")
+                mailVC.addAttachmentData(reportData, mimeType: "text/txt", fileName: "Системный отчет.txt")
             } catch {
                 print (error)
                 NSLog("Error sending report: \(error)")

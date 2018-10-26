@@ -81,26 +81,6 @@ class CheckInfoObject: Object {
 //        return lhs === rhs
     }
     
-//    func encode(with aCoder: NSCoder) {
-//        aCoder.encode(id, forKey: "id")
-//        aCoder.encode(name, forKey: "name")
-//        aCoder.encode(initialQuantity, forKey: "initialQuantity")
-//        aCoder.encode(totalQuantity, forKey: "totalQuantity")
-//        aCoder.encode(price, forKey: "price")
-//        aCoder.encode(myQuantity, forKey: "myQuantity")
-//        aCoder.encode(myQtotalQ, forKey: "myQtotalQ")
-//    }
-//    
-//    required init?(coder aDecoder: NSCoder) {
-//        self.id = aDecoder.decodeInteger(forKey: "id")
-//        self.name = aDecoder.decodeObject(forKey: "name") as! String
-//        self.initialQuantity = aDecoder.decodeDouble(forKey: "initialQuantity")
-//        self.totalQuantity = aDecoder.decodeDouble(forKey: "totalQuantity")
-//        self.price = aDecoder.decodeDouble(forKey: "price")
-//        self.myQuantity = aDecoder.decodeInteger(forKey: "myQuantity")
-//        self.myQtotalQ = aDecoder.decodeObject(forKey: "myQtotalQ") as! String
-//    }
-    
     func printInfo() {
         print(" id: \(id) \n name: \(name),\n initialQuantity: \(initialQuantity) \n totalQuantity: \(totalQuantity) \n price: \(price)")
     }

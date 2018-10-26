@@ -39,7 +39,6 @@ class NotLoadedCheckCell: UITableViewCell {
         }
         
         print (params["t"])
-        NSLog ("params[t] = \(params["t"])")
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyyMMdd'T'HHmmss"
@@ -49,6 +48,9 @@ class NotLoadedCheckCell: UITableViewCell {
         } else {
             dateFormatter.dateFormat = "yyyyMMdd'T'HHmm"
             fullDate = dateFormatter.date(from: params["t"]!)
+        }
+        if fullDate == nil {
+            NSLog ("NotLoadedCheckCell: something wrong with fullDate")
         }
         print (fullDate as Any)
         

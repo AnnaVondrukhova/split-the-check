@@ -40,6 +40,7 @@ class RequestService {
                 
             Alamofire.request(url, method: .get, headers: headers).validate(statusCode: 200..<600).responseData { response in
                 print ("Alamofire begin")
+                NSLog ("Alamofire request: start")
                 switch response.result {
                 //если получили json, записываем строку в базу с jsonString != nil
                 case .success(let value):
@@ -50,10 +51,14 @@ class RequestService {
                         qrStringItem.addCheckItems(check)
                         RealmServices.saveQRString(string: qrStringItem)
                         print ("case success")
-                    } else {
+                        NSLog("Alamofire request: case success")
+                    }
+                    //если json пустой, записываем строку в базу с jsonString = nil и error != nil
+                    else {
                         let qrStringItem = QrStringInfoObject(error: "\(response.response?.statusCode ?? 500)", qrString: receivedString, jsonString: nil)
                         RealmServices.saveQRString(string: qrStringItem)
                         print("case error: \(String(describing: response.response?.statusCode))")
+                        NSLog("Alamofire request: case error \(String(describing: response.response?.statusCode))")
                     }
                     
                 //если не получили json, записываем строку в базу с jsonString = nil и error != nil
@@ -61,6 +66,7 @@ class RequestService {
                     let qrStringItem = QrStringInfoObject(error: "\(response.response?.statusCode ?? 500)", qrString: receivedString, jsonString: nil)
                     RealmServices.saveQRString(string: qrStringItem)
                     print("case .failure \(String(describing: response.response?.statusCode))")
+                    NSLog("Alamofire request: case failure \(String(describing: response.response?.statusCode))")
                 }
             }
         

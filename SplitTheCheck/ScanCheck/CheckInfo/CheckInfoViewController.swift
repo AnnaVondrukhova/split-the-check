@@ -34,6 +34,7 @@ class CheckInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print ("viewDidLoad")
+        NSLog("CheckInfoVC did load")
         
         self.checkTableView?.rowHeight = 60
         self.tabBarController?.tabBar.isHidden = true
@@ -60,10 +61,8 @@ class CheckInfoViewController: UIViewController {
             checkHeader = "Чек_" + checkDate
         }
 
-//        tableView.delegate = self
         addGuest.titleLabel?.textAlignment = .center
         addGuest.titleLabel?.text = "Выберите позиции"
-//        addGuest.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         
         do {
             let realm = try Realm()
@@ -98,37 +97,17 @@ class CheckInfoViewController: UIViewController {
             for _ in 0..<guests.count {
                 isFolded.append(false)
             }
-            
-            
-            
-//                groupItems(items: realmItems)
             print("items grouped")
-//            print ("Items : \(items)")
+            NSLog("group items: success")
+
         } catch {
             print (error)
+            NSLog ("group items: error" + error.localizedDescription)
         }
         print ("total sum")
- //       self.totalSum[0] = items[0].reduce(0){$0 + round(100*$1.price*$1.totalQuantity)/100}
         self.checkTableView?.reloadData()
         print ("Items : \(items)")
-        
-        
     }
-    
-//    func groupItems(items: Results<CheckInfo>) -> [[CheckInfo]] {
-//        let groupedItems = items.reduce([[CheckInfo]]()) {
-//            guard var last = $0.last else { return [[$1]] }
-//            var collection = $0
-//            if last.first!.sectionId == $1.sectionId {
-//                last += [$1]
-//                collection[collection.count - 1] = last
-//            } else {
-//                collection += [[$1]]
-//            }
-//            return collection
-//        }
-//        return groupedItems
-//    }
 
     override func viewWillAppear(_ animated: Bool) {
         if guestSum != 0 {
@@ -142,21 +121,21 @@ class CheckInfoViewController: UIViewController {
             print ("view did disappear")
             addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
         }
+        //если включено автосохранение, сохраняем чек, покидая контроллер
         if self.isMovingFromParentViewController {
             if UserDefaults.standard.bool(forKey: "autoSave") {
                 self.saveTheCheck()
             }
         }
     }
-
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 }
 
+//extension для работы с таблицей: выбор строк, выбор количества товара, удаление строк из секции
 extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
     //количество секций
     func  numberOfSections(in tableView: UITableView) -> Int {
@@ -187,6 +166,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         return cell.contentView
     }
     
+    //обработка нажатия на кнопку foldBtn
     @objc func foldBtnTap(_ sender: UIButton) {
         isFolded[sender.tag] = !isFolded[sender.tag]
         print ("@@isFolded - \(isFolded[sender.tag])")
@@ -210,6 +190,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     
+    //меняем высоту ячейки в зависимости от isFolded
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if isFolded[indexPath.section] {
             return 0
@@ -242,15 +223,19 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                 
                 guestSum += Double(item.myQuantity-myQuantityOld)*item.price
                 addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
+                NSLog("added item amount")
             }
         }
         print ("item.myQuantity = \(item.myQuantity)")
     }
     
-    //высота заголовка секции
+    //высота заголовка секции. Если в секции нет товаров, высота заголовка = 0
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
-        
+        if items[section].isEmpty {
+            return 0
+        } else {
+            return 40
+        }
     }
     
     //выделение ячейки.
@@ -258,6 +243,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.cellForRow(at: indexPath)! as! CheckInfoCell
         let item = items[indexPath.section][indexPath.row]
         print("choose: \(item.myQtotalQ)")
+        NSLog("selected row at section \(indexPath.section), row \(indexPath.row)")
         
         
         if !item.isCountable {
@@ -267,7 +253,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         }
         else {
             //Устанавливаем количество выбранных единиц товара = 1
-            item.myQuantity = 1 //<-- поменяла += на =
+            item.myQuantity = 1
             guestSum += Double(item.myQuantity)*item.price
             
             if item.totalQuantity == 1 {
@@ -282,14 +268,13 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         print("appended, total \(selectedItems.count)")
         
         addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
-        
-        
     }
     
     //снятие выделения ячейки.
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let deselectedCell = tableView.cellForRow(at: indexPath) as! CheckInfoCell
         let item = items[indexPath.section][indexPath.row]
+        NSLog("deselected row at section \(indexPath.section), row \(indexPath.row)")
         
         //Устанавливаем количество единиц товара = totalQuantity, выбранных единиц товара = 0
         //Уменьшаем guestSum
@@ -310,8 +295,10 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
             selectedItems.remove(at: index!)
             deselectedCell.itemAmount.text = item.myQtotalQ
             print("removed, total  \(selectedItems.count)")
+            NSLog("selectedItems contains item: removed")
         } else {
             print("not removed, total  \(selectedItems.count)")
+            NSLog("selectedItems doesn't contain item: not removed")
         }
         
         if selectedItems.isEmpty {
@@ -346,7 +333,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                 items[0][index!].myQuantity = 0
                 items[0][index!].myQtotalQ = "\(Int(items[0][index!].totalQuantity))"
                 print(items[0][index!].totalQuantity)
-                
+                NSLog("Remove item from section: check contains item")
             }
             //если в общем чеке нет этого товара, вставляем в общем чеке строку с ним
             else {
@@ -360,6 +347,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                 checkTableView.beginUpdates()
                 checkTableView.insertRows(at: [IndexPath(row: items[0].count-1, section:0)], with: .none)
                 checkTableView.endUpdates()
+                NSLog("Remove item from section: check doesn't contain item")
             }
             
             //удаляем строку из секции гостя и обновляем значения сумм
@@ -386,6 +374,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                         item.sectionId -= 1
                     }
                 }
+                NSLog("removing section")
             }
             checkTableView.reloadData()
         }

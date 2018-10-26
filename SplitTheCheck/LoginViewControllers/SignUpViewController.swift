@@ -21,6 +21,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NSLog ("SignUpVC did load")
 
         waitingView.layer.cornerRadius = 10
         waitingView.layer.opacity = 0.8
@@ -39,6 +41,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
     
     override func viewWillAppear(_ animated: Bool) {
         waitingView.isHidden = true
+        NSLog ("SignUpVC will appear")
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -76,6 +79,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
+                NSLog("guard: " + (error?.localizedDescription ?? "Unknown error"))
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
                     self.waitingView.isHidden = true
@@ -90,6 +94,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
             if httpResponse != nil {
                 let statusCode = httpResponse!.statusCode
                 print("Status code = \(statusCode)")
+                NSLog("Status code = \(statusCode)")
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
                     self.waitingView.isHidden = true
@@ -126,6 +131,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
                 }
                 else {
                     print ("Unknown error, status code = \(statusCode), data = \(data), thread \(Thread.isMainThread)")
+                    NSLog ("Unknown error, status code = \(statusCode), data = \(data)")
                     DispatchQueue.main.async {
                         Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                     }
@@ -133,6 +139,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
             }
             else {
                 print (httpResponse!.allHeaderFields)
+                NSLog ("No status code: \(httpResponse!.allHeaderFields)")
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
                     self.waitingView.isHidden = true
@@ -145,6 +152,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
         self.signUpBtn.backgroundColor = UIColor(red:0.37, green:0.75, blue:0.62, alpha:1.0)
     }
     
+    //вызываем экран с пользовательским соглашением
     @IBAction func agreementBtnTap(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let userAgreementVC = storyboard.instantiateViewController(withIdentifier: "UserAgreementVC") as! UserAgreementViewController
@@ -156,12 +164,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return partialVC(presentedViewController: presented, presenting: presenting)
     }
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "toUserAgreementVC" {
-//            let vc = segue.destination as! UserAgreementViewController
-//            vc.preferredContentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height - 50)
-//        }
-//    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -171,6 +173,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
 }
 
 extension SignUpViewController: CheckboxDelegate {
+    //кнопка регистрации недоступна, если чекбокс не отмечен
     func checked(_ checkbox: Checkbox) {
         if checkbox.isChecked {
             signUpBtn.isEnabled = true

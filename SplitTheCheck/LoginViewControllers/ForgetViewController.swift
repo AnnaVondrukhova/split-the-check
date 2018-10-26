@@ -18,6 +18,7 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NSLog ("ForgetVC did load")
         waitingView.layer.cornerRadius = 10
         waitingView.layer.opacity = 0.8
         self.activityIndicator.hidesWhenStopped = true
@@ -31,6 +32,7 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         waitingView.isHidden = true
+        NSLog ("ForgetVC will appear")
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -65,6 +67,7 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
+                NSLog("guard: " + (error?.localizedDescription ?? "Unknown error"))
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
                     self.waitingView.isHidden = true
@@ -79,6 +82,7 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
             if httpResponse != nil {
                 let statusCode = httpResponse!.statusCode
                 print("Status code = \(statusCode)")
+                NSLog("Status code = \(statusCode)")
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
                     self.waitingView.isHidden = true
@@ -101,6 +105,7 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
                 }
                 else {
                     print ("Unknown error, status code = \(statusCode), data = \(data)")
+                    NSLog ("Unknown error, status code = \(statusCode), data = \(data)")
                     DispatchQueue.main.async {
                         Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                     }
@@ -108,6 +113,7 @@ class ForgetViewController: UIViewController, UITextFieldDelegate {
             }
             else {
                 print (httpResponse!.allHeaderFields)
+                NSLog ("No status code: \(httpResponse!.allHeaderFields)")
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
                     self.waitingView.isHidden = true

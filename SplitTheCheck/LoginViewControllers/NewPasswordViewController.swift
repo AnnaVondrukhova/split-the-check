@@ -17,6 +17,8 @@ class NewPasswordViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NSLog ("NewPasswordVC did load")
 
         waitingView.layer.cornerRadius = 10
         waitingView.layer.opacity = 0.8
@@ -30,6 +32,7 @@ class NewPasswordViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         waitingView.isHidden = true
+        NSLog ("NewPasswordVC will appear")
     }
     
     @objc func dismissKeyboard()
@@ -62,6 +65,7 @@ class NewPasswordViewController: UIViewController {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
+                NSLog("guard: " + (error?.localizedDescription ?? "Unknown error"))
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
                     self.waitingView.isHidden = true
@@ -76,6 +80,7 @@ class NewPasswordViewController: UIViewController {
             if httpResponse != nil {
                 let statusCode = httpResponse!.statusCode
                 print("Status code = \(statusCode)")
+                NSLog("Status code = \(statusCode)")
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
                     self.waitingView.isHidden = true
@@ -108,6 +113,7 @@ class NewPasswordViewController: UIViewController {
                 else {
                     //при неизвестной ошибке выдаем ошибку соединения с сервером
                     print ("Unknown error, status code = \(statusCode), data = \(data), thread \(Thread.isMainThread)")
+                    NSLog ("Unknown error, status code = \(statusCode), data = \(data)")
                     DispatchQueue.main.async {
                         Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                     }
@@ -115,6 +121,7 @@ class NewPasswordViewController: UIViewController {
             }
             else {
                 print (httpResponse!.allHeaderFields)
+                NSLog ("No status code: \(httpResponse!.allHeaderFields)")
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
                     self.waitingView.isHidden = true

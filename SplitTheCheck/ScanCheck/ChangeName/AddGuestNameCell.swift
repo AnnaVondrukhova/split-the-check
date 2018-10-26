@@ -47,11 +47,13 @@ class AddGuestNameCell: UITableViewCell, UITextFieldDelegate {
                 print (self.delegate.favouriteGuests.count)
             }
             try realm.commitWrite()
+            NSLog ("add new favGuest: success")
             self.delegate.tableView.reloadData()
             
             self.guestName.text = ""
         } catch {
             print(error.localizedDescription)
+            NSLog ("add new favGuest: error " + error.localizedDescription)
         }
     }
     

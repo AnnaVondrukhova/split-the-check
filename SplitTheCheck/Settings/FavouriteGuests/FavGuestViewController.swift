@@ -22,8 +22,10 @@ class FavGuestViewController: UITableViewController {
         self.tabBarController?.tabBar.isHidden = true
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         self.navigationItem.rightBarButtonItem?.title = "Изменить"
+        NSLog ("FavGuestVC did load")
     }
     
+    //при появлении контроллера получаем из базы список гостей
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         do {
@@ -36,12 +38,12 @@ class FavGuestViewController: UITableViewController {
             try realm.commitWrite()
             print(realm.configuration.fileURL as Any)
             print ("View will appear: fav guests: \(self.favouriteGuests)")
+            NSLog("get favourite guests: success")
             tableView.reloadData()
         } catch {
             print(error.localizedDescription)
+            NSLog("get favourite guests: error " + error.localizedDescription)
         }
-        
-//        syncTableWithRealm()
         
     }
 
@@ -49,8 +51,6 @@ class FavGuestViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -62,6 +62,7 @@ class FavGuestViewController: UITableViewController {
         return favouriteGuests.count+1
     }
 
+    //конфигурация ячейки
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favGuestCell", for: indexPath) as! FavGuestCell
         cell.delegate = self
@@ -82,48 +83,6 @@ class FavGuestViewController: UITableViewController {
         return cell
     }
 
-//    func syncTableWithRealm() {
-//        guard let realm = try? Realm() else {return}
-//        let user = realm.objects(User.self).first
-//        let realmFavouriteGuests = user?.guests
-//        token = realmFavouriteGuests?.observe{[weak self] (changes: RealmCollectionChange) in
-//            guard let tableView  =  self?.tableView else {return}
-//            switch changes {
-//            case .initial:
-//                tableView.reloadData()
-//                break
-//            case .update(_, let deletions, let insertions, let modifications):
-//                tableView.beginUpdates()
-//                print("insertions: \(insertions)")
-//                tableView.insertRows(at: insertions.map({IndexPath(row: $0, section: 0)}), with: .automatic)
-//                print ("deletions: \(deletions)")
-//                tableView.deleteRows(at: deletions.map({IndexPath(row: $0, section: 0)}), with: .automatic)
-//                print ("modifications: \(modifications)")
-//                tableView.reloadRows(at: modifications.map({IndexPath(row: $0, section: 0)}), with: .automatic)
-//                tableView.endUpdates()
-////                print (self?.favouriteGuests)
-//                break
-//            case .error(let error):
-//                fatalError("\(error)")
-//                break
-//            }
-//        }
-//    }
-    
-//    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let view = UIView()
-//
-//        view.backgroundColor = UIColor(red:0.81, green:0.85, blue:0.97, alpha:1.0)
-//        return view
-//    }
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
         if indexPath.row < favouriteGuests.count {
             return .delete
@@ -132,8 +91,7 @@ class FavGuestViewController: UITableViewController {
         }
     }
     
-
-    // Override to support editing the table view.
+    //удаляем гостя из списка
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         let guestToDelete = favouriteGuests[indexPath.row]
         
@@ -144,14 +102,12 @@ class FavGuestViewController: UITableViewController {
                 favouriteGuests.remove(at: indexPath.row)
                 realm.delete(guestToDelete)
                 try realm.commitWrite()
+                NSLog("Deleting guest: success")
                 tableView.reloadData()
             } catch {
                 print (error.localizedDescription)
+                NSLog("Deleting guest: error" + error.localizedDescription)
             }
-            
-            
-            // Delete the row from the data source
-            //tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
@@ -165,8 +121,10 @@ class FavGuestViewController: UITableViewController {
             favouriteGuests.insert(rowToMove, at: destinationIndexPath.row)
             try realm.commitWrite()
             print (favouriteGuests)
+            NSLog("Moving guest: success")
         } catch {
             print (error.localizedDescription)
+            NSLog("Moving guest: error" + error.localizedDescription)
         }
         
         tableView.reloadData()

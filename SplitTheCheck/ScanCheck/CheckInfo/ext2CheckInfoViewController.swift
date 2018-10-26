@@ -13,6 +13,7 @@ import RealmSwift
 import MessageUI
 import QuickLook
 
+//extension для отправки чека по почте, формирования pdf и сохранения чека
 extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPreviewControllerDelegate, QLPreviewControllerDataSource {
     
     //вызов actionSheet
@@ -86,10 +87,12 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
             checkHTML = checkHTML.replacingOccurrences(of: "#CHECK_BODY#", with: checkBody)
 //            createMessageBody(text: checkHTML)
             print ("html created")
+            NSLog("HTML created")
             return checkHTML
             
         } catch {
             print("Unable to open and use HTML template files.")
+            NSLog("Unable to open and use HTML template files.")
             return ""
         }
     }
@@ -113,6 +116,7 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
         
         pdfData.write(to: docURL as URL, atomically: false)
         print ("pdf created")
+        NSLog("PDF created")
         openQlPreview()
     }
     
@@ -130,6 +134,7 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
         return data
     }
     
+    //открываем pdf
     func openQlPreview() {
         let preview = QLPreviewController.init()
         preview.dataSource = self
@@ -142,17 +147,16 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
     }
     
     public func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-        //  pass your document url here
         let dir = FileManager.default.temporaryDirectory
-        
         let path = dir.appendingPathComponent(checkHeader + ".pdf")
-        return path as! QLPreviewItem
+        return path as QLPreviewItem
     }
     
     //отправка чека по e-mail
     func sendByEmail() {
         if !MFMailComposeViewController.canSendMail() {
             print ("Mail services are not available")
+            NSLog ("Mail services are not available")
             return
         }
         
@@ -168,24 +172,9 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
         self.present(mailVC, animated: true, completion: nil)
     }
     
-//    func createMessageBody(text: String) {
-//        let file = "html.txt"
-//        
-//        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-//            let fileURL = dir.appendingPathComponent(file)
-//            
-//            do {
-//                try text.write(to: fileURL, atomically: false, encoding: .utf8)
-//                print ("file created")
-//            } catch {
-//                print ("error while writing the file: \(error.localizedDescription)")
-//            }
-//        }
-//    }
-    
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         print ("mail sent")
-        
+        NSLog ("mail sent")
         controller.dismiss(animated: true, completion: nil)
     }
     
@@ -196,8 +185,7 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
         
         for section in items {
             for item in section {
-                let copyItem = item.copyItem()
-                itemsToRealm.append(copyItem)
+                itemsToRealm.append(item.copyItem())
             }
         }
         //удаляем старый чек, записываем в realm новый массив
@@ -211,8 +199,10 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
                 parentString.checkItems.append(item)
             }
             try realm.commitWrite()
+            NSLog ("saving check: success")
         } catch {
             print(error)
+            NSLog ("saving check: error " + error.localizedDescription)
         }
         print ("check saved")
     }

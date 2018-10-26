@@ -44,8 +44,6 @@ class CheckInfoCell: UITableViewCell {
     @objc func labelAmountTapped(_ sender: UITapGestureRecognizer) {
         print("tapped")
         delegate?.amountTapped(self)
-        
-//        itemAmount.text = String((itemAmount.text! as NSString).intValue % Int32(itemAmount.tag)+1)+"/\(itemAmount.tag)"
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
