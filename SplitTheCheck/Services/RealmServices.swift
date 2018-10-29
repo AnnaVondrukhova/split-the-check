@@ -75,7 +75,7 @@ class RealmServices {
                         VC.activityIndicator.stopAnimating()
                         VC.waitingLabel.isHidden = true
                         VC.waitingView.isHidden = true
-                        Alerts.showErrorAlert(VC: VC, message: "Чек не найден")
+                        Alerts.showErrorAlert(VC: VC, message: "Чек еще не внесен в базу данных ФНС")
                     case "202":
                         print ("Ошибка 202, повторяем запрос...")
                         usleep(500000)
@@ -144,7 +144,7 @@ class RealmServices {
                         VC.activityIndicator.stopAnimating()
                         VC.waitingLabel.isHidden = true
                         VC.waitingView.isHidden = true
-                        Alerts.showErrorAlert(VC: VC, message: "Чек не найден")
+                        Alerts.showErrorAlert(VC: VC, message: "Чек еще не внесен в базу данных ФНС")
                     case "202":
                         print ("Ошибка 202, повторяем запрос...")
                         usleep(500000)
