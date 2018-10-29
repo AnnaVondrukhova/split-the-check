@@ -379,14 +379,4 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
             checkTableView.reloadData()
         }
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "changeGuestName" {
-            let controller = segue.destination as! ChangeGuestNameViewController
-            if let button = sender as! UIButton? {
-                print ("pressed button \(button.tag)")
-                controller.sectionNo = button.tag
-            }
-        }
-    }
 }

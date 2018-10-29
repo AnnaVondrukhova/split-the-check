@@ -158,20 +158,15 @@ extension CheckInfoViewController {
             
             if let indexPath = guestNameVC.tableView.indexPathForSelectedRow {
                 print ("changing name to \(guestNameVC.favouriteGuests[indexPath.row].name)")
-                do {
-                    let realm = try! Realm()
-                    realm.beginWrite()
-                    guests[sectionNo].name = guestNameVC.favouriteGuests[indexPath.row].name
-                    for item in items[sectionNo] {
-                        item.sectionName = guestNameVC.favouriteGuests[indexPath.row].name
-                    }
-                    try realm.commitWrite()
-                    NSLog("changing section name to favourite: success")
-                } catch {
-                    print (error)
-                    NSLog("changing section name to favourite: error" + error.localizedDescription)
+                guests[sectionNo].name = guestNameVC.favouriteGuests[indexPath.row].name
+                for item in items[sectionNo] {
+                    item.sectionName = guestNameVC.favouriteGuests[indexPath.row].name
                 }
                 checkTableView.reloadData()
+                NSLog("changing section name to favourite: success")
+            } else {
+                print ("changing section name to favourite: error")
+                NSLog("changing section name to favourite: error")
             }
         } else if segue.identifier == "changeNameToNew" {
             let guestNameVC = segue.source as! ChangeGuestNameViewController
@@ -179,20 +174,22 @@ extension CheckInfoViewController {
             let guest = guestNameVC.newGuest
             
             print ("changing name to \(guest.name)")
-            do {
-                let realm = try! Realm()
-                realm.beginWrite()
-                guests[sectionNo].name = guest.name
-                for item in items[sectionNo] {
-                    item.sectionName = guest.name
-                }
-                try realm.commitWrite()
-                NSLog("changing section name to new: success")
-            } catch {
-                print (error)
-                NSLog("changing section name to new: error" + error.localizedDescription)
+            guests[sectionNo].name = guest.name
+            for item in items[sectionNo] {
+                item.sectionName = guest.name
             }
             checkTableView.reloadData()
+            NSLog("changing section name to new: success")
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "changeGuestName" {
+            let controller = segue.destination as! ChangeGuestNameViewController
+            if let button = sender as! UIButton? {
+                print ("pressed button \(button.tag)")
+                controller.sectionNo = button.tag
+            }
         }
     }
 }
