@@ -111,7 +111,7 @@ extension CheckInfoViewController {
             
             //из общего чека удаляем товары, перешедшие к гостю, или уменьшаем их количество
             let index = items[0].index(of: item)
-            if !item.isCountable || (item.totalQuantity == 1) {
+            if !item.isCountable || (item.totalQuantity == 1)||(items[0][index!].totalQuantity == Double(items[0][index!].myQuantity)) {
                 items[0].remove(at: index!)
             } else {
                 items[0][index!].totalQuantity -= Double(items[0][index!].myQuantity)
@@ -152,35 +152,44 @@ extension CheckInfoViewController {
     
     //изменяем имя гостя
     @IBAction func changeGuestName (segue: UIStoryboardSegue) {
+        let guestNameVC = segue.source as! ChangeGuestNameViewController
+        var sectionNo = guestNameVC.sectionNo
+        var guest: GuestInfoObject?
+        
         if segue.identifier == "changeNameToFavourite" {
-            let guestNameVC = segue.source as! ChangeGuestNameViewController
-            let sectionNo = guestNameVC.sectionNo
-            
             if let indexPath = guestNameVC.tableView.indexPathForSelectedRow {
-                print ("changing name to \(guestNameVC.favouriteGuests[indexPath.row].name)")
-                guests[sectionNo].name = guestNameVC.favouriteGuests[indexPath.row].name
-                for item in items[sectionNo] {
-                    item.sectionName = guestNameVC.favouriteGuests[indexPath.row].name
-                }
-                checkTableView.reloadData()
+                guest = guestNameVC.favouriteGuests[indexPath.row]
                 NSLog("changing section name to favourite: success")
             } else {
                 print ("changing section name to favourite: error")
                 NSLog("changing section name to favourite: error")
             }
         } else if segue.identifier == "changeNameToNew" {
-            let guestNameVC = segue.source as! ChangeGuestNameViewController
-            let sectionNo = guestNameVC.sectionNo
-            let guest = guestNameVC.newGuest
-            
-            print ("changing name to \(guest.name)")
-            guests[sectionNo].name = guest.name
-            for item in items[sectionNo] {
-                item.sectionName = guest.name
-            }
-            checkTableView.reloadData()
+            guest = guestNameVC.newGuest
             NSLog("changing section name to new: success")
         }
+        
+        if sectionNo == 0 {
+            items.insert([], at: 0)
+            guests.insert(GuestInfoObject(name: "Общий чек"), at: 0)
+            totalSum.insert(0.0, at: 0)
+            isFolded.insert(false, at: 0)
+            
+            for section in items {
+                for item in section {
+                    item.sectionId += 1
+                }
+            }
+            sectionNo = 1
+        }
+        
+        print ("changing name to \(guest!.name)")
+        guests[sectionNo].name = guest!.name
+        for item in items[sectionNo] {
+            item.sectionName = guest!.name
+        }
+        checkTableView.reloadData()
+        NSLog("section name changed")
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
