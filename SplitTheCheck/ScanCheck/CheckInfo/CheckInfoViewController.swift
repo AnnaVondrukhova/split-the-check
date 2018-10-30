@@ -17,6 +17,7 @@ import QuickLook
 class CheckInfoViewController: UIViewController {
 
     @IBOutlet weak var addGuest: CustomButton!
+    @IBOutlet weak var sumLabel: UILabel!
     @IBOutlet weak var checkTableView: UITableView!
     
 //    let requestResult = RequestService()
@@ -61,8 +62,8 @@ class CheckInfoViewController: UIViewController {
             checkHeader = "Чек_" + checkDate
         }
 
-        addGuest.titleLabel?.textAlignment = .center
-        addGuest.titleLabel?.text = "Выберите позиции"
+//        addGuest.titleLabel?.textAlignment = .center
+        sumLabel.text = "0₽"
         
         do {
             let realm = try Realm()
@@ -111,7 +112,7 @@ class CheckInfoViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         if guestSum != 0 {
-            addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
+            sumLabel.text = String(format: "%.2f", guestSum)+"₽"
         }
         print ("foldings - \(isFolded.count)")
     }
@@ -119,7 +120,7 @@ class CheckInfoViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         if guestSum != 0 {
             print ("view did disappear")
-            addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
+            sumLabel.text = String(format: "%.2f", guestSum)+"₽"
         }
         //если включено автосохранение, сохраняем чек, покидая контроллер
         if self.isMovingFromParentViewController {
@@ -224,7 +225,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.itemAmount.text = item.myQtotalQ
                 
                 guestSum += Double(item.myQuantity-myQuantityOld)*item.price
-                addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
+                sumLabel.text = String(format: "%.2f", guestSum)+"₽"
                 NSLog("added item amount")
             }
         }
@@ -270,7 +271,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         selectedItems.append(item)
         print("appended, total \(selectedItems.count)")
         
-        addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
+        sumLabel.text = String(format: "%.2f", guestSum)+"₽"
     }
     
     //снятие выделения ячейки.
@@ -292,7 +293,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                 item.myQtotalQ = "\(item.totalQuantity)"
             }
             
-            addGuest.titleLabel?.text = String(format: "%.2f", guestSum)
+            sumLabel.text = String(format: "%.2f", guestSum)+"₽"
             item.myQuantity = 0
             
             let index = selectedItems.index(of: item)
@@ -306,7 +307,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         if selectedItems.isEmpty {
-            addGuest.titleLabel?.text = "Выберите позиции"
+            sumLabel.text = "0₽"
         }
     }
     

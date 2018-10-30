@@ -89,7 +89,7 @@ extension CheckInfoViewController {
             
         }
         
-        addGuest.titleLabel?.text = "Выберите позиции"
+        sumLabel.text = "0₽"
         checkTableView.reloadData()
         NSLog ("added new guest section")
     }
@@ -145,7 +145,7 @@ extension CheckInfoViewController {
             
         }
         
-        addGuest.titleLabel?.text = "Выберите позиции"
+        sumLabel.text = "0₽"
         checkTableView.reloadData()
         NSLog ("added to existing guest section")
     }
