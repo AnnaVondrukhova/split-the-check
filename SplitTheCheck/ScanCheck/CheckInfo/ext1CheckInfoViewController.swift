@@ -171,7 +171,7 @@ extension CheckInfoViewController {
         
         if sectionNo == 0 {
             items.insert([], at: 0)
-            guests.insert(GuestInfoObject(name: "Общий чек"), at: 0)
+            guests.insert(GuestInfoObject(name: "Не распределено"), at: 0)
             totalSum.insert(0.0, at: 0)
             isFolded.insert(false, at: 0)
             

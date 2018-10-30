@@ -12,7 +12,7 @@ import RealmSwift
 
 class CheckInfoObject: Object {
     @objc dynamic var sectionId = 0
-    @objc dynamic var sectionName = "Общий чек"
+    @objc dynamic var sectionName = "Не распределено"
     @objc dynamic var id = 0
     @objc dynamic var name = ""
     @objc dynamic var initialQuantity = 0.0
@@ -24,7 +24,12 @@ class CheckInfoObject: Object {
     @objc dynamic var sum = 0.0
     var parent = LinkingObjects(fromType: QrStringInfoObject.self, property: "checkItems")
     
+    @objc dynamic var isSelected = false
     static var classId = 1
+    
+    override static func ignoredProperties() -> [String] {
+        return ["isSelected"]
+    }
     
     convenience init(json: JSON) {
         self.init()

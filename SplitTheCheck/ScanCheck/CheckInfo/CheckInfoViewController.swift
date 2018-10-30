@@ -183,8 +183,10 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
     //конфигурация ячейки
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "itemInfo", for: indexPath) as! CheckInfoCell
+        let item = items[indexPath.section][indexPath.row]
         cell.delegate = self
         
+        item.isSelected = cell.isSelected
         cell.configure(item: items[indexPath.section][indexPath.row], section: indexPath.section)
 
         return cell
@@ -242,6 +244,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)! as! CheckInfoCell
         let item = items[indexPath.section][indexPath.row]
+        item.isSelected = true
         print("choose: \(item.myQtotalQ)")
         NSLog("selected row at section \(indexPath.section), row \(indexPath.row)")
         
@@ -263,7 +266,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
             }
         }
         
-        cell.itemAmount.text = item.myQtotalQ
+        cell.configure(item: item, section: indexPath.section)
         selectedItems.append(item)
         print("appended, total \(selectedItems.count)")
         
@@ -274,6 +277,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let deselectedCell = tableView.cellForRow(at: indexPath) as! CheckInfoCell
         let item = items[indexPath.section][indexPath.row]
+        item.isSelected = false
         NSLog("deselected row at section \(indexPath.section), row \(indexPath.row)")
         
         //Устанавливаем количество единиц товара = totalQuantity, выбранных единиц товара = 0
@@ -293,7 +297,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
             
             let index = selectedItems.index(of: item)
             selectedItems.remove(at: index!)
-            deselectedCell.itemAmount.text = item.myQtotalQ
+            deselectedCell.configure(item: item, section: indexPath.section)
             print("removed, total  \(selectedItems.count)")
             NSLog("selectedItems contains item: removed")
         } else {
@@ -340,7 +344,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
                 print ("Check doesn't contain item")
                 
                 item.sectionId = 0
-                item.sectionName = "Общий чек"
+                item.sectionName = "Не распределено"
                 items[0].append(item)
                 items[0].sort(by: {$0.id < $1.id})
                 

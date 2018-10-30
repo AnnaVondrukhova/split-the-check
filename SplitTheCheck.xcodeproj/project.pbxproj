@@ -36,6 +36,7 @@
 		C1758925215A275C0042E01E /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1758924215A275C0042E01E /* CustomTextField.swift */; };
 		C1758927215A7C660042E01E /* YearMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1758926215A7C660042E01E /* YearMonth.swift */; };
 		C175892B215B84E50042E01E /* AllChecksHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C175892A215B84E50042E01E /* AllChecksHeaderCell.swift */; };
+		C18963BC2188432700CE4ABE /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18963BB2188432700CE4ABE /* CustomLabel.swift */; };
 		C18BDA771FF2951F0008E58F /* CheckInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */; };
 		C1902DB1212ED026009F00CF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1902DB0212ED026009F00CF /* GoogleService-Info.plist */; };
 		C1A0672F200CF16E007AD89A /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0672E200CF16E007AD89A /* CustomButton.swift */; };
@@ -88,6 +89,7 @@
 		C1758924215A275C0042E01E /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		C1758926215A7C660042E01E /* YearMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearMonth.swift; sourceTree = "<group>"; };
 		C175892A215B84E50042E01E /* AllChecksHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllChecksHeaderCell.swift; sourceTree = "<group>"; };
+		C18963BB2188432700CE4ABE /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
 		C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInfoViewController.swift; sourceTree = "<group>"; };
 		C1902DB0212ED026009F00CF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C1A0672E200CF16E007AD89A /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
@@ -285,6 +287,7 @@
 				C1A0672E200CF16E007AD89A /* CustomButton.swift */,
 				C1FCE56C212C38EF009B8C59 /* Checkbox.swift */,
 				C1758924215A275C0042E01E /* CustomTextField.swift */,
+				C18963BB2188432700CE4ABE /* CustomLabel.swift */,
 				C1758926215A7C660042E01E /* YearMonth.swift */,
 			);
 			path = CustomUIObjects;
@@ -464,6 +467,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C18963BC2188432700CE4ABE /* CustomLabel.swift in Sources */,
 				C169B031203C399F00987727 /* FavGuestCell.swift in Sources */,
 				C1758927215A7C660042E01E /* YearMonth.swift in Sources */,
 				C1A22E2720FF38D600286CD3 /* ForgetViewController.swift in Sources */,
