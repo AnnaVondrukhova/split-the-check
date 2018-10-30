@@ -55,7 +55,8 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-        present(nextViewController, animated:true, completion:nil)
+        let navigationNextVC = UINavigationController(rootViewController: nextViewController)
+        present(navigationNextVC, animated:true, completion:nil)
     }
     
     //настраиваем picker

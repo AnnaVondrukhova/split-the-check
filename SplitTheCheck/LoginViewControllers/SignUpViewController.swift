@@ -14,16 +14,37 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
     @IBOutlet weak var emailText: UITextField!
     @IBOutlet weak var telText: UITextField!
     @IBOutlet weak var checkbox: Checkbox!
-    @IBOutlet weak var agreementBtn: UIButton!
+    @IBOutlet weak var smsLabel: UILabel!
+    @IBOutlet weak var iAcceptLabel: UILabel!
     @IBOutlet weak var signUpBtn: CustomButton!
     @IBOutlet weak var waitingView: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    var agreementBtn: UIButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         NSLog ("SignUpVC did load")
-
+        print("\(self.view.frame.width)")
+        
+        //устанавливаем положение "пользовательсткого соглашения"
+        agreementBtn.setTitleColor(UIColor(red:0.37, green:0.75, blue:0.62, alpha:1.0), for: .normal)
+        agreementBtn.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        agreementBtn.setTitle("пользовательского соглашения", for: .normal)
+        
+        if self.view.frame.width < 370 {
+            agreementBtn.frame = CGRect(x: 42, y: iAcceptLabel.frame.minY + 15, width: 193, height: 15)
+            print ("\(agreementBtn.frame.minX), \(agreementBtn.frame.minY)")
+        } else {
+            agreementBtn.frame.size = CGSize(width: 193, height: 15)
+            agreementBtn.center.y = iAcceptLabel.center.y
+            agreementBtn.frame.origin.x = iAcceptLabel.frame.maxX
+            print ("\(agreementBtn.frame.minX), \(agreementBtn.frame.minY)")
+        }
+        self.view.addSubview(agreementBtn)
+        self.view.bringSubview(toFront: agreementBtn)
+        agreementBtn.addTarget(self, action: #selector(agreementBtnTap(_:)), for: .touchUpInside)
+        
         waitingView.layer.cornerRadius = 10
         waitingView.layer.opacity = 0.8
         self.activityIndicator.hidesWhenStopped = true
@@ -43,7 +64,13 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
         waitingView.isHidden = true
         NSLog ("SignUpVC will appear")
     }
-
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        
+    }
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         print ("did begin editing")
         if telText.text == "" {
@@ -153,7 +180,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
     }
     
     //вызываем экран с пользовательским соглашением
-    @IBAction func agreementBtnTap(_ sender: Any) {
+    @objc func agreementBtnTap(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let userAgreementVC = storyboard.instantiateViewController(withIdentifier: "UserAgreementVC") as! UserAgreementViewController
         userAgreementVC.modalPresentationStyle = UIModalPresentationStyle.custom
