@@ -21,7 +21,7 @@ class RequestService {
         let loginData = String(format: "%@:%@", user!, password!).data(using: String.Encoding.utf8)!
         let base64LoginData = loginData.base64EncodedString()
         
-        let headers = ["Authorization": "Basic \(base64LoginData)", "Device-Id": "84EDF5AE-13AE-42ED-9164-D77189481489", "Device-OS": "iOS 11.2.2", "Version":"2", "ClientVersion":"1.4.2", "Host": "proverkacheka.nalog.ru:8888", "Connection":"keep-alive", "Accept-Language": "ru;q=1", "User-Agent": "okhttp/3.0.1"]
+//        let headers = ["Authorization": "Basic \(base64LoginData)", "Device-Id": "84EDF5AE-13AE-42ED-9164-D77189481489", "Device-OS": "iOS 11.2.2", "Version":"2", "ClientVersion":"1.4.2", "Host": "proverkacheka.nalog.ru:8888", "Connection":"keep-alive", "Accept-Language": "ru;q=1", "User-Agent": "okhttp/3.0.1"]
         
         //разбираем полученную строку на словарь с параметрами
         let params = receivedString
@@ -36,9 +36,21 @@ class RequestService {
         }
         print ("params loaded")
         
-        let url = "https://proverkacheka.nalog.ru:9999/v1/inns/*/kkts/*/fss/\(params["fn"]!)/tickets/\(params["i"]!)?fiscalSign=\(params["fp"]!)&sendToEmail=no"
-                
-            Alamofire.request(url, method: .get, headers: headers).validate(statusCode: 200..<600).responseData { response in
+        let url = URL(string: "https://proverkacheka.nalog.ru:9999/v1/inns/*/kkts/*/fss/\(params["fn"]!)/tickets/\(params["i"]!)?fiscalSign=\(params["fp"]!)&sendToEmail=no")
+        
+//        let configuration = URLSessionConfiguration.default
+//        configuration.timeoutIntervalForRequest = 7 // seconds
+//        configuration.timeoutIntervalForResource = 7
+//        let alamoFireManager = Alamofire.SessionManager(configuration: configuration)
+        var request = URLRequest(url: url!)
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.setValue("Basic \(base64LoginData)", forHTTPHeaderField: "Authorization")
+        request.setValue("", forHTTPHeaderField: "Device-Id")
+        request.setValue("", forHTTPHeaderField: "Device-OS")
+        request.httpMethod = "GET"
+        request.timeoutInterval = 7
+        
+        Alamofire.request(request).responseData { response in
                 print ("Alamofire begin")
                 NSLog ("Alamofire request: start")
                 switch response.result {
@@ -62,11 +74,15 @@ class RequestService {
                     }
                     
                 //если не получили json, записываем строку в базу с jsonString = nil и error != nil
-                case .failure:
+                case .failure (let error):
                     let qrStringItem = QrStringInfoObject(error: "\(response.response?.statusCode ?? 500)", qrString: receivedString, jsonString: nil)
                     RealmServices.saveQRString(string: qrStringItem)
-                    print("case .failure \(String(describing: response.response?.statusCode))")
-                    NSLog("Alamofire request: case failure \(String(describing: response.response?.statusCode))")
+                    if error._code == NSURLErrorTimedOut {
+                        print("case .failure (timeout)\(error.localizedDescription)")
+                        NSLog("Alamofire request: case failure (timeout) \(error.localizedDescription)")
+                    }
+                    print("case .failure \(error.localizedDescription)")
+                    NSLog("Alamofire request: case failure \(error.localizedDescription)")
                 }
             }
         
