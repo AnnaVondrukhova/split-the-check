@@ -3,7 +3,7 @@
 //  SplitTheCheck
 //
 //  Created by Anya on 09/10/2018.
-//  Copyright © 2018 Anna Zhulidova. All rights reserved.
+//  Copyright © 2018 Anna Vondrukhova. All rights reserved.
 //
 
 import UIKit
@@ -46,7 +46,12 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
             var checkHeader = ""
             
             //создаем секции чека
-            for i in 0..<items.count {
+            var startIndex = 0
+            if totalSum[0] == 0 {
+                startIndex = 1
+            }
+            
+            for i in startIndex..<items.count {
                 var sectionBody = ""
                 var sectionHeader = try String(contentsOfFile: pathToSectionHeaderTemplate!)
                 var checkHeaderRow = try String(contentsOfFile: pathToCheckHeaderTemplate!)

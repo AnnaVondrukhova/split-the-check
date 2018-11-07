@@ -3,7 +3,7 @@
 //  App_Lvl2
 //
 //  Created by Anya on 22/12/2017.
-//  Copyright © 2017 Anna Zhulidova. All rights reserved.
+//  Copyright © 2017 Anna Vondrukhova. All rights reserved.
 //
 
 import UIKit

@@ -3,7 +3,7 @@
 //  SplitTheCheck
 //
 //  Created by Anya on 29/08/2018.
-//  Copyright © 2018 Anna Zhulidova. All rights reserved.
+//  Copyright © 2018 Anna Vondrukhova. All rights reserved.
 //
 
 import Foundation
@@ -48,7 +48,8 @@ class Alerts {
             let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
             
             let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-            VC.present(nextViewController, animated:true, completion:nil)
+            let navigationNextVC = UINavigationController(rootViewController: nextViewController)
+            VC.present(navigationNextVC, animated:true, completion:nil)
         })
         alert.addAction(actionOk)
         alert.addAction(actionCancel)

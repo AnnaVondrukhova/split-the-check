@@ -3,7 +3,7 @@
 //  SplitTheCheck
 //
 //  Created by Anya on 26/07/2018.
-//  Copyright © 2018 Anna Zhulidova. All rights reserved.
+//  Copyright © 2018 Anna Vondrukhova. All rights reserved.
 //
 
 import UIKit

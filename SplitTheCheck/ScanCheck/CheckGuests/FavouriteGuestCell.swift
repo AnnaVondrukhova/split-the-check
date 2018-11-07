@@ -3,7 +3,7 @@
 //  SplitTheCheck
 //
 //  Created by Anya on 17/01/2018.
-//  Copyright © 2018 Anna Zhulidova. All rights reserved.
+//  Copyright © 2018 Anna Vondrukhova. All rights reserved.
 //
 
 import UIKit
@@ -18,6 +18,7 @@ class FavouriteGuestCell: UITableViewCell, UITextFieldDelegate {
     
     var delegate = CheckGuestsViewController()
     var guestId = ""
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -39,11 +40,15 @@ class FavouriteGuestCell: UITableViewCell, UITextFieldDelegate {
     }
     
     @IBAction func editBtnTap(_ sender: Any) {
-        guestName.font = UIFont.systemFont(ofSize: 17)
-        guestName.isUserInteractionEnabled = true
-        guestName.becomeFirstResponder()
-        
-        editBtn.setImage(UIImage(named: "edit_now"), for: .normal)
+        if !guestName.isEditing {
+            guestName.font = UIFont.systemFont(ofSize: 17)
+            guestName.isUserInteractionEnabled = true
+            guestName.becomeFirstResponder()
+            
+            editBtn.setImage(UIImage(named: "edit_now"), for: .normal)
+        } else {
+            textFieldShouldReturn(guestName)
+        }
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {

@@ -3,7 +3,7 @@
 //  SplitTheCheck
 //
 //  Created by Anya on 24/09/2018.
-//  Copyright © 2018 Anna Zhulidova. All rights reserved.
+//  Copyright © 2018 Anna Vondrukhova. All rights reserved.
 //
 
 import UIKit
@@ -41,11 +41,15 @@ class FavGuestNameCell: UITableViewCell, UITextFieldDelegate {
     @IBAction func editBtnTap(_ sender: Any) {
 //        self.isUserInteractionEnabled = false
         
-        guestName.font = UIFont.systemFont(ofSize: 17)
-        guestName.isUserInteractionEnabled = true
-        guestName.becomeFirstResponder()
-        
-        editBtn.setImage(UIImage(named: "edit_now"), for: .normal)
+        if !guestName.isEditing {
+            guestName.font = UIFont.systemFont(ofSize: 17)
+            guestName.isUserInteractionEnabled = true
+            guestName.becomeFirstResponder()
+            
+            editBtn.setImage(UIImage(named: "edit_now"), for: .normal)
+        } else {
+            textFieldShouldReturn(guestName)
+        }
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {

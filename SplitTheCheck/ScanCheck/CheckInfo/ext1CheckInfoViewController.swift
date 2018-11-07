@@ -3,7 +3,7 @@
 //  SplitTheCheck
 //
 //  Created by Anya on 09/10/2018.
-//  Copyright © 2018 Anna Zhulidova. All rights reserved.
+//  Copyright © 2018 Anna Vondrukhova. All rights reserved.
 //
 
 import UIKit
@@ -18,29 +18,35 @@ extension CheckInfoViewController {
     
     //добавляем favouriteGuest на экран с чеком по нажатию на ячейку или кнопку +
     @IBAction func addGuestToCheck (segue: UIStoryboardSegue) {
-        if segue.identifier == "addFavouriteGuestToCheck" {
-            let guestViewCotroller = segue.source as! CheckGuestsViewController
-            
-            if let indexPath = guestViewCotroller.tableView.indexPathForSelectedRow {
-                let guest = GuestInfoObject(name: guestViewCotroller.favouriteGuests[indexPath.row].name)
-                //если такой гость уже существует, добавляем позиции к нему.
-                //если гость еще не существует, добавляем новую секцию
-                if guests.contains(where: {$0.name == guest.name}){
-                    let sectionNo = guests.index(of: guests.first(where: {$0.name == guest.name})!)
-                    addToSection(sectionNo: sectionNo!, sectionName: guest.name)
-                } else {
-                    guests.append(guest)
-                    addNewSection(sectionName: guest.name)
+        //если позиции не были выбраны, гостя не добавляем
+        if !selectedItems.isEmpty {
+            if segue.identifier == "addFavouriteGuestToCheck" {
+                let guestViewCotroller = segue.source as! CheckGuestsViewController
+                
+                if let indexPath = guestViewCotroller.tableView.indexPathForSelectedRow {
+                    let guest = GuestInfoObject(name: guestViewCotroller.favouriteGuests[indexPath.row].name)
+                    //если такой гость уже существует, добавляем позиции к нему.
+                    //если гость еще не существует, добавляем новую секцию
+                    if guests.contains(where: {$0.name == guest.name}){
+                        let sectionNo = guests.index(of: guests.first(where: {$0.name == guest.name})!)
+                        addToSection(sectionNo: sectionNo!, sectionName: guest.name)
+                    } else {
+                        guests.append(guest)
+                        addNewSection(sectionName: guest.name)
+                    }
                 }
+            } else if segue.identifier == "addNewGuestToCheck" {
+                let guestViewCotroller = segue.source as! CheckGuestsViewController
+                
+                let guest = guestViewCotroller.newGuest
+                print(guest.name)
+                guests.append(guest)
+                
+                addNewSection(sectionName: guest.name)
             }
-        } else if segue.identifier == "addNewGuestToCheck" {
-            let guestViewCotroller = segue.source as! CheckGuestsViewController
-            
-            let guest = guestViewCotroller.newGuest
-            print(guest.name)
-            guests.append(guest)
-            
-            addNewSection(sectionName: guest.name)
+        } else {
+            print ("No positions selected")
+            NSLog ("addGuestToCheck: No positions selected")
         }
     }
     
@@ -153,7 +159,7 @@ extension CheckInfoViewController {
     //изменяем имя гостя
     @IBAction func changeGuestName (segue: UIStoryboardSegue) {
         let guestNameVC = segue.source as! ChangeGuestNameViewController
-        var sectionNo = guestNameVC.sectionNo
+        let sectionNo = guestNameVC.sectionNo
         var guest: GuestInfoObject?
         
         if segue.identifier == "changeNameToFavourite" {
@@ -169,26 +175,48 @@ extension CheckInfoViewController {
             NSLog("changing section name to new: success")
         }
         
-        if sectionNo == 0 {
-            items.insert([], at: 0)
-            guests.insert(GuestInfoObject(name: "Не распределено"), at: 0)
-            totalSum.insert(0.0, at: 0)
-            isFolded.insert(false, at: 0)
+        if guests.contains(where:{$0.name == guest!.name}) {
+            showGuestAlert(name: guest!.name, fromSection: sectionNo, VC: guestNameVC) { (sectionNo) in
+                if sectionNo == 0 {
+                    print ("async?")
+                    self.items.insert([], at: 0)
+                    self.guests.insert(GuestInfoObject(name: "Не распределено"), at: 0)
+                    self.totalSum.insert(0.0, at: 0)
+                    self.isFolded.insert(false, at: 0)
+                    
+                    for section in self.items {
+                        for item in section {
+                            item.sectionId += 1
+                        }
+                    }
+                }
+                self.navigationController?.popViewController(animated: true)
+                self.checkTableView.reloadData()
+            }
             
-            for section in items {
-                for item in section {
-                    item.sectionId += 1
+        } else {
+            print ("changing name to \(guest!.name)")
+            guests[sectionNo].name = guest!.name
+            for item in items[sectionNo] {
+                item.sectionName = guest!.name
+            }
+            //если переименовывали нулевую секцию - вставляем ее обратно
+            if sectionNo == 0 {
+                items.insert([], at: 0)
+                guests.insert(GuestInfoObject(name: "Не распределено"), at: 0)
+                totalSum.insert(0.0, at: 0)
+                isFolded.insert(false, at: 0)
+                
+                for section in items {
+                    for item in section {
+                        item.sectionId += 1
+                    }
                 }
             }
-            sectionNo = 1
         }
         
-        print ("changing name to \(guest!.name)")
-        guests[sectionNo].name = guest!.name
-        for item in items[sectionNo] {
-            item.sectionName = guest!.name
-        }
         checkTableView.reloadData()
+        print("section name changed")
         NSLog("section name changed")
     }
     
@@ -201,4 +229,45 @@ extension CheckInfoViewController {
             }
         }
     }
+    
+    //ошибка повтора гостя при переименовании секции
+    func showGuestAlert(name: String, fromSection: Int, VC: ChangeGuestNameViewController, complition: @escaping  (Int) -> Void) {
+        let alert = UIAlertController(title: "Гость уже существует", message: "Гость с именем \"\(name)\" уже есть в этом чеке. Добавить позиции к этому гостю?", preferredStyle: .alert)
+        //если нажимаем Отмена, ничего не делаем
+        let actionCancel = UIAlertAction(title: "Oтмена", style: .cancel, handler: {(action: UIAlertAction) in
+            VC.tableView.reloadData()
+        })
+        
+        //если выбираем Да, то переносим позиции к уже существующему гостю
+        let actionOk = UIAlertAction(title: "Да", style: .default, handler: {(action: UIAlertAction) in
+            let toSection = self.guests.index(of: self.guests.first(where: {$0.name == name})!)
+            print("fromSection = \(fromSection)")
+            for item in self.items[fromSection] {
+                item.sectionId = toSection!
+                item.sectionName = name
+                self.items[toSection!].append(item)
+            }
+            
+            self.totalSum[toSection!] += self.totalSum[fromSection]
+            print ("\(self.totalSum[fromSection])")
+            print ("\(self.totalSum[toSection!])")
+            //удаляем опустевшую секцию и сдвигаем все последующие на 1 назад
+            self.items.remove(at: fromSection)
+            self.guests.remove(at:fromSection)
+            self.totalSum.remove(at: fromSection)
+            self.isFolded.remove(at:fromSection)
+            
+            for section in fromSection..<self.items.count {
+                for item in self.items[section] {
+                    item.sectionId -= 1
+                }
+            }
+            
+            complition (fromSection)
+        })
+        alert.addAction(actionOk)
+        alert.addAction(actionCancel)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
 }

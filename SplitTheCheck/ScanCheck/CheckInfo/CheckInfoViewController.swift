@@ -3,7 +3,7 @@
 //  SplitTheCheck
 //
 //  Created by Anya on 26/12/2017.
-//  Copyright © 2017 Anna Zhulidova. All rights reserved.
+//  Copyright © 2017 Anna Vondrukhova. All rights reserved.
 //
 
 import UIKit
@@ -106,6 +106,14 @@ class CheckInfoViewController: UIViewController {
             NSLog ("group items: error" + error.localizedDescription)
         }
         print ("total sum")
+        
+        //если весь чек распределен между гостями, добавляем нулевую секцию
+        if items.first?.first?.sectionId != 0 {
+            items.insert([], at: 0)
+            guests.insert(GuestInfoObject(name: "Не распределено"), at: 0)
+            totalSum.insert(0.0, at: 0)
+            isFolded.insert(false, at: 0)
+        }
         self.checkTableView?.reloadData()
         print ("Items : \(items)")
     }

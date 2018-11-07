@@ -3,7 +3,7 @@
 //  SplitTheCheck
 //
 //  Created by Anya on 28/09/2018.
-//  Copyright © 2018 Anna Zhulidova. All rights reserved.
+//  Copyright © 2018 Anna Vondrukhova. All rights reserved.
 //
 
 import UIKit
@@ -46,6 +46,7 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         sortPicker.selectRow(sortType, inComponent: 0, animated: false)
         
         self.sortButton.setTitle(self.sortPickerData[sortType], for: .normal)
+        sortButton.setTitleColor(colors[sortPicker.isHidden], for: .normal)
     }
     
     //настраиваем log out
