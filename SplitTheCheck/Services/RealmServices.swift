@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 
 class RealmServices {
-    
+    static var counter202 = 0
     //сохраняем наш объект QrStringInfo в базу данных
     static func saveQRString(string: QrStringInfoObject) {
         let userId = UserDefaults.standard.string(forKey: "user")
@@ -70,25 +70,38 @@ class RealmServices {
                         VC.activityIndicator.stopAnimating()
                         VC.waitingLabel.isHidden = true
                         VC.waitingView.isHidden = true
+                        counter202 = 0
                         Alerts.authErrorAlert(VC: VC, message: "Неверный пользователь или пароль. Требуется повторная авторизация")
                     case "406":
                         VC.activityIndicator.stopAnimating()
                         VC.waitingLabel.isHidden = true
                         VC.waitingView.isHidden = true
+                        counter202 = 0
                         Alerts.showErrorAlert(VC: VC, message: "Чек еще не внесен в базу данных ФНС")
                     case "202":
-                        print ("Ошибка 202, повторяем запрос...")
+                        print ("Ошибка 202, повторяем запрос...\(counter202)")
                         usleep(500000)
-                        RequestService.loadData(receivedString: VC.qrString)
+                        counter202 += 1
+                        if counter202 < 20 {
+                            RequestService.loadData(receivedString: VC.qrString)
+                        } else {
+                            VC.activityIndicator.stopAnimating()
+                            VC.waitingLabel.isHidden = true
+                            VC.waitingView.isHidden = true
+                            counter202 = 0
+                            Alerts.showErrorAlert(VC: VC, message: "Чек временно недоступен. Повторите запрос позднее")
+                        }
                     case "500":
                         VC.activityIndicator.stopAnimating()
                         VC.waitingLabel.isHidden = true
                         VC.waitingView.isHidden = true
+                        counter202 = 0
                         Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
                     default:
                         VC.activityIndicator.stopAnimating()
                         VC.waitingLabel.isHidden = true
                         VC.waitingView.isHidden = true
+                        counter202 = 0
                         Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
                     }
                     //!!ВОПРОС!! Переходить ли на страницу со списком чеков?
@@ -97,11 +110,13 @@ class RealmServices {
                     VC.waitingLabel.isHidden = true
                     VC.waitingView.isHidden = true
                     NSLog ("addedString.error == nil, performing qrResult segue")
+                    counter202 = 0
                     VC.performSegue(withIdentifier: "qrResult", sender: nil)
                     print("qrResult segue performed from GetStringFromRealm")
                 }
             case .error(let error):
                 print(error)
+                counter202 = 0
                 NSLog ("case error: " + error.localizedDescription)
             }
         }
@@ -139,25 +154,38 @@ class RealmServices {
                         VC.activityIndicator.stopAnimating()
                         VC.waitingLabel.isHidden = true
                         VC.waitingView.isHidden = true
+                        counter202 = 0
                         Alerts.authErrorAlert(VC: VC, message: "Неверный пользователь или пароль. Требуется повторная авторизация")
                     case "406":
                         VC.activityIndicator.stopAnimating()
                         VC.waitingLabel.isHidden = true
                         VC.waitingView.isHidden = true
+                        counter202 = 0
                         Alerts.showErrorAlert(VC: VC, message: "Чек еще не внесен в базу данных ФНС")
                     case "202":
-                        print ("Ошибка 202, повторяем запрос...")
+                        print ("Ошибка 202, повторяем запрос...\(counter202)")
                         usleep(500000)
-                        RequestService.loadData(receivedString: qrString)
+                        counter202 += 1
+                        if counter202 < 20 {
+                            RequestService.loadData(receivedString: qrString)
+                        } else {
+                            VC.activityIndicator.stopAnimating()
+                            VC.waitingLabel.isHidden = true
+                            VC.waitingView.isHidden = true
+                            counter202 = 0
+                            Alerts.showErrorAlert(VC: VC, message: "Чек временно недоступен. Повторите запрос позднее")
+                        }
                     case "500":
                         VC.activityIndicator.stopAnimating()
                         VC.waitingLabel.isHidden = true
                         VC.waitingView.isHidden = true
+                        counter202 = 0
                         Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
                     default:
                         VC.activityIndicator.stopAnimating()
                         VC.waitingLabel.isHidden = true
                         VC.waitingView.isHidden = true
+                        counter202 = 0
                         Alerts.showErrorAlert(VC: VC, message: "Отсутствует соединение с сервером")
                     }
                 } else {
@@ -165,11 +193,13 @@ class RealmServices {
                     VC.waitingLabel.isHidden = true
                     VC.waitingView.isHidden = true
                     NSLog ("modifiedString.error == nil, performing showCheckSegue")
+                    counter202 = 0
                     VC.performSegue(withIdentifier: "showCheckSegue", sender: self)
                     print("showCheckSegue performed")
                 }
             case .error(let error):
                 print(error)
+                counter202 = 0
                 NSLog ("case error: " + error.localizedDescription)
             }
         }
