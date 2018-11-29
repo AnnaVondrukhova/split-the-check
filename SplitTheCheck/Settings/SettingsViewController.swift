@@ -18,7 +18,7 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
     @IBOutlet weak var supportBtn: UIButton!
     
     var sortPickerData = [String]()
-    var sortType = UserDefaults.standard.integer(forKey: "sortType")
+    var sortType = Int()
     let infoLabelText = [true: "Изменения в чеке сохраняются автоматически при выходе из него", false: "Изменения в чеке сохраняются вручную по нажатию кнопки \"Сохранить\". Включите, чтобы сохранять изменения автоматически."]
     var colors = [Bool: UIColor]()
     var addReport = true
@@ -39,6 +39,7 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        sortType = UserDefaults.standard.integer(forKey: "sortType")
         print ("sortType = \(sortType)")
         super.viewWillAppear(animated)
         self.tabBarController?.tabBar.isHidden = false

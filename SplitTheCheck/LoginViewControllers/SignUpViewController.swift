@@ -46,7 +46,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIViewControl
         agreementBtn.addTarget(self, action: #selector(agreementBtnTap(_:)), for: .touchUpInside)
         
         waitingView.layer.cornerRadius = 10
-        waitingView.layer.opacity = 0.8
+        waitingView.layer.opacity = 1
         self.activityIndicator.hidesWhenStopped = true
         self.telText.delegate = self
         telText.keyboardType = UIKeyboardType.numberPad

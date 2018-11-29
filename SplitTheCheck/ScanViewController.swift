@@ -42,7 +42,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         print ("scan view controller did load")
         activityIndicator.hidesWhenStopped = true
         waitingView.layer.cornerRadius = 10
-        waitingView.layer.opacity = 0.8
+        waitingView.layer.opacity = 1
         
         
 //        //проверяем, что такого чека еще нет в базе

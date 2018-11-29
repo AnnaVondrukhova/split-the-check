@@ -50,7 +50,7 @@ class AllChecksViewController: UITableViewController {
         waitingView.frame.size = CGSize(width: 180, height: 20 + activityIndicator.frame.height + 48)
         waitingView.center = CGPoint(x: UIScreen.main.bounds.width/2, y: UIScreen.main.bounds.height/2)
         print (waitingView.center)
-        waitingView.layer.opacity = 0.8
+        waitingView.layer.opacity = 1
         self.navigationController?.view.addSubview(waitingView)
         self.navigationController?.view.bringSubview(toFront: waitingView)
         

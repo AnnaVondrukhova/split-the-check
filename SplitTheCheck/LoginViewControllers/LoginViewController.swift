@@ -26,7 +26,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         NSLog ("LoginVC did load")
         
         waitingView.layer.cornerRadius = 10
-        waitingView.layer.opacity = 0.8
+        waitingView.layer.opacity = 1
         self.activityIndicator.hidesWhenStopped = true
         self.loginText.delegate = self
         loginText.keyboardType = UIKeyboardType.numberPad
