@@ -39,7 +39,10 @@ extension CheckInfoViewController {
                 let guestViewCotroller = segue.source as! CheckGuestsViewController
                 
                 let guest = guestViewCotroller.newGuest
-                print(guest.name)
+                if guest.name.replacingOccurrences(of: " ", with: "") == "" {
+                    guest.name = "Гость"
+                }
+                print("guest name = " + guest.name)
                 guests.append(guest)
                 
                 addNewSection(sectionName: guest.name)
