@@ -184,7 +184,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                     }
                     //если нет, добавляем строку в базу и пробуем загрузить данные
                     else {
-                        RequestService.loadData(receivedString: qrString)
+                        RequestService.checkExist(receivedString: qrString)
                         RealmServices.getStringFromRealm(VC: self)
                     }
                 } catch {
