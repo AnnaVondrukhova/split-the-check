@@ -52,6 +52,7 @@
 		C1A8F73320FA904A00B0B644 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A8F73220FA904A00B0B644 /* StartViewController.swift */; };
 		C1DA9E1B203EC67D0014C0DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1DA9E1A203EC67D0014C0DB /* Assets.xcassets */; };
 		C1F09F132178C442000AF696 /* policy.txt in Resources */ = {isa = PBXBuildFile; fileRef = C1F09F122178C442000AF696 /* policy.txt */; };
+		C1F79C0424BC53D10022E012 /* CreateHTML.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F79C0324BC53D10022E012 /* CreateHTML.swift */; };
 		C1FCE56B212C2FDB009B8C59 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FCE56A212C2FDB009B8C59 /* UserAgreementViewController.swift */; };
 		C1FCE56D212C38EF009B8C59 /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FCE56C212C38EF009B8C59 /* Checkbox.swift */; };
 		C1FCE576212D8E64009B8C59 /* Main_2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C1FCE578212D8E64009B8C59 /* Main_2.storyboard */; };
@@ -105,6 +106,7 @@
 		C1A8F73220FA904A00B0B644 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		C1DA9E1A203EC67D0014C0DB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C1F09F122178C442000AF696 /* policy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = policy.txt; sourceTree = "<group>"; };
+		C1F79C0324BC53D10022E012 /* CreateHTML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHTML.swift; sourceTree = "<group>"; };
 		C1FCE56A212C2FDB009B8C59 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		C1FCE56C212C38EF009B8C59 /* Checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
 		C1FCE577212D8E64009B8C59 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_2.storyboard; sourceTree = "<group>"; };
@@ -178,13 +180,8 @@
 		C1619CB22008EAEA004640ED /* CheckInfo */ = {
 			isa = PBXGroup;
 			children = (
-				C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */,
-				C1A364D8216CFB3D006F7605 /* ext1CheckInfoViewController.swift */,
-				C1A364DA216CFCC1006F7605 /* ext2CheckInfoViewController.swift */,
-				C1619CB32008EB61004640ED /* CheckInfoCell.swift */,
-				C1369BC2200D227000830D45 /* HeaderCell.swift */,
-				C1619CB02008D339004640ED /* CheckInfoObject.swift */,
-				C1690C7A2019FCBD00C3638E /* QrStringInfoObject.swift */,
+				C1F79BFC24BC4E990022E012 /* Controller */,
+				C1F79BFB24BC4E900022E012 /* Model */,
 			);
 			path = CheckInfo;
 			sourceTree = "<group>";
@@ -203,9 +200,10 @@
 		C169B02D203C393900987727 /* FavouriteGuests */ = {
 			isa = PBXGroup;
 			children = (
+				C1F79BFF24BC4EF80022E012 /* Model */,
+				C1F79BFD24BC4ED70022E012 /* Controller */,
 				C169B02E203C397100987727 /* FavGuestViewController.swift */,
 				C169B030203C399F00987727 /* FavGuestCell.swift */,
-				C1369BC5200F841700830D45 /* GuestInfoObject.swift */,
 			);
 			path = FavouriteGuests;
 			sourceTree = "<group>";
@@ -213,7 +211,7 @@
 		C16B3E6F1FF112B6005C99B8 = {
 			isa = PBXGroup;
 			children = (
-				C1A364DC216E39FA006F7605 /* HTMLtemplates */,
+				C1F79C0024BC4FE40022E012 /* HTMLService */,
 				C16B3E7A1FF112B6005C99B8 /* SplitTheCheck */,
 				C16B3E791FF112B6005C99B8 /* Products */,
 				E5A7E747308CBDFAC86DB98A /* Pods */,
@@ -238,7 +236,6 @@
 				C104596421368F99007BD0A7 /* LoginViewControllers */,
 				C104596521369001007BD0A7 /* Services */,
 				C1A980EB213EC4BB000E7A0D /* CustomUIObjects */,
-				C16B3E7D1FF112B6005C99B8 /* ScanViewController.swift */,
 				C16B3E7F1FF112B6005C99B8 /* Main.storyboard */,
 				C1FCE578212D8E64009B8C59 /* Main_2.storyboard */,
 				C16B3E841FF112B6005C99B8 /* LaunchScreen.storyboard */,
@@ -253,6 +250,7 @@
 		C175891C215903080042E01E /* ScanCheck */ = {
 			isa = PBXGroup;
 			children = (
+				C16B3E7D1FF112B6005C99B8 /* ScanViewController.swift */,
 				C1619CB22008EAEA004640ED /* CheckInfo */,
 				C1369BC4200F83DD00830D45 /* CheckGuests */,
 				C175891D2159034D0042E01E /* ChangeName */,
@@ -293,6 +291,51 @@
 			path = CustomUIObjects;
 			sourceTree = "<group>";
 		};
+		C1F79BFB24BC4E900022E012 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C1619CB02008D339004640ED /* CheckInfoObject.swift */,
+				C1690C7A2019FCBD00C3638E /* QrStringInfoObject.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C1F79BFC24BC4E990022E012 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */,
+				C1A364D8216CFB3D006F7605 /* ext1CheckInfoViewController.swift */,
+				C1A364DA216CFCC1006F7605 /* ext2CheckInfoViewController.swift */,
+				C1619CB32008EB61004640ED /* CheckInfoCell.swift */,
+				C1369BC2200D227000830D45 /* HeaderCell.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		C1F79BFD24BC4ED70022E012 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		C1F79BFF24BC4EF80022E012 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C1369BC5200F841700830D45 /* GuestInfoObject.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C1F79C0024BC4FE40022E012 /* HTMLService */ = {
+			isa = PBXGroup;
+			children = (
+				C1A364DC216E39FA006F7605 /* HTMLtemplates */,
+				C1F79C0324BC53D10022E012 /* CreateHTML.swift */,
+			);
+			path = HTMLService;
+			sourceTree = "<group>";
+		};
 		E5A7E747308CBDFAC86DB98A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -314,7 +357,6 @@
 				C16B3E751FF112B6005C99B8 /* Frameworks */,
 				C16B3E761FF112B6005C99B8 /* Resources */,
 				5AA08AA3151A0F2B904525A4 /* [CP] Embed Pods Frameworks */,
-				B7E2DB7F165D1CB3798C9438 /* [CP] Copy Pods Resources */,
 				C169B02B203AC25900987727 /* Run Script */,
 			);
 			buildRules = (
@@ -387,10 +429,11 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-SplitTheCheck/Pods-SplitTheCheck-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-SplitTheCheck/Pods-SplitTheCheck-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
@@ -401,7 +444,8 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
@@ -410,7 +454,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SplitTheCheck/Pods-SplitTheCheck-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SplitTheCheck/Pods-SplitTheCheck-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		753424930D80F1B8D10756A4 /* [CP] Check Pods Manifest.lock */ = {
@@ -429,21 +473,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B7E2DB7F165D1CB3798C9438 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SplitTheCheck/Pods-SplitTheCheck-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C169B02B203AC25900987727 /* Run Script */ = {
@@ -469,6 +498,7 @@
 			files = (
 				C18963BC2188432700CE4ABE /* CustomLabel.swift in Sources */,
 				C169B031203C399F00987727 /* FavGuestCell.swift in Sources */,
+				C1F79C0424BC53D10022E012 /* CreateHTML.swift in Sources */,
 				C1758927215A7C660042E01E /* YearMonth.swift in Sources */,
 				C1A22E2720FF38D600286CD3 /* ForgetViewController.swift in Sources */,
 				C1619CB12008D339004640ED /* CheckInfoObject.swift in Sources */,
@@ -664,7 +694,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Anna.V.SplitTheCheck;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -683,7 +713,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Anna.V.SplitTheCheck;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

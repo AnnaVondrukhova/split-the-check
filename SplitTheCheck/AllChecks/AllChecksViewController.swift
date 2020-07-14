@@ -184,7 +184,7 @@ class AllChecksViewController: UITableViewController {
             waitingLabel.isHidden = false
             waitingView.isHidden = false
             activityIndicator.startAnimating()
-            RequestService.loadData(receivedString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].qrString)
+            RequestService.checkExist(receivedString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].qrString)
             RealmServices.getStringFromRealm(VC: self, qrString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].qrString)
         }
     }

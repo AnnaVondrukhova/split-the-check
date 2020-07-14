@@ -231,7 +231,7 @@ class RealmServices {
         }
         else {
             NSLog ("realmQrString is empty, trying to load data")
-            RequestService.loadData(receivedString: qrStringInfo)
+            RequestService.checkExist(receivedString: qrStringInfo)
             RealmServices.getStringFromRealm(VC: VC)
         }
         

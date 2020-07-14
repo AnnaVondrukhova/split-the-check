@@ -6,7 +6,7 @@ target 'SplitTheCheck' do
   use_frameworks!
 pod 'Alamofire'
 pod 'SwiftyJSON'
-pod 'RealmSwift'
+pod 'RealmSwift', '~> 3.20.0'
 pod 'Firebase/Core'
 pod 'Firebase/Auth'
 pod 'Firebase/Database'
