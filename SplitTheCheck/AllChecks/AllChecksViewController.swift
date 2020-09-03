@@ -83,7 +83,7 @@ class AllChecksViewController: UITableViewController {
 //        } catch {
 //            print(error.localizedDescription)
 //        }
-//        UserDefaults.standard.set(false, forKey: "notFirstLaunchFor\(userId!)")
+        UserDefaults.standard.set(false, forKey: "notFirstLaunchFor\(userId!)")
 //
 //                    Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
 //                    print("configuration changed")
@@ -99,9 +99,11 @@ class AllChecksViewController: UITableViewController {
                 let user = realm.object(ofType: User.self, forPrimaryKey: userId)
                 user?.guests.append(GuestInfoObject(name: userName))
                 try realm.commitWrite()
+                print("Append me as guest: success")
                 NSLog("Append me as guest: success")
             } catch {
                 print(error.localizedDescription)
+                print("Append me as guest: " + error.localizedDescription)
                 NSLog("Append me as guest: " + error.localizedDescription)
             }
             

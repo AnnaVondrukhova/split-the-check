@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyJSON
+import Alamofire
 
 class LoginViewController: UIViewController, UITextFieldDelegate, UIViewControllerTransitioningDelegate {
     @IBOutlet weak var loginText: UITextField!
@@ -24,7 +25,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, UIViewControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         print ("LoginVC did load")
         NSLog ("LoginVC did load")
         
@@ -33,7 +34,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, UIViewControll
         self.activityIndicator.hidesWhenStopped = true
         self.loginText.delegate = self
         loginText.keyboardType = UIKeyboardType.numberPad
-        pwdText.keyboardType = UIKeyboardType.numberPad
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
@@ -43,7 +43,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, UIViewControll
         logInBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
         checkbox.delegate = self
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.isNavigationBarHidden = true
         waitingView.isHidden = true
@@ -67,20 +67,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate, UIViewControll
             agreementBtn.frame.size = CGSize(width: 193, height: 15)
             agreementBtn.center.y = iAcceptLabel.center.y
             agreementBtn.frame.origin.x = iAcceptLabel.frame.maxX
-            print ("\(iAcceptLabel.frame.maxX), \(iAcceptLabel.frame.minY)")
-            print ("\(agreementBtn.frame.minX), \(agreementBtn.frame.minY)")
         }
         self.view.addSubview(agreementBtn)
         self.view.bringSubview(toFront: agreementBtn)
         agreementBtn.addTarget(self, action: #selector(agreementBtnTap(_:)), for: .touchUpInside)
-    }
-        
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        print ("did begin editing")
-        if ((textField == loginText)&&(textField.text == "")) {
-            print ("+7")
-            textField.text = "+7"
-        }
     }
     
     @objc func dismissKeyboard()
@@ -109,7 +99,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, UIViewControll
         UIApplication.shared.open(URL(string: url)!, options: [:], completionHandler: nil)
     }
     
-
+    
     @IBAction func logIn(_ sender: Any) {
         logInBtn.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
         waitingView.isHidden = false
@@ -123,86 +113,66 @@ class LoginViewController: UIViewController, UITextFieldDelegate, UIViewControll
         let user = loginText.text ?? ""
         let password = pwdText.text ?? ""
         
-        let url = URL(string: "https://proverkacheka.nalog.ru:9999/v1/mobile/users/login")
+        UserDefaults.standard.set(user, forKey: "user")
+        UserDefaults.standard.set(password, forKey: "password")
         
-        var request = URLRequest(url: url!)
-        request.httpMethod = "GET"
-        
-        let loginData = String(format: "%@:%@", user, password).data(using: String.Encoding.utf8)!
-        let base64LoginData = loginData.base64EncodedString()
-        
-        request.setValue("Basic \(base64LoginData)", forHTTPHeaderField: "Authorization")
-        
-        print ("\(user), \(password)")
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {
-                print(error?.localizedDescription ?? "Unknown error")
-                NSLog("guard: " + (error?.localizedDescription ?? "Unknown error"))
-                DispatchQueue.main.async {
-                    self.activityIndicator.stopAnimating()
-                    self.waitingView.isHidden = true
-                    Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
-                }
-                return
+        NetworkService.shared.getSessionId { (sessionId, error, statusCode) in
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                self.waitingView.isHidden = true
             }
             
-            let httpResponse = response as? HTTPURLResponse
-            
-            //если ответ получен, то:
-            if httpResponse != nil {
-                let statusCode = httpResponse!.statusCode
-                print("Status code = \(statusCode)")
-                NSLog("Status code = \(statusCode)")
+            if statusCode == 200 {
+                UserDefaults.standard.set(true, forKey: "isLoggedIn")
                 DispatchQueue.main.async {
-                    self.activityIndicator.stopAnimating()
-                    self.waitingView.isHidden = true
+                    self.performSegue(withIdentifier: "fromLoginToCheckHistoryVC", sender: nil)
                 }
-                
-                if statusCode == 200 {
-                    //если авторизация прошла, получаем имя и email пользователя, запоминаем, переходим на главную страницу приложения
-                    let json = JSON(data)
-                    let name = json["name"].stringValue
-                    let email = json["email"].stringValue
-                    
-                    UserDefaults.standard.set(user, forKey: "user")
-                    UserDefaults.standard.set(password, forKey: "password")
-                    UserDefaults.standard.set(name, forKey: "name")
-                    UserDefaults.standard.set(email, forKey: "email")
-                    UserDefaults.standard.set(true, forKey: "isLoggedIn")
-                    
-                    DispatchQueue.main.async {
-                        self.performSegue(withIdentifier: "fromLoginToCheckHistoryVC", sender: nil)
-                    }
+            }
+            else if statusCode == 403 {
+                //если авторизация не прошла, выдаем ошибку
+                DispatchQueue.main.async {
+                    Alerts.showErrorAlert(VC: self, message: "Неверный ИНН или пароль")
                 }
-                else if statusCode == 403 {
-                    //если авторизация не прошла, выдаем ошибку
-                    print ("thread \(Thread.isMainThread)")
-                    DispatchQueue.main.async {
-                        Alerts.showErrorAlert(VC: self, message: "Неверный пользователь или пароль")
-                    }
-                }
-                else {
-                    //при неизвестной ошибке выдаем ошибку соединения с сервером
-                    print ("Unknown error, status code = \(statusCode), data = \(data), thread \(Thread.isMainThread)")
-                    NSLog ("Unknown error, status code = \(statusCode), data = \(data)")
+            } else {
+                //при неизвестной ошибке проверяем соединение с интернетом или выдаем ошибку соединения с сервером
+                guard let underlyingError = error?.asAFError?.underlyingError  else {
+                    print ("Unknown error: \(error.debugDescription), status code = \(statusCode)" )
+                    NSLog ("Unknown error: \(error.debugDescription), status code = \(statusCode)")
                     DispatchQueue.main.async {
                         Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
                     }
+                    return
+                }
+                
+                if let urlError = underlyingError as? URLError {
+                    switch urlError.code {
+                    case .timedOut:
+                        print ("Timeout error: \(error.debugDescription), status code = \(statusCode)" )
+                        NSLog ("Timeout error: \(error.debugDescription), status code = \(statusCode)")
+                        DispatchQueue.main.async {
+                            Alerts.showErrorAlert(VC: self, message: "Превышено время ожидания ответа от сервера")
+                        }
+                    case .notConnectedToInternet:
+                        print ("No internet error: \(error.debugDescription), status code = \(statusCode)" )
+                        NSLog ("No internet error: \(error.debugDescription), status code = \(statusCode)")
+                        DispatchQueue.main.async {
+                            Alerts.showErrorAlert(VC: self, message: "Нет соединения с интернетом")
+                        }
+                    default:
+                        print ("Unknown error: \(error.debugDescription), status code = \(statusCode)" )
+                        NSLog ("Unknown error: \(error.debugDescription), status code = \(statusCode)")
+                        DispatchQueue.main.async {
+                            Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
+                        }
+                    }
                 }
             }
-            else {
-                print (httpResponse!.allHeaderFields)
-                NSLog ("No status code: \(httpResponse!.allHeaderFields)")
-                DispatchQueue.main.async {
-                    self.activityIndicator.stopAnimating()
-                    self.waitingView.isHidden = true
-                    Alerts.showErrorAlert(VC: self, message: "Ошибка соединения с сервером")
-                }
+            
+            
+            DispatchQueue.main.async {
+                self.checkbox.isChecked = false
             }
         }
-        
-        task.resume()
-        self.logInBtn.backgroundColor = UIColor(red:0.37, green:0.75, blue:0.62, alpha:1.0)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -213,7 +183,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, UIViewControll
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
 }
 
 extension LoginViewController: CheckboxDelegate {

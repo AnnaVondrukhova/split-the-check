@@ -40,6 +40,7 @@
 		C18BDA771FF2951F0008E58F /* CheckInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */; };
 		C1902DB1212ED026009F00CF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1902DB0212ED026009F00CF /* GoogleService-Info.plist */; };
 		C191EAF62500C27700CFDDA7 /* Main_2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C191EAF52500C27700CFDDA7 /* Main_2.storyboard */; };
+		C191EAF82500D13700CFDDA7 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C191EAF72500D13700CFDDA7 /* NetworkService.swift */; };
 		C1A0672F200CF16E007AD89A /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0672E200CF16E007AD89A /* CustomButton.swift */; };
 		C1A22E2320FCB3E100286CD3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A22E2220FCB3E100286CD3 /* LoginViewController.swift */; };
 		C1A22E2520FE208400286CD3 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A22E2420FE208400286CD3 /* SignUpViewController.swift */; };
@@ -94,6 +95,7 @@
 		C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInfoViewController.swift; sourceTree = "<group>"; };
 		C1902DB0212ED026009F00CF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C191EAF52500C27700CFDDA7 /* Main_2.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_2.storyboard; sourceTree = "<group>"; };
+		C191EAF72500D13700CFDDA7 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		C1A0672E200CF16E007AD89A /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		C1A22E2220FCB3E100286CD3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		C1A22E2420FE208400286CD3 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				C1619CAE2008CBE2004640ED /* RequestService.swift */,
 				C104596221368F0C007BD0A7 /* RealmServices.swift */,
 				C104596721369A9A007BD0A7 /* Alerts.swift */,
+				C191EAF72500D13700CFDDA7 /* NetworkService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -533,6 +536,7 @@
 				C1690C722015F60000C3638E /* NotLoadedCheckCell.swift in Sources */,
 				C1369BCC200F873D00830D45 /* AddGuestCell.swift in Sources */,
 				C16B3E7C1FF112B6005C99B8 /* AppDelegate.swift in Sources */,
+				C191EAF82500D13700CFDDA7 /* NetworkService.swift in Sources */,
 				C10CB24D2109E24400652794 /* NewPasswordViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
