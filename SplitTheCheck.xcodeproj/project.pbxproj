@@ -39,6 +39,7 @@
 		C18963BC2188432700CE4ABE /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18963BB2188432700CE4ABE /* CustomLabel.swift */; };
 		C18BDA771FF2951F0008E58F /* CheckInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */; };
 		C1902DB1212ED026009F00CF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1902DB0212ED026009F00CF /* GoogleService-Info.plist */; };
+		C191EAF62500C27700CFDDA7 /* Main_2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C191EAF52500C27700CFDDA7 /* Main_2.storyboard */; };
 		C1A0672F200CF16E007AD89A /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0672E200CF16E007AD89A /* CustomButton.swift */; };
 		C1A22E2320FCB3E100286CD3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A22E2220FCB3E100286CD3 /* LoginViewController.swift */; };
 		C1A22E2520FE208400286CD3 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A22E2420FE208400286CD3 /* SignUpViewController.swift */; };
@@ -55,7 +56,6 @@
 		C1F79C0424BC53D10022E012 /* CreateHTML.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F79C0324BC53D10022E012 /* CreateHTML.swift */; };
 		C1FCE56B212C2FDB009B8C59 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FCE56A212C2FDB009B8C59 /* UserAgreementViewController.swift */; };
 		C1FCE56D212C38EF009B8C59 /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FCE56C212C38EF009B8C59 /* Checkbox.swift */; };
-		C1FCE576212D8E64009B8C59 /* Main_2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C1FCE578212D8E64009B8C59 /* Main_2.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -93,6 +93,7 @@
 		C18963BB2188432700CE4ABE /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
 		C18BDA761FF2951F0008E58F /* CheckInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInfoViewController.swift; sourceTree = "<group>"; };
 		C1902DB0212ED026009F00CF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C191EAF52500C27700CFDDA7 /* Main_2.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_2.storyboard; sourceTree = "<group>"; };
 		C1A0672E200CF16E007AD89A /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		C1A22E2220FCB3E100286CD3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		C1A22E2420FE208400286CD3 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
@@ -109,7 +110,6 @@
 		C1F79C0324BC53D10022E012 /* CreateHTML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHTML.swift; sourceTree = "<group>"; };
 		C1FCE56A212C2FDB009B8C59 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		C1FCE56C212C38EF009B8C59 /* Checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
-		C1FCE577212D8E64009B8C59 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_2.storyboard; sourceTree = "<group>"; };
 		DE63CC8D7FEB5D6DF5BDC512 /* Pods-SplitTheCheck.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SplitTheCheck.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SplitTheCheck/Pods-SplitTheCheck.debug.xcconfig"; sourceTree = "<group>"; };
 		DFAE0A127918E475E097803E /* Pods-SplitTheCheck.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SplitTheCheck.release.xcconfig"; path = "Pods/Target Support Files/Pods-SplitTheCheck/Pods-SplitTheCheck.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -237,7 +237,7 @@
 				C104596521369001007BD0A7 /* Services */,
 				C1A980EB213EC4BB000E7A0D /* CustomUIObjects */,
 				C16B3E7F1FF112B6005C99B8 /* Main.storyboard */,
-				C1FCE578212D8E64009B8C59 /* Main_2.storyboard */,
+				C191EAF52500C27700CFDDA7 /* Main_2.storyboard */,
 				C16B3E841FF112B6005C99B8 /* LaunchScreen.storyboard */,
 				C1DA9E1A203EC67D0014C0DB /* Assets.xcassets */,
 				C16B3E871FF112B6005C99B8 /* Info.plist */,
@@ -411,11 +411,11 @@
 				C1DA9E1B203EC67D0014C0DB /* Assets.xcassets in Resources */,
 				C16B3E811FF112B6005C99B8 /* Main.storyboard in Resources */,
 				C1A364E2216E3A57006F7605 /* check.html in Resources */,
+				C191EAF62500C27700CFDDA7 /* Main_2.storyboard in Resources */,
 				C1A364E1216E3A57006F7605 /* sectionHeader.html in Resources */,
 				C1A364E4216F6F4D006F7605 /* checkHeader.html in Resources */,
 				C1F09F132178C442000AF696 /* policy.txt in Resources */,
 				C1A364E0216E3A57006F7605 /* sectionRow.html in Resources */,
-				C1FCE576212D8E64009B8C59 /* Main_2.storyboard in Resources */,
 				C1902DB1212ED026009F00CF /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -555,15 +555,6 @@
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
-		};
-		C1FCE578212D8E64009B8C59 /* Main_2.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C1FCE577212D8E64009B8C59 /* Base */,
-			);
-			name = Main_2.storyboard;
-			path = /Users/Anya/Documents/Geekbrains/Swift/SplitTheCheck/SplitTheCheck;
-			sourceTree = "<absolute>";
 		};
 /* End PBXVariantGroup section */
 
