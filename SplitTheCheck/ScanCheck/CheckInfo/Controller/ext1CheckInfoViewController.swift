@@ -14,31 +14,24 @@ import MessageUI
 import QuickLook
 
 //extension для добавления новой секции
-extension CheckInfoViewController {
+extension CheckInfoViewController: CheckGuestsDelegate {
     
     //добавляем favouriteGuest на экран с чеком по нажатию на ячейку или кнопку +
-    @IBAction func addGuestToCheck (segue: UIStoryboardSegue) {
+    func addGuestToCheck (guestType: GuestType, guest: GuestInfoObject) {
         //если позиции не были выбраны, гостя не добавляем
         if !selectedItems.isEmpty {
-            if segue.identifier == "addFavouriteGuestToCheck" {
-                let guestViewCotroller = segue.source as! CheckGuestsViewController
-                
-                if let indexPath = guestViewCotroller.tableView.indexPathForSelectedRow {
-                    let guest = GuestInfoObject(name: guestViewCotroller.favouriteGuests[indexPath.row].name)
-                    //если такой гость уже существует, добавляем позиции к нему.
-                    //если гость еще не существует, добавляем новую секцию
-                    if guests.contains(where: {$0.name == guest.name}){
-                        let sectionNo = guests.index(of: guests.first(where: {$0.name == guest.name})!)
-                        addToSection(sectionNo: sectionNo!, sectionName: guest.name)
-                    } else {
-                        guests.append(guest)
-                        addNewSection(sectionName: guest.name)
-                    }
+            switch guestType {
+            case .favourite:
+                //если такой гость уже существует, добавляем позиции к нему.
+                //если гость еще не существует, добавляем новую секцию
+                if guests.contains(where: {$0.name == guest.name}){
+                    let sectionNo = guests.index(of: guests.first(where: {$0.name == guest.name})!)
+                    addToSection(sectionNo: sectionNo!, sectionName: guest.name)
+                } else {
+                    guests.append(guest)
+                    addNewSection(sectionName: guest.name)
                 }
-            } else if segue.identifier == "addNewGuestToCheck" {
-                let guestViewCotroller = segue.source as! CheckGuestsViewController
-                
-                let guest = guestViewCotroller.newGuest
+            case .new:
                 if guest.name.replacingOccurrences(of: " ", with: "") == "" {
                     guest.name = "Гость"
                 }
@@ -160,60 +153,23 @@ extension CheckInfoViewController {
     }
     
     //изменяем имя гостя
-    @IBAction func changeGuestName (segue: UIStoryboardSegue) {
-        let guestNameVC = segue.source as! ChangeGuestNameViewController
-        let sectionNo = guestNameVC.sectionNo
-        var guest: GuestInfoObject?
+    func changeGuestName (sectionNo: Int, guestType: GuestType, guest: GuestInfoObject) {
         
-        if segue.identifier == "changeNameToFavourite" {
-            if let indexPath = guestNameVC.tableView.indexPathForSelectedRow {
-                guest = guestNameVC.favouriteGuests[indexPath.row]
-                NSLog("changing section name to favourite: success")
-            } else {
-                print ("changing section name to favourite: error")
-                NSLog("changing section name to favourite: error")
-            }
-        } else if segue.identifier == "changeNameToNew" {
-            guest = guestNameVC.newGuest
-            NSLog("changing section name to new: success")
+        print ("changing name to \(guest.name)")
+        guests[sectionNo].name = guest.name
+        for item in items[sectionNo] {
+            item.sectionName = guest.name
         }
-        
-        if guests.contains(where:{$0.name == guest!.name}) {
-            showGuestAlert(name: guest!.name, fromSection: sectionNo, VC: guestNameVC) { (sectionNo) in
-                if sectionNo == 0 {
-                    print ("async?")
-                    self.items.insert([], at: 0)
-                    self.guests.insert(GuestInfoObject(name: "Не распределено"), at: 0)
-                    self.totalSum.insert(0.0, at: 0)
-                    self.isFolded.insert(false, at: 0)
-                    
-                    for section in self.items {
-                        for item in section {
-                            item.sectionId += 1
-                        }
-                    }
-                }
-                self.navigationController?.popViewController(animated: true)
-                self.checkTableView.reloadData()
-            }
+        //если переименовывали нулевую секцию - вставляем ее обратно
+        if sectionNo == 0 {
+            items.insert([], at: 0)
+            guests.insert(GuestInfoObject(name: "Не распределено"), at: 0)
+            totalSum.insert(0.0, at: 0)
+            isFolded.insert(false, at: 0)
             
-        } else {
-            print ("changing name to \(guest!.name)")
-            guests[sectionNo].name = guest!.name
-            for item in items[sectionNo] {
-                item.sectionName = guest!.name
-            }
-            //если переименовывали нулевую секцию - вставляем ее обратно
-            if sectionNo == 0 {
-                items.insert([], at: 0)
-                guests.insert(GuestInfoObject(name: "Не распределено"), at: 0)
-                totalSum.insert(0.0, at: 0)
-                isFolded.insert(false, at: 0)
-                
-                for section in items {
-                    for item in section {
-                        item.sectionId += 1
-                    }
+            for section in items {
+                for item in section {
+                    item.sectionId += 1
                 }
             }
         }
@@ -224,17 +180,24 @@ extension CheckInfoViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "changeGuestName" {
-            let controller = segue.destination as! ChangeGuestNameViewController
+        let controller = segue.destination as! CheckGuestsViewController
+        if segue.identifier == "addGuestSegue" {
+            print ("pressed \"Add guest\" button")
+            controller.action = .addGuest
+            controller.delegate = self
+        }
+        if segue.identifier == "changeGuestNameSegue" {
             if let button = sender as! UIButton? {
                 print ("pressed button \(button.tag)")
                 controller.sectionNo = button.tag
+                controller.action = .changeName
+                controller.delegate = self
             }
         }
     }
     
     //ошибка повтора гостя при переименовании секции
-    func showGuestAlert(name: String, fromSection: Int, VC: ChangeGuestNameViewController, complition: @escaping  (Int) -> Void) {
+    func showGuestAlert(name: String, fromSection: Int, VC: CheckGuestsViewController, completion: @escaping  (Int) -> Void) {
         let alert = UIAlertController(title: "Гость уже существует", message: "Гость с именем \"\(name)\" уже есть в этом чеке. Добавить позиции к этому гостю?", preferredStyle: .alert)
         //если нажимаем Отмена, ничего не делаем
         let actionCancel = UIAlertAction(title: "Oтмена", style: .cancel, handler: {(action: UIAlertAction) in
@@ -266,7 +229,7 @@ extension CheckInfoViewController {
                 }
             }
             
-            complition (fromSection)
+            completion (fromSection)
         })
         alert.addAction(actionOk)
         alert.addAction(actionCancel)

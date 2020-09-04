@@ -14,9 +14,14 @@ enum ActionType {
     case changeName
 }
 
-protocol checkGuestsDelegate {
-    func addGuestToCheck (guest: GuestInfoObject)
-    func changeGuestName (guest: GuestInfoObject)
+enum GuestType {
+    case favourite
+    case new
+}
+
+protocol CheckGuestsDelegate {
+    func addGuestToCheck (guestType: GuestType, guest: GuestInfoObject)
+    func changeGuestName (sectionNo: Int, guestType: GuestType, guest: GuestInfoObject)
 }
 
 class CheckGuestsViewController: UITableViewController  {
@@ -79,6 +84,7 @@ class CheckGuestsViewController: UITableViewController  {
             cell.guestName.text = favouriteGuests[indexPath.row].name
             cell.setTag(tag: indexPath.row)
             cell.guestId = favouriteGuests[indexPath.row].id
+            cell.selectionStyle = .none
             print ("cell tag: \(cell.guestName.tag)")
             return cell
         } else {
@@ -93,9 +99,34 @@ class CheckGuestsViewController: UITableViewController  {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (tableView.dequeueReusableCell(withIdentifier: "favouriteGuest") as? FavouriteGuestCell) != nil {
             let guest = favouriteGuests[indexPath.row]
+            let guestType: GuestType = .favourite
             switch action {
             case .addGuest:
-                
+                delegate.addGuestToCheck(guestType: guestType, guest: guest)
+                self.navigationController?.popViewController(animated: true)
+            case .changeName:
+                if delegate.guests.contains(where:{$0.name == guest.name}) {
+                    delegate.showGuestAlert(name: guest.name, fromSection: sectionNo, VC: self) { (sectionNo) in
+                        if sectionNo == 0 {
+                            print ("async?")
+                            self.delegate.items.insert([], at: 0)
+                            self.delegate.guests.insert(GuestInfoObject(name: "Не распределено"), at: 0)
+                            self.delegate.totalSum.insert(0.0, at: 0)
+                            self.delegate.isFolded.insert(false, at: 0)
+                            
+                            for section in self.delegate.items {
+                                for item in section {
+                                    item.sectionId += 1
+                                }
+                            }
+                        }
+                        self.navigationController?.popViewController(animated: true)
+                        self.delegate.checkTableView.reloadData()
+                    }
+                } else {
+                    delegate.changeGuestName(sectionNo: sectionNo, guestType: .favourite, guest: guest)
+                    self.navigationController?.popViewController(animated: true)
+                }
             }
         }
     }

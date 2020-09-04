@@ -35,6 +35,36 @@ class AddGuestCell: UITableViewCell, UITextFieldDelegate {
     @IBAction func addGuestBtnTap(_ sender: CustomButton) {
         delegate.newGuest = GuestInfoObject(name: self.guestName.text!)
         print ("+ pressed")
+        let guest = delegate.newGuest
+        let guestType: GuestType = .new
+        switch delegate.action {
+        case .addGuest:
+            delegate.delegate.addGuestToCheck(guestType: guestType, guest: guest)
+            delegate.navigationController?.popViewController(animated: true)
+        case .changeName:
+            if delegate.delegate.guests.contains(where:{$0.name == guest.name}) {
+                delegate.delegate.showGuestAlert(name: guest.name, fromSection: delegate.sectionNo, VC: delegate.self) { (sectionNo) in
+                    if sectionNo == 0 {
+                        print ("async?")
+                        self.delegate.delegate.items.insert([], at: 0)
+                        self.delegate.delegate.guests.insert(GuestInfoObject(name: "Не распределено"), at: 0)
+                        self.delegate.delegate.totalSum.insert(0.0, at: 0)
+                        self.delegate.delegate.isFolded.insert(false, at: 0)
+                        
+                        for section in self.delegate.delegate.items {
+                            for item in section {
+                                item.sectionId += 1
+                            }
+                        }
+                    }
+                    self.delegate.navigationController?.popViewController(animated: true)
+                    self.delegate.delegate.checkTableView.reloadData()
+                }
+            } else {
+                delegate.delegate.changeGuestName(sectionNo: delegate.sectionNo, guestType: guestType, guest: guest)
+                delegate.navigationController?.popViewController(animated: true)
+            }
+        }
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
