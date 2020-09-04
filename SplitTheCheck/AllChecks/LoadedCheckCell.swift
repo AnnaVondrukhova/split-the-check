@@ -23,7 +23,11 @@ class LoadedCheckCell: UITableViewCell {
         }
     }
     
-    
+    var dateFormatter: DateFormatter {
+        let df = DateFormatter()
+        df.dateFormat = "yyyy.MM.dd HH:mm"
+        return df
+    }
     
     func configure(jsonString: String) {
         self.selectionStyle = .none
@@ -31,31 +35,21 @@ class LoadedCheckCell: UITableViewCell {
         
         let json = JSON.init(parseJSON: jsonString)
         
-        print(json["document"]["receipt"]["dateTime"].stringValue)
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
-        let fullDate = dateFormatter.date(from: json["document"]["receipt"]["dateTime"].stringValue)
-        if fullDate == nil {
-            NSLog ("LoadedCheckCell: something wrong with fullDate")
-        }
-        print (fullDate as Any)
-        
+        let seconds = json["ticket"]["document"]["receipt"]["dateTime"].doubleValue
+        print(seconds)
+        let fullDate = Date(timeIntervalSince1970: seconds)
 
-        dateFormatter.dateFormat = "yyyy.MM.dd"
-        let date = dateFormatter.string(from: fullDate!)
-        dateFormatter.dateFormat = "HH:mm"
-        let time = dateFormatter.string(from: fullDate!)
+        print (fullDate as Any)
+
+        self.date.text = dateFormatter.string(from: fullDate)
         
-        
-        self.date.text = date+"  "+time
-        if json["document"]["receipt"]["user"].stringValue.replacingOccurrences(of: " ", with: "") != "" {
-            self.shop.text = json["document"]["receipt"]["user"].stringValue.replacingOccurrences(of: " ", with: "", options: [.anchored], range: nil )
+        let sellerName = json["seller"]["name"].stringValue.replacingOccurrences(of: " ", with: "")
+        if sellerName != "" {
+            self.shop.text = sellerName.replacingOccurrences(of: #"\""#, with: "\"")
         }
         else {
             self.shop.text = "Без названия"
         }
-        self.sum.text = String(format: "%.2f", json["document"]["receipt"]["totalSum"].doubleValue/100)
+        self.sum.text = String(format: "%.2f", json["ticket"]["document"]["receipt"]["totalSum"].doubleValue/100)
     }
 }

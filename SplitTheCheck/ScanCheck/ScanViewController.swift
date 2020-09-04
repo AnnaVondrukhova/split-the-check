@@ -38,6 +38,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
 //        qrString = "t=20180902T154200&s=2412.30&fn=9286000100156559&i=12259&fp=2970651064&n=1"
 //        qrString = "t=20180126T185600&s=1576.00&fn=8710000100961732&i=20194&fp=2759156229&n=1"
 //        qrString = "t=20180729T100900&s=2402.30&fn=8710000101834587&i=66815&fp=1196724422&n=1"
+        qrString = "t=20200525T1441&s=5449.15&fn=9289000100513986&i=43561&fp=1330867838&n=1"
         
         print ("scan view controller did load")
         activityIndicator.hidesWhenStopped = true
@@ -75,151 +76,169 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         self.tabBarController?.tabBar.isHidden = false
 
         //запускаем камеру
-        captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
-        //var error: NSError?
+//        captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
+//        //var error: NSError?
+//        do {
+//            let input = try AVCaptureDeviceInput(device: captureDevice!)
+//            captureSession = AVCaptureSession()
+//            captureSession?.addInput(input as AVCaptureInput)
+//
+//            let captureMetadataOutput = AVCaptureMetadataOutput()
+//            captureSession?.addOutput(captureMetadataOutput)
+//
+//            captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+//            captureMetadataOutput.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
+//
+//            videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
+//            videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
+//            videoPreviewLayer?.frame = view.layer.bounds
+//            view.layer.addSublayer(videoPreviewLayer!)
+//
+//            activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
+//            view.bringSubview(toFront: waitingView)
+//            view.bringSubview(toFront: waitingLabel)
+//            view.bringSubview(toFront: activityIndicator)
+//            waitingLabel.isHidden = true
+//            waitingView.isHidden = true
+//
+//            captureSession?.startRunning()
+//            print ("Capture session started running")
+//        } catch let error {
+//            print("\(error.localizedDescription)")
+//        }
+//
+//        //вызываем зеленую рамку
+//        qrCodeFrameView = UIView()
+//        qrCodeFrameView?.layer.borderColor = UIColor(red:0.26, green:0.71, blue:0.56, alpha:1.0).cgColor
+//        qrCodeFrameView?.layer.borderWidth = 2
+//        qrCodeFrameView?.layer.cornerRadius = 15
+//        qrCodeFrameView?.frame.size = CGSize(width: self.view.frame.width - 50, height: self.view.frame.width - 50)
+//        qrCodeFrameView?.center = self.view.center
+//        view.addSubview(qrCodeFrameView!)
+//        view.bringSubview(toFront: qrCodeFrameView!)
+        
+        //проверяем, что такого чека еще нет в базе
         do {
-            let input = try AVCaptureDeviceInput(device: captureDevice!)
-            captureSession = AVCaptureSession()
-            captureSession?.addInput(input as AVCaptureInput)
+            let realm = try Realm()
 
-            let captureMetadataOutput = AVCaptureMetadataOutput()
-            captureSession?.addOutput(captureMetadataOutput)
-
-            captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-            captureMetadataOutput.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
-
-            videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
-            videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
-            videoPreviewLayer?.frame = view.layer.bounds
-            view.layer.addSublayer(videoPreviewLayer!)
-
-            activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
-            view.bringSubview(toFront: waitingView)
-            view.bringSubview(toFront: waitingLabel)
-            view.bringSubview(toFront: activityIndicator)
-            waitingLabel.isHidden = true
-            waitingView.isHidden = true
-
-            captureSession?.startRunning()
-            print ("Capture session started running")
-        } catch let error {
-            print("\(error.localizedDescription)")
+            let user = realm.object(ofType: User.self, forPrimaryKey: UserDefaults.standard.string(forKey: "user"))
+            print ("qrString = \(qrString)")
+            let realmQrString = user!.checks.filter("qrString = %@", qrString).isEmpty
+            //если есть, выдаем ошибку
+            if !realmQrString {
+                activityIndicator.stopAnimating()
+                waitingLabel.isHidden = true
+                waitingView.isHidden = true
+                showDuplicateAlert(qrString: self.qrString)
+            }
+            //если нет, добавляем строку в базу и пробуем загрузить данные
+            else {
+                NetworkService.shared.getCheckInfo(receivedString: qrString)
+                RealmServices.getStringFromRealm(VC: self)
+            }
+        } catch {
+            print(error.localizedDescription)
         }
-
-        //вызываем зеленую рамку
-        qrCodeFrameView = UIView()
-        qrCodeFrameView?.layer.borderColor = UIColor(red:0.26, green:0.71, blue:0.56, alpha:1.0).cgColor
-        qrCodeFrameView?.layer.borderWidth = 2
-        qrCodeFrameView?.layer.cornerRadius = 15
-        qrCodeFrameView?.frame.size = CGSize(width: self.view.frame.width - 50, height: self.view.frame.width - 50)
-        qrCodeFrameView?.center = self.view.center
-        view.addSubview(qrCodeFrameView!)
-        view.bringSubview(toFront: qrCodeFrameView!)
 
     }
     
     //ручная фокусировка
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let screenSize = view.bounds.size
-        if let touchPoint = touches.first {
-            let x = touchPoint.location(in: view).y / screenSize.height
-            let y = 1.0 - touchPoint.location(in: view).x / screenSize.width
-            let focusPoint = CGPoint(x: x, y: y)
-            
-            if let device = captureDevice {
-                do {
-                    try device.lockForConfiguration()
-                    
-                    device.focusPointOfInterest = focusPoint
-                    //device.focusMode = .continuousAutoFocus
-                    device.focusMode = .autoFocus
-                    //device.focusMode = .locked
-                    device.exposurePointOfInterest = focusPoint
-                    device.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
-                    device.unlockForConfiguration()
-                }
-                catch {
-                    // just ignore
-                }
-            }
-        }
-    }
-
-    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-//        if metadataObjects.count == 0 {
-//            qrCodeFrameView?.frame = CGRect.zero
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        let screenSize = view.bounds.size
+//        if let touchPoint = touches.first {
+//            let x = touchPoint.location(in: view).y / screenSize.height
+//            let y = 1.0 - touchPoint.location(in: view).x / screenSize.width
+//            let focusPoint = CGPoint(x: x, y: y)
+//
+//            if let device = captureDevice {
+//                do {
+//                    try device.lockForConfiguration()
+//
+//                    device.focusPointOfInterest = focusPoint
+//                    //device.focusMode = .continuousAutoFocus
+//                    device.focusMode = .autoFocus
+//                    //device.focusMode = .locked
+//                    device.exposurePointOfInterest = focusPoint
+//                    device.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
+//                    device.unlockForConfiguration()
+//                }
+//                catch {
+//                    // just ignore
+//                }
+//            }
 //        }
-        captureSession?.stopRunning()
-        qrCodeFrameView?.isHidden = true
-        print ("got metadataObjects: \(metadataObjects)")
+//    }
 
-        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-
-        //если засекли qr-код, то пытаемся получить по нему данные
-        if metadataObj.type == AVMetadataObject.ObjectType.qr {
-//            let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj) as! AVMetadataMachineReadableCodeObject
-//            qrCodeFrameView?.frame = barCodeObject.bounds
-
-
-            if (metadataObj.stringValue != nil) && (metadataObj.stringValue?.range(of: "&fn=") != nil)  && (metadataObj.stringValue?.range(of: "&fp=") != nil) && (metadataObj.stringValue?.range(of: "&i=") != nil) {
-                qrString = metadataObj.stringValue!
-                activityIndicator.startAnimating()
-                waitingLabel.isHidden = false
-                waitingView.isHidden = false
-                print("started activity indicator")
-
-                //проверяем, что такого чека еще нет в базе
-                do {
-                    let realm = try Realm()
-
-                    let user = realm.object(ofType: User.self, forPrimaryKey: UserDefaults.standard.string(forKey: "user"))
-                    print ("qrString = \(qrString)")
-                    let realmQrString = user!.checks.filter("qrString = %@", qrString).isEmpty
-                    //если есть, выдаем ошибку
-                    if !realmQrString {
-                        activityIndicator.stopAnimating()
-                        waitingLabel.isHidden = true
-                        waitingView.isHidden = true
-                        showDuplicateAlert(qrString: self.qrString)
-                    }
-                    //если нет, добавляем строку в базу и пробуем загрузить данные
-                    else {
-                        RequestService.checkExist(receivedString: qrString)
-                        RealmServices.getStringFromRealm(VC: self)
-                    }
-                } catch {
-                    print(error.localizedDescription)
-                }
-            } else {
-                Alerts.showErrorAlert(VC: self, message: "Неправильный формат QR-кода")
-            }
-
-
-        }
-    }
+//    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+//
+//        captureSession?.stopRunning()
+//        qrCodeFrameView?.isHidden = true
+//        print ("got metadataObjects: \(metadataObjects)")
+//
+//        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+//
+//        //если засекли qr-код, то пытаемся получить по нему данные
+//        if metadataObj.type == AVMetadataObject.ObjectType.qr {
+//
+//            if (metadataObj.stringValue != nil) && (metadataObj.stringValue?.range(of: "&fn=") != nil)  && (metadataObj.stringValue?.range(of: "&fp=") != nil) && (metadataObj.stringValue?.range(of: "&i=") != nil) {
+//                qrString = metadataObj.stringValue!
+//                activityIndicator.startAnimating()
+//                waitingLabel.isHidden = false
+//                waitingView.isHidden = false
+//                print("started activity indicator")
+//
+//                //проверяем, что такого чека еще нет в базе
+//                do {
+//                    let realm = try Realm()
+//
+//                    let user = realm.object(ofType: User.self, forPrimaryKey: UserDefaults.standard.string(forKey: "user"))
+//                    print ("qrString = \(qrString)")
+//                    let realmQrString = user!.checks.filter("qrString = %@", qrString).isEmpty
+//                    //если есть, выдаем ошибку
+//                    if !realmQrString {
+//                        activityIndicator.stopAnimating()
+//                        waitingLabel.isHidden = true
+//                        waitingView.isHidden = true
+//                        showDuplicateAlert(qrString: self.qrString)
+//                    }
+//                    //если нет, добавляем строку в базу и пробуем загрузить данные
+//                    else {
+//                        NetworkService.shared.getCheckInfo(receivedString: qrString)
+//                        RealmServices.getStringFromRealm(VC: self)
+//                    }
+//                } catch {
+//                    print(error.localizedDescription)
+//                }
+//            } else {
+//                Alerts.showErrorAlert(VC: self, message: "Неправильный формат QR-кода")
+//            }
+//
+//
+//        }
+//    }
 
     
     //алерт при сканировании с информацией о том, что такой чек уже существует
     func showDuplicateAlert (qrString: String) {
-        let alert = UIAlertController(title: "Ошибка", message: "Чек уже отсканирован", preferredStyle: .alert)
-        
-        let actionCancel = UIAlertAction(title: "Oтмена", style: .cancel, handler: {(action: UIAlertAction) in
-            self.videoPreviewLayer?.isHidden = false
-            self.qrCodeFrameView?.isHidden = false
-            self.captureSession?.startRunning()
-        })
-        //если выбираем "Перейти к чеку", то пытаемся загрузить данные
-        let actionOk = UIAlertAction(title: "Перейти к чеку", style: .default, handler: {(action: UIAlertAction) in
-            self.activityIndicator.startAnimating()
-            self.waitingLabel.isHidden = false
-            self.waitingView.isHidden = false
-            print("started activity indicator in showDuplicateAlert")
-            RealmServices.getStringInfo(VC: self, token: self.token, qrStringInfo: qrString)
-        })
-        
-        alert.addAction(actionOk)
-        alert.addAction(actionCancel)
-        present(alert, animated: true, completion: nil)
+//        let alert = UIAlertController(title: "Ошибка", message: "Чек уже отсканирован", preferredStyle: .alert)
+//
+//        let actionCancel = UIAlertAction(title: "Oтмена", style: .cancel, handler: {(action: UIAlertAction) in
+//            self.videoPreviewLayer?.isHidden = false
+//            self.qrCodeFrameView?.isHidden = false
+//            self.captureSession?.startRunning()
+//        })
+//        //если выбираем "Перейти к чеку", то пытаемся загрузить данные
+//        let actionOk = UIAlertAction(title: "Перейти к чеку", style: .default, handler: {(action: UIAlertAction) in
+//            self.activityIndicator.startAnimating()
+//            self.waitingLabel.isHidden = false
+//            self.waitingView.isHidden = false
+//            print("started activity indicator in showDuplicateAlert")
+//            RealmServices.getStringInfo(VC: self, token: self.token, qrStringInfo: qrString)
+//        })
+//
+//        alert.addAction(actionOk)
+//        alert.addAction(actionCancel)
+//        present(alert, animated: true, completion: nil)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -229,7 +248,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
             controller.parentString = addedString!
         }
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

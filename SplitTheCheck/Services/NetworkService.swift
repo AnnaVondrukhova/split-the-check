@@ -50,13 +50,16 @@ class NetworkService {
         }
     }
     
-    func getTicketId(completion: @escaping(String, String?, Error?)->()) {
+    func getTicketId(qrString: String, completion: @escaping(String?, String?, Error?)->()) {
         getSessionId { (sessionId, error, statusCode) in
-            guard let sessionId = sessionId, statusCode == 200, error == nil else { return }
+            guard let sessionId = sessionId, statusCode == 200, error == nil else {
+                completion (nil, nil, error)
+                return
+            }
             
             let url = "https://irkkt-mobile.nalog.ru:8888/v2/ticket"
 //            let qrString = "t=20200829T1109&s=1399.00&fn=9280440300724624&i=9202&fp=964283072&n=1"
-            let qrString = "t=20200525T1441&s=5449.15&fn=9289000100513986&i=43561&fp=1330867838&n=1"
+//            let qrString = "t=20200525T1441&s=5449.15&fn=9289000100513986&i=43561&fp=1330867838&n=1"
             let payload = ["qr": qrString]
             let headers = ["Host": "irkkt-mobile.nalog.ru:8888",
                            "Accept": "*/*",
@@ -83,9 +86,22 @@ class NetworkService {
         }
     }
     
-    func getCheckInfo() {
-        getTicketId { (sessionId, ticketId, error) in
-            guard let ticketId = ticketId, error == nil else { return }
+    func getCheckInfo(receivedString: String) {
+        getTicketId(qrString: receivedString) { (sessionId, ticketId, error) in
+            guard let sessionId = sessionId, let ticketId = ticketId, error == nil else {
+                let qrStringItem = QrStringInfoObject(error: "\(error?._code ?? 500)", qrString: receivedString, jsonString: nil)
+                RealmServices.saveQRString(string: qrStringItem)
+                if let error = error {
+                    if error._code == NSURLErrorTimedOut {
+                        print("Alamofire first check request: case failure (timeout) \(error.localizedDescription)")
+                        NSLog("Alamofire first check request: case failure (timeout) \(error.localizedDescription)")
+                    }
+                }
+                
+                print("Alamofire first check request: case failure \(error?.localizedDescription)")
+                NSLog("Alamofire first check request: case failure \(error?.localizedDescription)")
+                return
+            }
             
             let url = "https://irkkt-mobile.nalog.ru:8888/v2/tickets/\(ticketId)"
             let headers = ["Host": "irkkt-mobile.nalog.ru:8888",
@@ -103,8 +119,57 @@ class NetworkService {
 //                    print(value)
                     let json = JSON(value)
                     print (json)
+                    if json["ticket"] == [] {
+                        print ("Alamofire first check request: case success, empty ticket")
+                        NSLog("Alamofire first check request: case success, empty ticket")
+                        AF.request(url, method: .get, encoding: JSONEncoding.default,  headers: httpHeaders).responseJSON { (response) in
+                            switch response.result {
+                            case .success(let value):
+                                let json = JSON(value)
+                                print(json)
+                                if json.rawString() != "null" {
+                                    let qrStringItem = QrStringInfoObject(error: nil, qrString: receivedString, jsonString: json.rawString())
+                                    let check = json["ticket"]["document"]["receipt"]["items"].compactMap {CheckInfoObject(json: $0.1)}
+                                    qrStringItem.addCheckItems(check)
+                                    RealmServices.saveQRString(string: qrStringItem)
+                                    print ("Alamofire repeat check request: case success")
+                                    NSLog("Alamofire repeat check request: case success")
+                                }
+                                //если json пустой, записываем строку в базу с jsonString = nil и error != nil
+                                else {
+                                    let qrStringItem = QrStringInfoObject(error: "\(response.response?.statusCode ?? 500)", qrString: receivedString, jsonString: nil)
+                                    RealmServices.saveQRString(string: qrStringItem)
+                                    print("Alamofire repeat check request: case error \(String(describing: response.response?.statusCode))")
+                                    NSLog("Alamofire repeat check request: case error \(String(describing: response.response?.statusCode))")
+                                }
+                            case .failure(let error):
+                                let qrStringItem = QrStringInfoObject(error: "\(error._code)", qrString: receivedString, jsonString: nil)
+                                RealmServices.saveQRString(string: qrStringItem)
+                                if error._code == NSURLErrorTimedOut {
+                                    print("Alamofire repeat check request: case failure (timeout) \(error.localizedDescription)")
+                                    NSLog("Alamofire repeat check request: case failure (timeout) \(error.localizedDescription)")
+                                }
+                                print("Alamofire repeat check request: case failure \(error.localizedDescription)")
+                                NSLog("Alamofire repeat check request: case failure \(error.localizedDescription)")
+                            }
+                        }
+                    } else {
+                        let qrStringItem = QrStringInfoObject(error: nil, qrString: receivedString, jsonString: json.rawString())
+                        let check = json["ticket"]["document"]["receipt"]["items"].compactMap {CheckInfoObject(json: $0.1)}
+                        qrStringItem.addCheckItems(check)
+                        RealmServices.saveQRString(string: qrStringItem)
+                        print ("Alamofire first check request: case success, got ticket")
+                        NSLog("Alamofire first check request: case success, got ticket")
+                    }
                 case .failure(let error):
-                    print("getCheckInfo error: ", error.localizedDescription)
+                    let qrStringItem = QrStringInfoObject(error: "\(error._code)", qrString: receivedString, jsonString: nil)
+                    RealmServices.saveQRString(string: qrStringItem)
+                    if error._code == NSURLErrorTimedOut {
+                        print("Alamofire first check request: case failure (timeout) \(error.localizedDescription)")
+                        NSLog("Alamofire first check request: case failure (timeout) \(error.localizedDescription)")
+                    }
+                    print("Alamofire first check request: case failure \(error.localizedDescription)")
+                    NSLog("Alamofire first check request: case failure \(error.localizedDescription)")
                 }
             }
         }

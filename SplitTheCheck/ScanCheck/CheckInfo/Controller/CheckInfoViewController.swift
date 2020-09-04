@@ -161,6 +161,7 @@ extension CheckInfoViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeader") as! HeaderCell
         cell.isUserInteractionEnabled = true
         
+        print("setting view for header")
         cell.sectionTitle.setTitle(guests[section].name, for: .normal)
         cell.totalSum.text = String(format: "%.2f", totalSum[section])
         cell.sectionTitle.tag = section
