@@ -23,7 +23,18 @@ class AllChecksViewController: UITableViewController {
     var waitingLabel: UILabel = UILabel()
     var waitingView: UIView = UIView()
     var sortedKeys =  [YearMonth]()
-    var noChecksLabel: UILabel = UILabel()
+    var noChecksLabel: UILabel {
+        //задаем параметры надписи на заднем плане по умолчанию
+        let label = UILabel()
+        let bounds = CGRect(x: 0, y: 0, width: (self.tableView?.bounds.size.width)!, height: (self.tableView?.bounds.size.height)!)
+        label.bounds = bounds
+        label.text = "Нет отсканированных чеков"
+        label.textAlignment = .center
+        label.textColor = UIColor.lightGray
+        label.font = UIFont.systemFont(ofSize: 15)
+        label.sizeToFit()
+        return label
+    }
     let userId = UserDefaults.standard.string(forKey: "user")
     
     override func viewDidLoad() {
@@ -31,14 +42,6 @@ class AllChecksViewController: UITableViewController {
         
         NSLog ("AllChecksVC did load")
         
-        //задаем параметры надписи на заднем плане по умолчанию
-        let bounds = CGRect(x: 0, y: 0, width: (self.tableView?.bounds.size.width)!, height: (self.tableView?.bounds.size.height)!)
-        noChecksLabel.bounds = bounds
-        noChecksLabel.text = "Нет отсканированных чеков"
-        noChecksLabel.textAlignment = .center
-        noChecksLabel.textColor = UIColor.lightGray
-        noChecksLabel.font = UIFont.systemFont(ofSize: 15)
-        noChecksLabel.sizeToFit()
         self.tableView?.backgroundView = noChecksLabel
 
         //убираем разделитель
@@ -49,7 +52,6 @@ class AllChecksViewController: UITableViewController {
         waitingView.layer.cornerRadius = 10
         waitingView.frame.size = CGSize(width: 180, height: 20 + activityIndicator.frame.height + 48)
         waitingView.center = CGPoint(x: UIScreen.main.bounds.width/2, y: UIScreen.main.bounds.height/2)
-        print (waitingView.center)
         waitingView.layer.opacity = 1
         self.navigationController?.view.addSubview(waitingView)
         self.navigationController?.view.bringSubview(toFront: waitingView)
@@ -83,7 +85,7 @@ class AllChecksViewController: UITableViewController {
 //        } catch {
 //            print(error.localizedDescription)
 //        }
-        UserDefaults.standard.set(false, forKey: "notFirstLaunchFor\(userId!)")
+//        UserDefaults.standard.set(false, forKey: "notFirstLaunchFor\(userId!)")
 //
 //                    Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
 //                    print("configuration changed")

@@ -11,7 +11,6 @@ import UIKit
 
 class NotLoadedCheckCell: UITableViewCell {
     @IBOutlet weak var backColorView: UIView!
-    @IBOutlet weak var qrImage: UIImageView!
     @IBOutlet weak var date: UILabel!
     @IBOutlet weak var sum: UILabel!
     
