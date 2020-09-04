@@ -9,11 +9,24 @@
 import UIKit
 import RealmSwift
 
+enum ActionType {
+    case addGuest
+    case changeName
+}
+
+protocol checkGuestsDelegate {
+    func addGuestToCheck (guest: GuestInfoObject)
+    func changeGuestName (guest: GuestInfoObject)
+}
+
 class CheckGuestsViewController: UITableViewController  {
     
     var favouriteGuests = List<GuestInfoObject>()
     var newGuest = GuestInfoObject(name: "Гость 1")
     let userId = UserDefaults.standard.string(forKey: "user")
+    var sectionNo = 0
+    var action: ActionType = .addGuest
+    var delegate: CheckInfoViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,6 +87,16 @@ class CheckGuestsViewController: UITableViewController  {
             cell.selectionStyle = .none
             return cell
             
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (tableView.dequeueReusableCell(withIdentifier: "favouriteGuest") as? FavouriteGuestCell) != nil {
+            let guest = favouriteGuests[indexPath.row]
+            switch action {
+            case .addGuest:
+                
+            }
         }
     }
     
