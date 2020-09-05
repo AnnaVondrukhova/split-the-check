@@ -10,7 +10,7 @@ import UIKit
 import MessageUI
 
 class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, MFMailComposeViewControllerDelegate {
-    @IBOutlet weak var logOutBtn: UILabel!
+    
     @IBOutlet weak var sortButton: UIButton!
     @IBOutlet weak var sortPicker: UIPickerView!
     @IBOutlet weak var saveSwitch: UISwitch!
