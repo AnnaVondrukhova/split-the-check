@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
+import RealmSwift
 
 class StartViewController: UIViewController {
 
@@ -39,9 +40,7 @@ class StartViewController: UIViewController {
         
         print("StartView did load")
         NSLog("StartVC did load. Is logged in = \(UserDefaults.standard.bool(forKey: "isLoggedIn"))")
-        
-        
-        
+                
         //Тестовый блок - УДАЛИТЬ
 //        let domain = Bundle.main.bundleIdentifier!
 //        UserDefaults.standard.removePersistentDomain(forName: domain)
@@ -55,6 +54,7 @@ class StartViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         //запрос на авторизацию
         if UserDefaults.standard.bool(forKey: "isLoggedIn") {
+            print("isLoggedIn")
             self.performSegue(withIdentifier: "toCheckHistoryVC", sender: nil)
         }
         

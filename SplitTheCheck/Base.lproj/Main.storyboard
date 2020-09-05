@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchIcon" translatesAutoresizingMaskIntoConstraints="NO" id="O0y-rn-F7n">
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchIcon" translatesAutoresizingMaskIntoConstraints="NO" id="O0y-rn-F7n">
                                 <rect key="frame" x="97.5" y="223" width="180" height="221"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="180" id="b0Q-V2-O9Y"/>
@@ -614,7 +614,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="wyk-Tj-H9T"/>
-        <segue reference="7UP-3a-D1I"/>
+        <segue reference="dXZ-De-ubA"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="launchIcon" width="139.5" height="172"/>

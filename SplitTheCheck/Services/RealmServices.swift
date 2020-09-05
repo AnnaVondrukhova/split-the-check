@@ -23,7 +23,7 @@ class RealmServices {
                 print ("added string to Realm")
                 NSLog ("saveQRString: added string to Realm")
             } else {
-                realm.add(string, update: true)
+                realm.add(string, update: .all)
                 print ("updated string in Realm")
                 NSLog ("saveQRString: updated string in Realm")
             }

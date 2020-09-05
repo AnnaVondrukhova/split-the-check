@@ -75,6 +75,14 @@ class AllChecksViewController: UITableViewController {
         self.navigationController?.view.bringSubview(toFront: waitingLabel)
 
         //Тестовый блок - УДАЛИТЬ
+        
+//        do {
+//            try FileManager.default.removeItem(at: Realm.Configuration.defaultConfiguration.fileURL!)
+//            print("Realm deleted")
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+        
 //        do {
 //            let realm = try Realm()
 //
