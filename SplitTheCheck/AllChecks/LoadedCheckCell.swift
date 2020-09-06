@@ -45,7 +45,7 @@ class LoadedCheckCell: UITableViewCell {
         
         let sellerName = json["seller"]["name"].stringValue.replacingOccurrences(of: " ", with: "")
         if sellerName != "" {
-            self.shop.text = sellerName.replacingOccurrences(of: #"\""#, with: "\"")
+            self.shop.text = json["seller"]["name"].stringValue.replacingOccurrences(of: #"\""#, with: "\"")
         }
         else {
             self.shop.text = "Без названия"

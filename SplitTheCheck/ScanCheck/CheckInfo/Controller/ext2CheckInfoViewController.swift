@@ -100,7 +100,7 @@ extension CheckInfoViewController: MFMailComposeViewControllerDelegate, QLPrevie
         
         let text = CreateHTML.create(items: items, totalSum: totalSum, guests: guests, checkPlace: checkPlace, checkDate: checkDate)
         
-        mailVC.setToRecipients([UserDefaults.standard.string(forKey: "email")!])
+//        mailVC.setToRecipients([UserDefaults.standard.string(forKey: "email")!])
         mailVC.setSubject(checkHeader)
         mailVC.setMessageBody(text, isHTML: true)
         

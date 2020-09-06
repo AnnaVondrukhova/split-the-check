@@ -71,6 +71,7 @@ class NetworkService {
             let httpHeaders = HTTPHeaders(headers)
             
             AF.request(url, method: .post, parameters: payload, encoding: JSONEncoding.default, headers: httpHeaders).responseJSON { (response) in
+                print(response)
                 switch response.result {
                 case .success(let value):
                     if let json = value as? [String: Any] {
@@ -79,7 +80,7 @@ class NetworkService {
                     }
                     
                 case .failure(let error):
-                    print("getSessionId error: ", error.localizedDescription)
+                    print("getTicketId error: ", error.localizedDescription)
                     completion(sessionId, nil, error)
                 }
             }
@@ -119,9 +120,11 @@ class NetworkService {
 //                    print(value)
                     let json = JSON(value)
                     print (json)
-                    if json["ticket"] == [] {
+                    print (json["ticket"].rawString())
+                    if json["ticket"].rawString() == "null" {
                         print ("Alamofire first check request: case success, empty ticket")
                         NSLog("Alamofire first check request: case success, empty ticket")
+                        sleep(1)
                         AF.request(url, method: .get, encoding: JSONEncoding.default,  headers: httpHeaders).responseJSON { (response) in
                             switch response.result {
                             case .success(let value):
@@ -168,7 +171,7 @@ class NetworkService {
                         print("Alamofire first check request: case failure (timeout) \(error.localizedDescription)")
                         NSLog("Alamofire first check request: case failure (timeout) \(error.localizedDescription)")
                     }
-                    print("Alamofire first check request: case failure \(error.localizedDescription)")
+                    print("Alamofire first check request: case failure \(error.localizedDescription), \(error._code)")
                     NSLog("Alamofire first check request: case failure \(error.localizedDescription)")
                 }
             }

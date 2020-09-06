@@ -17,20 +17,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k0C-Ne-Wl6">
-                                <rect key="frame" x="97.5" y="291" width="180" height="85"/>
-                                <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="PSt-wL-IPt">
-                                        <rect key="frame" x="71.5" y="10" width="37" height="37"/>
-                                    </activityIndicatorView>
-                                </subviews>
+                                <rect key="frame" x="97.5" y="281" width="180" height="105"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="PSt-wL-IPt" secondAttribute="bottom" constant="38" id="8WY-Nr-pHG"/>
-                                    <constraint firstAttribute="height" constant="85" id="D4r-2s-L8o"/>
+                                    <constraint firstAttribute="height" constant="105" id="D4r-2s-L8o"/>
                                     <constraint firstAttribute="width" constant="180" id="LMI-TK-WOL"/>
-                                    <constraint firstItem="PSt-wL-IPt" firstAttribute="centerX" secondItem="k0C-Ne-Wl6" secondAttribute="centerX" id="ycd-l0-iDY"/>
                                 </constraints>
                             </view>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="PSt-wL-IPt">
+                                <rect key="frame" x="169" y="301" width="37" height="37"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="37" id="YDY-vu-v6h"/>
+                                    <constraint firstAttribute="width" constant="37" id="xnZ-pr-Knu"/>
+                                </constraints>
+                            </activityIndicatorView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Обработка чека..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xkz-E6-Jqn">
                                 <rect key="frame" x="117.5" y="346" width="140" height="20"/>
                                 <constraints>
@@ -44,9 +44,11 @@
                         </subviews>
                         <color key="backgroundColor" red="0.37254901960784315" green="0.41176470588235292" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="xkz-E6-Jqn" firstAttribute="top" secondItem="PSt-wL-IPt" secondAttribute="bottom" constant="8" id="Nxu-gD-e3c"/>
+                            <constraint firstItem="PSt-wL-IPt" firstAttribute="top" secondItem="k0C-Ne-Wl6" secondAttribute="top" constant="20" id="S8K-8F-coW"/>
+                            <constraint firstItem="xkz-E6-Jqn" firstAttribute="top" secondItem="PSt-wL-IPt" secondAttribute="bottom" constant="8" id="VEF-QM-uXj"/>
                             <constraint firstItem="k0C-Ne-Wl6" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="WNZ-5P-OdE"/>
                             <constraint firstItem="xkz-E6-Jqn" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="bnB-da-dg8"/>
+                            <constraint firstItem="PSt-wL-IPt" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="gmb-uQ-cLD"/>
                             <constraint firstItem="k0C-Ne-Wl6" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pXl-t7-Y7l"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -932,7 +934,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="V8t-bd-5Ad"/>
-        <segue reference="ZHr-2T-Ypr"/>
+        <segue reference="b71-60-Gyo"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="add1" width="118" height="118.5"/>

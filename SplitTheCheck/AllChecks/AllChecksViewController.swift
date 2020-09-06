@@ -46,6 +46,7 @@ class AllChecksViewController: UITableViewController {
 
         //убираем разделитель
         self.tableView.separatorColor = UIColor.clear
+        self.tableView.rowHeight = 70.0
         
         //задаем параметры ActivityIndicatorView и сопутствующих элементов
         waitingView.backgroundColor = UIColor.lightGray
@@ -197,6 +198,7 @@ class AllChecksViewController: UITableViewController {
             waitingView.isHidden = false
             activityIndicator.startAnimating()
             RequestService.checkExist(receivedString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].qrString)
+            NetworkService.shared.getCheckInfo(receivedString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].qrString) 
             RealmServices.getStringFromRealm(VC: self, qrString: groupedChecks![sortedKeys[indexPath.section]]![indexPath.row].qrString)
         }
     }

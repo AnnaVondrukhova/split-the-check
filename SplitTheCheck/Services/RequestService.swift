@@ -83,7 +83,9 @@ class RequestService {
                 NSLog("Status code = \(statusCode)")
                 
                 if statusCode == 204 {
+                    print("Check existence request: success, loading data")
                     RequestService.loadData(receivedString: receivedString)
+                    print("Check existence request: success, loading data")
                     NSLog("Check existence request: success, loading data")
                 }
                 else {
